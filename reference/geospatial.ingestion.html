@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -482,15 +516,26 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.geospatial.ingestion.build_file_list_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.build_file_list_udf">build_file_list_udf</h3>
-<p><code>cloud.geospatial.ingestion.build_file_list_udf(dataset_type, config=None, search_uri=None, pattern=None, ignore=None, dataset_list_uri=None, max_files=None, verbose=False, trace=False, log_uri=None)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.build_file_list_udf(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    dataset_type</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    search_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    dataset_list_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Build a list of sources</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
+<col style="width: 12%">
 <col style="width: 24%">
-<col style="width: 53%">
+<col style="width: 54%">
 <col style="width: 8%">
 </colgroup>
 <thead>
@@ -503,61 +548,61 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_type</code></td>
+<td>dataset_type</td>
 <td>DatasetType</td>
 <td>dataset type, one of pointcloud, raster or geometry</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>search_uri</code></td>
+<td>search_uri</td>
 <td>Optional[str]</td>
 <td>URI to search for geospatial dataset files, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>pattern</code></td>
+<td>pattern</td>
 <td>Optional[str]</td>
 <td>Unix shell style pattern to match when searching for files, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>ignore</code></td>
+<td>ignore</td>
 <td>Optional[str]</td>
 <td>Unix shell style pattern to ignore when searching for files, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>dataset_list_uri</code></td>
+<td>dataset_list_uri</td>
 <td>Optional[str]</td>
 <td>URI with a list of dataset URIs, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_files</code></td>
+<td>max_files</td>
 <td>Optional[int]</td>
 <td>maximum number of URIs to read/find, defaults to None (no limit)</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>trace</code></td>
+<td>trace</td>
 <td>bool</td>
 <td>bool, enabling log tracing, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI</td>
 <td><code>None</code></td>
@@ -565,17 +610,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 22%">
+<col style="width: 66%">
+</colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Sequence[str]</td>
 <td>A sequence of source files grouped into batches</td>
 </tr>
@@ -585,352 +637,27 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.build_inputs_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.build_inputs_udf">build_inputs_udf</h3>
-<p><code>cloud.geospatial.ingestion.build_inputs_udf(dataset_type, sources, config=None, compression_filter=None, tile_size=RASTER_TILE_SIZE, pixels_per_fragment=PIXELS_PER_FRAGMENT, chunk_size=POINT_CLOUD_CHUNK_SIZE, nodata=None, resampling='bilinear', res=None, verbose=False, trace=False, log_uri=None)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.build_inputs_udf(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    dataset_type</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    sources</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    compression_filter<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    tile_size<span class="op">=</span>RASTER_TILE_SIZE</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    pixels_per_fragment<span class="op">=</span>PIXELS_PER_FRAGMENT</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    chunk_size<span class="op">=</span>POINT_CLOUD_CHUNK_SIZE</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    nodata<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    resampling<span class="op">=</span><span class="st">'bilinear'</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    res<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Groups input URIs into batches.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 18%">
-<col style="width: 56%">
-<col style="width: 13%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_type</code></td>
-<td>DatasetType</td>
-<td>dataset type, one of pointcloud, raster or geometry</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>sources</code></td>
-<td>Sequence[str]</td>
-<td>URIs to process</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, object]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>compression_filter</code></td>
-<td>Optional[dict]</td>
-<td>serialized tiledb filter, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>tile_size</code></td>
-<td>int</td>
-<td>for rasters this is the tile (block) size for the merged destination array, defaults to 1024</td>
-<td><code>RASTER_TILE_SIZE</code></td>
-</tr>
-<tr class="even">
-<td><code>pixels_per_fragment</code></td>
-<td>int</td>
-<td>This is the number of pixels that will be written per fragment. Ideally aim to align as a factor of tile_size</td>
-<td><code>PIXELS_PER_FRAGMENT</code></td>
-</tr>
-<tr class="odd">
-<td><code>chunk_size</code></td>
-<td>int</td>
-<td>for point cloud this is the PDAL chunk size, defaults to 1000000</td>
-<td><code>POINT_CLOUD_CHUNK_SIZE</code></td>
-</tr>
-<tr class="even">
-<td><code>nodata</code></td>
-<td>Optional[float]</td>
-<td>NODATA value for raster merging</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>resampling</code></td>
-<td>Optional[str]</td>
-<td>string, resampling method, one of None, bilinear, cubic, nearest and average</td>
-<td><code>'bilinear'</code></td>
-</tr>
-<tr class="even">
-<td><code>res</code></td>
-<td>Tuple[float, float]</td>
-<td>Tuple[float, float], output resolution in x/y</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>trace</code></td>
-<td>bool</td>
-<td>bool, enabling log tracing, to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="odd">
-<td><code>log_uri</code></td>
-<td>Optional[str]</td>
-<td>log array URI</td>
-<td><code>None</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 24%">
-<col style="width: 75%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>dict[str, object]</td>
-<td>A dict containing the kwargs needed for the next function call</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.geospatial.ingestion.consolidate_meta" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.consolidate_meta">consolidate_meta</h3>
-<p><code>cloud.geospatial.ingestion.consolidate_meta(dataset_uri, *, config=None, id='consolidate', verbose=False, trace=False, log_uri=None)</code></p>
-<p>Consolidate arrays in the dataset.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 31%">
-<col style="width: 40%">
-<col style="width: 14%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, object]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>id</code></td>
-<td>str</td>
-<td>profiler event id, defaults to “consolidate”</td>
-<td><code>'consolidate'</code></td>
-</tr>
-<tr class="even">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.geospatial.ingestion.ingest_datasets" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_datasets">ingest_datasets</h3>
-<p><code>cloud.geospatial.ingestion.ingest_datasets(dataset_uri, *, dataset_type, acn=None, config=None, namespace=None, register_name=None, search_uri=None, pattern=None, ignore=None, dataset_list_uri=None, max_files=None, compression_filter=None, workers=MAX_WORKERS, batch_size=BATCH_SIZE, tile_size=RASTER_TILE_SIZE, pixels_per_fragment=PIXELS_PER_FRAGMENT, chunk_size=POINT_CLOUD_CHUNK_SIZE, nodata=None, res=None, stats=False, verbose=False, trace=False, log_uri=None)</code></p>
-<p>Ingest samples into a dataset.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 60%">
-<col style="width: 14%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>dataset_type</code></td>
-<td>DatasetType</td>
-<td>dataset type, one of pointcloud, raster or geometry</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>acn</code></td>
-<td>Optional[str]</td>
-<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>config</code></td>
-<td></td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>namespace</code></td>
-<td>Optional[str]</td>
-<td>TileDB-Cloud namespace, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>register_name</code></td>
-<td>Optional[str]</td>
-<td>name to register the dataset with on TileDB Cloud, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>search_uri</code></td>
-<td>Optional[str]</td>
-<td>URI to search for geospatial dataset files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>pattern</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to match when searching for files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>ignore</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to ignore when searching for files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>dataset_list_uri</code></td>
-<td>Optional[str]</td>
-<td>URI with a list of dataset URIs, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>max_files</code></td>
-<td>Optional[int]</td>
-<td>maximum number of URIs to read/find, defaults to None (no limit)</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>compression_filter</code></td>
-<td>Optional[dict]</td>
-<td>serialized tiledb filter, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>workers</code></td>
-<td>int</td>
-<td>number of workers for dataset ingestion, defaults to MAX_WORKERS</td>
-<td><code>MAX_WORKERS</code></td>
-</tr>
-<tr class="even">
-<td><code>batch_size</code></td>
-<td>int</td>
-<td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
-<td><code>BATCH_SIZE</code></td>
-</tr>
-<tr class="odd">
-<td><code>tile_size</code></td>
-<td>int</td>
-<td>for rasters this is the tile (block) size for the merged destination array defaults to 1024</td>
-<td><code>RASTER_TILE_SIZE</code></td>
-</tr>
-<tr class="even">
-<td><code>pixels_per_fragment</code></td>
-<td>int</td>
-<td>This is the number of pixels that will be written per fragment. Ideally aim to align as a factor of tile_size</td>
-<td><code>PIXELS_PER_FRAGMENT</code></td>
-</tr>
-<tr class="odd">
-<td><code>chunk_size</code></td>
-<td>int</td>
-<td>for point cloud this is the PDAL chunk size, defaults to 1000000</td>
-<td><code>POINT_CLOUD_CHUNK_SIZE</code></td>
-</tr>
-<tr class="even">
-<td><code>nodata</code></td>
-<td>Optional[float]</td>
-<td>NODATA value for rasters</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>res</code></td>
-<td>Tuple[float, float]</td>
-<td>Tuple[float, float], output resolution in x/y</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>stats</code></td>
-<td>bool</td>
-<td>bool, print TileDB stats to stdout</td>
-<td><code>False</code></td>
-</tr>
-<tr class="odd">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>trace</code></td>
-<td>bool</td>
-<td>bool, enable trace for logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="odd">
-<td><code>log_uri</code></td>
-<td>Optional[str]</td>
-<td>log array URI</td>
-<td><code>None</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.geospatial.ingestion.ingest_datasets_dag" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_datasets_dag">ingest_datasets_dag</h3>
-<p><code>cloud.geospatial.ingestion.ingest_datasets_dag(dataset_uri, *, dataset_type, acn=None, config=None, namespace=None, register_name=None, search_uri=None, pattern=None, ignore=None, dataset_list_uri=None, max_files=None, compression_filter=None, workers=MAX_WORKERS, batch_size=BATCH_SIZE, tile_size=RASTER_TILE_SIZE, pixels_per_fragment=PIXELS_PER_FRAGMENT, chunk_size=POINT_CLOUD_CHUNK_SIZE, nodata=None, resampling='bilinear', res=None, stats=False, verbose=False, trace=False, log_uri=None)</code></p>
-<p>Ingests geospatial point clouds, geometries and images into TileDB arrays</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 11%">
+<col style="width: 10%">
 <col style="width: 18%">
 <col style="width: 57%">
 <col style="width: 13%">
@@ -945,145 +672,79 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>dataset_type</code></td>
+<td>dataset_type</td>
 <td>DatasetType</td>
 <td>dataset type, one of pointcloud, raster or geometry</td>
 <td><em>required</em></td>
 </tr>
-<tr class="odd">
-<td><code>acn</code></td>
-<td>Optional[str]</td>
-<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
-<td><code>None</code></td>
-</tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>sources</td>
+<td>Sequence[str]</td>
+<td>URIs to process</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
-<td><code>namespace</code></td>
-<td>Optional[str]</td>
-<td>TileDB-Cloud namespace, defaults to None</td>
-<td><code>None</code></td>
-</tr>
 <tr class="even">
-<td><code>register_name</code></td>
-<td>Optional[str]</td>
-<td>name to register the dataset with on TileDB Cloud, defaults to None and the destination array is not registered</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>search_uri</code></td>
-<td>Optional[str]</td>
-<td>URI to search for geospatial dataset files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>pattern</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to match when searching for files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>ignore</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to ignore when searching for files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>dataset_list_uri</code></td>
-<td>Optional[str]</td>
-<td>URI with a list of dataset URIs, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>max_files</code></td>
-<td>Optional[int]</td>
-<td>maximum number of URIs to read/find, defaults to None (no limit)</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>compression_filter</code></td>
+<td>compression_filter</td>
 <td>Optional[dict]</td>
 <td>serialized tiledb filter, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>workers</code></td>
-<td>int</td>
-<td>number of workers for dataset ingestion, defaults to MAX_WORKERS</td>
-<td><code>MAX_WORKERS</code></td>
-</tr>
-<tr class="even">
-<td><code>batch_size</code></td>
-<td>int</td>
-<td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
-<td><code>BATCH_SIZE</code></td>
-</tr>
-<tr class="odd">
-<td><code>tile_size</code></td>
+<td>tile_size</td>
 <td>int</td>
 <td>for rasters this is the tile (block) size for the merged destination array, defaults to 1024</td>
 <td><code>RASTER_TILE_SIZE</code></td>
 </tr>
 <tr class="even">
-<td><code>pixels_per_fragment</code></td>
+<td>pixels_per_fragment</td>
 <td>int</td>
 <td>This is the number of pixels that will be written per fragment. Ideally aim to align as a factor of tile_size</td>
 <td><code>PIXELS_PER_FRAGMENT</code></td>
 </tr>
 <tr class="odd">
-<td><code>chunk_size</code></td>
+<td>chunk_size</td>
 <td>int</td>
 <td>for point cloud this is the PDAL chunk size, defaults to 1000000</td>
 <td><code>POINT_CLOUD_CHUNK_SIZE</code></td>
 </tr>
 <tr class="even">
-<td><code>nodata</code></td>
+<td>nodata</td>
 <td>Optional[float]</td>
 <td>NODATA value for raster merging</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>resampling</code></td>
+<td>resampling</td>
 <td>Optional[str]</td>
 <td>string, resampling method, one of None, bilinear, cubic, nearest and average</td>
 <td><code>'bilinear'</code></td>
 </tr>
 <tr class="even">
-<td><code>res</code></td>
+<td>res</td>
 <td>Tuple[float, float]</td>
 <td>Tuple[float, float], output resolution in x/y</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>stats</code></td>
-<td>bool</td>
-<td>bool, print TileDB stats to stdout</td>
-<td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
-<tr class="odd">
-<td><code>trace</code></td>
+<tr class="even">
+<td>trace</td>
 <td>bool</td>
-<td>bool, enabling log tracing, defaults to False</td>
+<td>bool, enabling log tracing, to False</td>
 <td><code>False</code></td>
 </tr>
-<tr class="even">
-<td><code>log_uri</code></td>
+<tr class="odd">
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI</td>
 <td><code>None</code></td>
@@ -1091,18 +752,50 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-</section>
-<section id="tiledb.cloud.geospatial.ingestion.ingest_geometry_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_geometry_udf">ingest_geometry_udf</h3>
-<p><code>cloud.geospatial.ingestion.ingest_geometry_udf(dataset_uri, args={}, sources=None, schema=None, extents=None, crs=None, chunk_size=GEOMETRY_CHUNK_SIZE, batch_size=BATCH_SIZE, compressor=None, append=False, verbose=False, stats=False, config=None, id='geometry', trace=False, log_uri=None)</code></p>
-<p>Internal udf that ingests server side batch of geometry files into tiledb arrays using Fiona API</p>
-<section id="parameters-5" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
-<col style="width: 25%">
-<col style="width: 48%">
+<col style="width: 8%">
+<col style="width: 22%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>dict[str, object]</td>
+<td>A dict containing the kwargs needed for the next function call</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.geospatial.ingestion.consolidate_meta" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.consolidate_meta">consolidate_meta</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.consolidate_meta(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'consolidate'</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Consolidate arrays in the dataset.</p>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 32%">
+<col style="width: 41%">
 <col style="width: 15%">
 </colgroup>
 <thead>
@@ -1115,91 +808,214 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
-<td>str, output TileDB array name</td>
+<td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>args</code></td>
-<td>Union[Dict, List]</td>
-<td>dict, input key value arguments as a dictionary</td>
-<td><code>{}</code></td>
+<td>config</td>
+<td>Optional[Mapping[str, object]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>sources</code></td>
-<td>Sequence[str]</td>
-<td>Sequence of input geometry file names</td>
-<td><code>None</code></td>
+<td>id</td>
+<td>str</td>
+<td>profiler event id, defaults to “consolidate”</td>
+<td><code>'consolidate'</code></td>
 </tr>
 <tr class="even">
-<td><code>schema</code></td>
-<td>dict</td>
-<td>dict, dictionary of schema attributes and geometries</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>extents</code></td>
-<td>Optional[XYBoundsTuple]</td>
-<td>Extents of the destination geometry array</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>crs</code></td>
-<td>Optional[str]</td>
-<td>str, CRS for the destination dataset</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>chunk_size</code></td>
-<td>Optional[int]</td>
-<td>int, sets tile capacity and the number of geometries written at once</td>
-<td><code>GEOMETRY_CHUNK_SIZE</code></td>
-</tr>
-<tr class="even">
-<td><code>batch_size</code></td>
-<td>Optional[int]</td>
-<td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
-<td><code>BATCH_SIZE</code></td>
-</tr>
-<tr class="odd">
-<td><code>compressor</code></td>
-<td>Optional[dict]</td>
-<td>dict, serialized compression filter</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>append</code></td>
-<td>bool</td>
-<td>bool, whether to append to the array</td>
-<td><code>False</code></td>
-</tr>
-<tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.geospatial.ingestion.ingest_datasets" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_datasets">ingest_datasets</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.ingest_datasets(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    dataset_type</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    register_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    search_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    dataset_list_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    compression_filter<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    workers<span class="op">=</span>MAX_WORKERS</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>BATCH_SIZE</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    tile_size<span class="op">=</span>RASTER_TILE_SIZE</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    pixels_per_fragment<span class="op">=</span>PIXELS_PER_FRAGMENT</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    chunk_size<span class="op">=</span>POINT_CLOUD_CHUNK_SIZE</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    nodata<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    res<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    stats<span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ingest samples into a dataset.</p>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 61%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
 <tr class="even">
-<td><code>stats</code></td>
+<td>dataset_type</td>
+<td>DatasetType</td>
+<td>dataset type, one of pointcloud, raster or geometry</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>acn</td>
+<td>Optional[str]</td>
+<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>config</td>
+<td></td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>namespace</td>
+<td>Optional[str]</td>
+<td>TileDB-Cloud namespace, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>register_name</td>
+<td>Optional[str]</td>
+<td>name to register the dataset with on TileDB Cloud, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>search_uri</td>
+<td>Optional[str]</td>
+<td>URI to search for geospatial dataset files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>pattern</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to match when searching for files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>ignore</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to ignore when searching for files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>dataset_list_uri</td>
+<td>Optional[str]</td>
+<td>URI with a list of dataset URIs, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>max_files</td>
+<td>Optional[int]</td>
+<td>maximum number of URIs to read/find, defaults to None (no limit)</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>compression_filter</td>
+<td>Optional[dict]</td>
+<td>serialized tiledb filter, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>workers</td>
+<td>int</td>
+<td>number of workers for dataset ingestion, defaults to MAX_WORKERS</td>
+<td><code>MAX_WORKERS</code></td>
+</tr>
+<tr class="even">
+<td>batch_size</td>
+<td>int</td>
+<td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
+<td><code>BATCH_SIZE</code></td>
+</tr>
+<tr class="odd">
+<td>tile_size</td>
+<td>int</td>
+<td>for rasters this is the tile (block) size for the merged destination array defaults to 1024</td>
+<td><code>RASTER_TILE_SIZE</code></td>
+</tr>
+<tr class="even">
+<td>pixels_per_fragment</td>
+<td>int</td>
+<td>This is the number of pixels that will be written per fragment. Ideally aim to align as a factor of tile_size</td>
+<td><code>PIXELS_PER_FRAGMENT</code></td>
+</tr>
+<tr class="odd">
+<td>chunk_size</td>
+<td>int</td>
+<td>for point cloud this is the PDAL chunk size, defaults to 1000000</td>
+<td><code>POINT_CLOUD_CHUNK_SIZE</code></td>
+</tr>
+<tr class="even">
+<td>nodata</td>
+<td>Optional[float]</td>
+<td>NODATA value for rasters</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>res</td>
+<td>Tuple[float, float]</td>
+<td>Tuple[float, float], output resolution in x/y</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>stats</td>
 <td>bool</td>
 <td>bool, print TileDB stats to stdout</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, object]]</td>
-<td>dict, configuration to pass on tiledb.VFS</td>
-<td><code>None</code></td>
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>id</code></td>
-<td>str</td>
-<td>str, ID for logging</td>
-<td><code>'geometry'</code></td>
+<td>trace</td>
+<td>bool</td>
+<td>bool, enable trace for logging, defaults to False</td>
+<td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI</td>
 <td><code>None</code></td>
@@ -1207,21 +1023,353 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+</section>
+<section id="tiledb.cloud.geospatial.ingestion.ingest_datasets_dag" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_datasets_dag">ingest_datasets_dag</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.ingest_datasets_dag(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    dataset_type</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    register_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    search_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    dataset_list_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    compression_filter<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    workers<span class="op">=</span>MAX_WORKERS</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>BATCH_SIZE</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    tile_size<span class="op">=</span>RASTER_TILE_SIZE</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    pixels_per_fragment<span class="op">=</span>PIXELS_PER_FRAGMENT</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    chunk_size<span class="op">=</span>POINT_CLOUD_CHUNK_SIZE</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    nodata<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    resampling<span class="op">=</span><span class="st">'bilinear'</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    res<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    stats<span class="op">=</span><span class="va">False</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ingests geospatial point clouds, geometries and images into TileDB arrays</p>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 37%">
-<col style="width: 62%">
+<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 57%">
+<col style="width: 13%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>dataset_type</td>
+<td>DatasetType</td>
+<td>dataset type, one of pointcloud, raster or geometry</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>acn</td>
+<td>Optional[str]</td>
+<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>config</td>
+<td>Optional[Mapping[str, object]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>namespace</td>
+<td>Optional[str]</td>
+<td>TileDB-Cloud namespace, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>register_name</td>
+<td>Optional[str]</td>
+<td>name to register the dataset with on TileDB Cloud, defaults to None and the destination array is not registered</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>search_uri</td>
+<td>Optional[str]</td>
+<td>URI to search for geospatial dataset files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>pattern</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to match when searching for files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>ignore</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to ignore when searching for files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>dataset_list_uri</td>
+<td>Optional[str]</td>
+<td>URI with a list of dataset URIs, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>max_files</td>
+<td>Optional[int]</td>
+<td>maximum number of URIs to read/find, defaults to None (no limit)</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>compression_filter</td>
+<td>Optional[dict]</td>
+<td>serialized tiledb filter, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>workers</td>
+<td>int</td>
+<td>number of workers for dataset ingestion, defaults to MAX_WORKERS</td>
+<td><code>MAX_WORKERS</code></td>
+</tr>
+<tr class="even">
+<td>batch_size</td>
+<td>int</td>
+<td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
+<td><code>BATCH_SIZE</code></td>
+</tr>
+<tr class="odd">
+<td>tile_size</td>
+<td>int</td>
+<td>for rasters this is the tile (block) size for the merged destination array, defaults to 1024</td>
+<td><code>RASTER_TILE_SIZE</code></td>
+</tr>
+<tr class="even">
+<td>pixels_per_fragment</td>
+<td>int</td>
+<td>This is the number of pixels that will be written per fragment. Ideally aim to align as a factor of tile_size</td>
+<td><code>PIXELS_PER_FRAGMENT</code></td>
+</tr>
+<tr class="odd">
+<td>chunk_size</td>
+<td>int</td>
+<td>for point cloud this is the PDAL chunk size, defaults to 1000000</td>
+<td><code>POINT_CLOUD_CHUNK_SIZE</code></td>
+</tr>
+<tr class="even">
+<td>nodata</td>
+<td>Optional[float]</td>
+<td>NODATA value for raster merging</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>resampling</td>
+<td>Optional[str]</td>
+<td>string, resampling method, one of None, bilinear, cubic, nearest and average</td>
+<td><code>'bilinear'</code></td>
+</tr>
+<tr class="even">
+<td>res</td>
+<td>Tuple[float, float]</td>
+<td>Tuple[float, float], output resolution in x/y</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>stats</td>
+<td>bool</td>
+<td>bool, print TileDB stats to stdout</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td>trace</td>
+<td>bool</td>
+<td>bool, enabling log tracing, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>log_uri</td>
+<td>Optional[str]</td>
+<td>log array URI</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.geospatial.ingestion.ingest_geometry_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_geometry_udf">ingest_geometry_udf</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.ingest_geometry_udf(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    args<span class="op">=</span>{}</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    sources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    schema<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    extents<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    chunk_size<span class="op">=</span>GEOMETRY_CHUNK_SIZE</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>BATCH_SIZE</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    compressor<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    append<span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    stats<span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'geometry'</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Internal udf that ingests server side batch of geometry files into tiledb arrays using Fiona API</p>
+<section id="parameters-5" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 25%">
+<col style="width: 49%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>str, output TileDB array name</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>args</td>
+<td>Union[Dict, List]</td>
+<td>dict, input key value arguments as a dictionary</td>
+<td><code>{}</code></td>
+</tr>
+<tr class="odd">
+<td>sources</td>
+<td>Sequence[str]</td>
+<td>Sequence of input geometry file names</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>schema</td>
+<td>dict</td>
+<td>dict, dictionary of schema attributes and geometries</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>extents</td>
+<td>Optional[XYBoundsTuple]</td>
+<td>Extents of the destination geometry array</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>crs</td>
+<td>Optional[str]</td>
+<td>str, CRS for the destination dataset</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>chunk_size</td>
+<td>Optional[int]</td>
+<td>int, sets tile capacity and the number of geometries written at once</td>
+<td><code>GEOMETRY_CHUNK_SIZE</code></td>
+</tr>
+<tr class="even">
+<td>batch_size</td>
+<td>Optional[int]</td>
+<td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
+<td><code>BATCH_SIZE</code></td>
+</tr>
+<tr class="odd">
+<td>compressor</td>
+<td>Optional[dict]</td>
+<td>dict, serialized compression filter</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>append</td>
+<td>bool</td>
+<td>bool, whether to append to the array</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>stats</td>
+<td>bool</td>
+<td>bool, print TileDB stats to stdout</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td>config</td>
+<td>Optional[Mapping[str, object]]</td>
+<td>dict, configuration to pass on tiledb.VFS</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>id</td>
+<td>str</td>
+<td>str, ID for logging</td>
+<td><code>'geometry'</code></td>
+</tr>
+<tr class="odd">
+<td>log_uri</td>
+<td>Optional[str]</td>
+<td>log array URI</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 35%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Union[Sequence[os.PathLike], None]</td>
 <td>if not appending then the function returns a tuple of file paths</td>
 </tr>
@@ -1231,15 +1379,28 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.ingest_point_cloud_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_point_cloud_udf">ingest_point_cloud_udf</h3>
-<p><code>cloud.geospatial.ingestion.ingest_point_cloud_udf(args={}, dataset_uri, sources=None, append=False, chunk_size=POINT_CLOUD_CHUNK_SIZE, batch_size=BATCH_SIZE, verbose=False, stats=False, config=None, id='pointcloud', trace=False, log_uri=None)</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.ingest_point_cloud_udf(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    args<span class="op">=</span>{}</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    sources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    append<span class="op">=</span><span class="va">False</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    chunk_size<span class="op">=</span>POINT_CLOUD_CHUNK_SIZE</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>BATCH_SIZE</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    stats<span class="op">=</span><span class="va">False</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'pointcloud'</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Internal udf that ingests server side batch of point cloud files into tiledb arrays using PDAL API. Compression uses the default profile built in to PDAL.</p>
-<section id="parameters-6" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
+<section id="parameters-6" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 26%">
-<col style="width: 42%">
+<col style="width: 9%">
+<col style="width: 27%">
+<col style="width: 43%">
 <col style="width: 19%">
 </colgroup>
 <thead>
@@ -1252,67 +1413,67 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>args</code></td>
+<td>args</td>
 <td>Union[Dict, List]</td>
 <td>dict or list, input key value arguments as a dictionary</td>
 <td><code>{}</code></td>
 </tr>
 <tr class="even">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>str, output TileDB array name</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>sources</code></td>
+<td>sources</td>
 <td>Sequence[GeoMetadata]</td>
 <td>Sequence of GeoMetadata objects</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>append</code></td>
+<td>append</td>
 <td>bool</td>
 <td>bool, whether to append to the array</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>chunk_size</code></td>
+<td>chunk_size</td>
 <td>Optional[int]</td>
 <td>PDAL configuration for chunking fragments</td>
 <td><code>POINT_CLOUD_CHUNK_SIZE</code></td>
 </tr>
 <tr class="even">
-<td><code>batch_size</code></td>
+<td>batch_size</td>
 <td>Optional[int]</td>
 <td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
 <td><code>BATCH_SIZE</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>stats</code></td>
+<td>stats</td>
 <td>bool</td>
 <td>bool, print TileDB stats to stdout</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>dict, configuration to pass on tiledb.VFS</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>id</code></td>
+<td>id</td>
 <td>str</td>
 <td>str, ID for logging</td>
 <td><code>'pointcloud'</code></td>
 </tr>
 <tr class="odd">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI</td>
 <td><code>None</code></td>
@@ -1320,21 +1481,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
+<section id="returns-3" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 45%">
-<col style="width: 54%">
+<col style="width: 8%">
+<col style="width: 41%">
+<col style="width: 50%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Union[Sequence[os.PathLike], None]</td>
 <td>if not appending then a sequence of file paths</td>
 </tr>
@@ -1344,13 +1508,33 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.ingest_raster_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.ingest_raster_udf">ingest_raster_udf</h3>
-<p><code>cloud.geospatial.ingestion.ingest_raster_udf(args={}, dataset_uri, sources=None, extents=None, band_count=None, dtype=None, nodata=None, pixels_per_fragment=PIXELS_PER_FRAGMENT, tile_size=RASTER_TILE_SIZE, resampling=DEFAULT_RASTER_SAMPLING, append=False, batch_size=BATCH_SIZE, stats=False, verbose=False, config=None, compressor=None, id='raster', trace=False, log_uri=None)</code></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.ingest_raster_udf(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    args<span class="op">=</span>{}</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    sources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    extents<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    band_count<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    dtype<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    nodata<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    pixels_per_fragment<span class="op">=</span>PIXELS_PER_FRAGMENT</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    tile_size<span class="op">=</span>RASTER_TILE_SIZE</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    resampling<span class="op">=</span>DEFAULT_RASTER_SAMPLING</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    append<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>BATCH_SIZE</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    stats<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    compressor<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'raster'</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Internal udf that ingests server side batch of raster files into tiledb arrays using Rasterio API</p>
-<section id="parameters-7" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
+<section id="parameters-7" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-7">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 16%">
 <col style="width: 61%">
 <col style="width: 12%">
@@ -1365,109 +1549,109 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>args</code></td>
+<td>args</td>
 <td>Union[Dict, List]</td>
 <td>dict, input key value arguments as a dictionary</td>
 <td><code>{}</code></td>
 </tr>
 <tr class="even">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>str, output TileDB array name</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>sources</code></td>
+<td>sources</td>
 <td>Tuple[GeoBlockMetadata]</td>
 <td>tuple, sequence of GeoBlockMetadata objects containing the destination raster window and the input files that contribute to this window</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>extents</code></td>
+<td>extents</td>
 <td>Optional[BoundingBox]</td>
 <td>Extents of the destination raster</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>band_count</code></td>
+<td>band_count</td>
 <td>Optional[int]</td>
 <td>int, number of bands in destination array</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>dtype</code></td>
+<td>dtype</td>
 <td>Optional[str]</td>
 <td>str, dtype of destination array</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>nodata</code></td>
+<td>nodata</td>
 <td>Optional[float]</td>
 <td>float, NODATA value for destination raster</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>tile_size</code></td>
+<td>tile_size</td>
 <td>int</td>
 <td>for rasters this is the tile (block) size for the merged destination array, defaults to 1024</td>
 <td><code>RASTER_TILE_SIZE</code></td>
 </tr>
 <tr class="odd">
-<td><code>pixels_per_fragment</code></td>
+<td>pixels_per_fragment</td>
 <td>int</td>
 <td>This is the number of pixels that will be written per fragment. Ideally aim to align as a factor of tile_size</td>
 <td><code>PIXELS_PER_FRAGMENT</code></td>
 </tr>
 <tr class="even">
-<td><code>resampling</code></td>
+<td>resampling</td>
 <td>str</td>
 <td>string, resampling method, one of None, bilinear, cubic, nearest and average</td>
 <td><code>DEFAULT_RASTER_SAMPLING</code></td>
 </tr>
 <tr class="odd">
-<td><code>append</code></td>
+<td>append</td>
 <td>bool</td>
 <td>bool, whether to append to the array</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>batch_size</code></td>
+<td>batch_size</td>
 <td>int</td>
 <td>batch size for dataset ingestion, defaults to BATCH_SIZE</td>
 <td><code>BATCH_SIZE</code></td>
 </tr>
 <tr class="odd">
-<td><code>stats</code></td>
+<td>stats</td>
 <td>bool</td>
 <td>bool, print TileDB stats to stdout</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>dict, configuration to pass on tiledb.VFS</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>compressor</code></td>
+<td>compressor</td>
 <td>Optional[dict]</td>
 <td>dict, serialized compression filter</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>id</code></td>
+<td>id</td>
 <td>str</td>
 <td>str, ID for logging</td>
 <td><code>'raster'</code></td>
 </tr>
 <tr class="even">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI</td>
 <td><code>None</code></td>
@@ -1475,21 +1659,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-4" class="level4">
-<h4 class="anchored" data-anchor-id="returns-4">Returns</h4>
+<section id="returns-4" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-4">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 38%">
-<col style="width: 61%">
+<col style="width: 6%">
+<col style="width: 36%">
+<col style="width: 57%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Union[Sequence[GeoBlockMetadata], None]</td>
 <td>if not appending then a sequence of populated GeoBlockMetadata objects</td>
 </tr>
@@ -1499,16 +1686,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.load_geometry_metadata" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.load_geometry_metadata">load_geometry_metadata</h3>
-<p><code>cloud.geospatial.ingestion.load_geometry_metadata(sources, *, config=None, verbose=False, id='pointcloud_metadata', trace=False, log_uri=None)</code></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.load_geometry_metadata(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    sources</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'pointcloud_metadata'</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Return geospatial metadata for a sequence of input geometry data files</p>
 <p>:Return: list[GeoMetadata], a list of populated GeoMetadata objects</p>
-<section id="parameters-8" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
+<section id="parameters-8" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
-<col style="width: 33%">
-<col style="width: 44%">
+<col style="width: 8%">
+<col style="width: 34%">
+<col style="width: 45%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -1521,31 +1716,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>sources</code></td>
+<td>sources</td>
 <td>Iterable[os.PathLike]</td>
 <td>A sequence of paths or path to input</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>dict configuration to pass on tiledb.VFS</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>bool, enable verbose logging, default is False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>trace</code></td>
+<td>trace</td>
 <td>bool</td>
 <td>bool, enable trace logging, default is False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>Optional[str] = None,</td>
 <td><code>None</code></td>
@@ -1556,16 +1751,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.load_pointcloud_metadata" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.load_pointcloud_metadata">load_pointcloud_metadata</h3>
-<p><code>cloud.geospatial.ingestion.load_pointcloud_metadata(sources, *, config=None, verbose=False, id='pointcloud_metadata', trace=False, log_uri=None)</code></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.load_pointcloud_metadata(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    sources</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'pointcloud_metadata'</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Return geospatial metadata for a sequence of input point cloud data files</p>
 <p>:Return: list[GeoMetadata], a list of populated GeoMetadata objects</p>
-<section id="parameters-9" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-9">Parameters</h4>
+<section id="parameters-9" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-9">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
-<col style="width: 33%">
-<col style="width: 44%">
+<col style="width: 8%">
+<col style="width: 34%">
+<col style="width: 45%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -1578,31 +1781,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>sources</code></td>
+<td>sources</td>
 <td>Iterable[os.PathLike]</td>
 <td>iterator, paths or path to process</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>dict, configuration to pass on tiledb.VFS</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>bool, enable verbose logging, default is False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>trace</code></td>
+<td>trace</td>
 <td>bool</td>
 <td>bool, enable trace logging, default is False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>Optional[str] = None,</td>
 <td><code>None</code></td>
@@ -1613,16 +1816,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.load_raster_metadata" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.load_raster_metadata">load_raster_metadata</h3>
-<p><code>cloud.geospatial.ingestion.load_raster_metadata(sources, *, config=None, verbose=False, id='raster_metadata', trace=False, log_uri=None)</code></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.load_raster_metadata(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    sources</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'raster_metadata'</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    trace<span class="op">=</span><span class="va">False</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Return geospatial metadata for a sequence of input raster data files</p>
 <p>:Return: list[GeoMetadata]: list of populated GeoMetadata objects</p>
-<section id="parameters-10" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-10">Parameters</h4>
+<section id="parameters-10" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-10">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 9%">
+<col style="width: 7%">
 <col style="width: 31%">
-<col style="width: 41%">
+<col style="width: 42%">
 <col style="width: 18%">
 </colgroup>
 <thead>
@@ -1635,37 +1846,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>sources</code></td>
+<td>sources</td>
 <td>Iterable[os.PathLike]</td>
 <td>iterator, paths or path to process</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>dict, configuration to pass on tiledb.VFS</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>bool, enable verbose logging, default is False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>trace</code></td>
+<td>trace</td>
 <td>bool</td>
 <td>bool, enable trace logging, default is False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>id</code></td>
+<td>id</td>
 <td>str</td>
 <td>str, ID for logging</td>
 <td><code>'raster_metadata'</code></td>
 </tr>
 <tr class="even">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>Optional[str] = None,</td>
 <td><code>None</code></td>
@@ -1676,15 +1887,23 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.read_uris" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.read_uris">read_uris</h3>
-<p><code>cloud.geospatial.ingestion.read_uris(list_uri, dataset_type, *, log_uri=None, config=None, max_files=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.read_uris(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    list_uri</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    dataset_type</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Read a list of URIs from a URI.</p>
-<section id="parameters-11" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-11">Parameters</h4>
+<section id="parameters-11" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-11">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 30%">
-<col style="width: 45%">
+<col style="width: 12%">
+<col style="width: 31%">
+<col style="width: 46%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -1697,37 +1916,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>list_uri</code></td>
+<td>list_uri</td>
 <td>str</td>
 <td>URI of the list of URIs</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>dataset_type</code></td>
+<td>dataset_type</td>
 <td>DatasetType</td>
 <td>dataset type, one of pointcloud, raster or geometry</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_files</code></td>
+<td>max_files</td>
 <td>Optional[int]</td>
 <td>maximum number of URIs returned, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -1735,17 +1954,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-5" class="level4">
-<h4 class="anchored" data-anchor-id="returns-5">Returns</h4>
+<section id="returns-5" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-5">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Sequence[str]</td>
 <td>list of URIs</td>
 </tr>
@@ -1755,16 +1976,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.register_dataset_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.register_dataset_udf">register_dataset_udf</h3>
-<p><code>cloud.geospatial.ingestion.register_dataset_udf(dataset_uri, *, register_name, namespace=None, acn=None, config=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.register_dataset_udf(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    register_name</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Register the dataset on TileDB Cloud.</p>
-<section id="parameters-12" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-12">Parameters</h4>
+<section id="parameters-12" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-12">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 23%">
+<col style="width: 10%">
+<col style="width: 24%">
 <col style="width: 57%">
-<col style="width: 7%">
+<col style="width: 8%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1776,37 +2005,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>register_name</code></td>
+<td>register_name</td>
 <td>str</td>
 <td>name to register the dataset with on TileDB Cloud</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB Cloud namespace, defaults to the user’s default namespace</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>acn</code></td>
+<td>acn</td>
 <td>Optional[str]</td>
 <td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, object]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -1817,16 +2046,20 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.geospatial.ingestion.remove_dataset_type_from_array_meta" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.geospatial.ingestion.remove_dataset_type_from_array_meta">remove_dataset_type_from_array_meta</h3>
-<p><code>cloud.geospatial.ingestion.remove_dataset_type_from_array_meta(dataset_uri, *, verbose=False)</code></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cloud.geospatial.ingestion.remove_dataset_type_from_array_meta(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Removes <code>dataset_type</code> meta if the ingested result is an array. FIXME: This exists to fix an internal UI issue until formally fixed. FIXME: Related ticket -&gt; sc-48098</p>
-<section id="parameters-13" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-13">Parameters</h4>
+<section id="parameters-13" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-13">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 21%">
+<col style="width: 18%">
 <col style="width: 11%">
-<col style="width: 50%">
-<col style="width: 16%">
+<col style="width: 52%">
+<col style="width: 17%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1838,13 +2071,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>

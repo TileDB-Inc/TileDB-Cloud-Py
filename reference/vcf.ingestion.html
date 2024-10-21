@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -430,7 +464,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.vcf.ingestion.Contigs" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.Contigs">Contigs</h3>
-<p><code>cloud.vcf.ingestion.Contigs()</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.Contigs()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The contigs to ingest.</p>
 <p>ALL = all contigs CHROMOSOMES = all human chromosomes OTHER = all contigs other than the human chromosomes ALL_DISABLE_MERGE = all contigs with merging disabled, for non-human datasets</p>
 </section>
@@ -517,14 +551,776 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.vcf.ingestion.consolidate_dataset_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.consolidate_dataset_udf">consolidate_dataset_udf</h3>
-<p><code>cloud.vcf.ingestion.consolidate_dataset_udf(dataset_uri, *, config=None, exclude=MANIFEST_ARRAY, include=None, id='consolidate', verbose=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.consolidate_dataset_udf(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    exclude<span class="op">=</span>MANIFEST_ARRAY</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    include<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'consolidate'</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Consolidate arrays in the dataset.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 33%">
+<col style="width: 42%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>exclude</td>
+<td>Optional[Union[Sequence[str], str]]</td>
+<td>group members to exclude, defaults to MANIFEST_ARRAY</td>
+<td><code>MANIFEST_ARRAY</code></td>
+</tr>
+<tr class="even">
+<td>include</td>
+<td>Optional[Union[Sequence[str], str]]</td>
+<td>group members to include, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>id</td>
+<td>str</td>
+<td>profiler event id, defaults to “consolidate”</td>
+<td><code>'consolidate'</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.create_dataset_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.create_dataset_udf">create_dataset_udf</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.create_dataset_udf(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    extra_attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    vcf_attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    anchor_gap<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    compression_level<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    annotation_dataset<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Create a TileDB-VCF dataset.</p>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 11%">
-<col style="width: 33%">
+<col style="width: 24%">
+<col style="width: 57%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>extra_attrs</td>
+<td>Optional[Union[Sequence[str], str]]</td>
+<td>INFO/FORMAT fields to materialize, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>vcf_attrs</td>
+<td>Optional[str]</td>
+<td>VCF with all INFO/FORMAT fields to materialize, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>anchor_gap</td>
+<td>Optional[int]</td>
+<td>anchor gap for VCF dataset, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>compression_level</td>
+<td>Optional[int]</td>
+<td>zstd compression level for the VCF dataset, defaults to None (uses the default level in TileDB-VCF)</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>annotation_dataset</td>
+<td>bool</td>
+<td>create an annotation dataset, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>str</td>
+<td>dataset URI</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.create_manifest" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.create_manifest">create_manifest</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.create_manifest(dataset_uri, group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Create a manifest array in the dataset.</p>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>group</td>
+<td>tiledb.Group</td>
+<td>dataset group</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.filter_samples_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.filter_samples_udf">filter_samples_udf</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.filter_samples_udf(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Return URIs for samples not already in the dataset.</p>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 34%">
+<col style="width: 38%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Sequence[str]</td>
+<td>sample URIs</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.filter_uris_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.filter_uris_udf">filter_uris_udf</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.filter_uris_udf(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    sample_uris</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Return URIs from <code>sample_uris</code> that are not in the manifest.</p>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 34%">
+<col style="width: 38%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>sample_uris</td>
+<td>Sequence[str]</td>
+<td>sample URIs</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Sequence[str]</td>
+<td>filtered sample URIs</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.find_uris_aws_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.find_uris_aws_udf">find_uris_aws_udf</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.find_uris_aws_udf(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    search_uri</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    include<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    exclude<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Find URIs matching a pattern in the <code>search_uri</code> path with an efficient implementation for S3.</p>
+<p><code>include</code> and <code>exclude</code> patterns are Unix shell style (see fnmatch module).</p>
+<section id="parameters-5" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 26%">
+<col style="width: 52%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>search_uri</td>
+<td>str</td>
+<td>URI to search for VCF files</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>include</td>
+<td>Optional[str]</td>
+<td>include pattern used in the search, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>exclude</td>
+<td>Optional[str]</td>
+<td>exclude pattern applied to the search results, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>max_files</td>
+<td>Optional[int]</td>
+<td>maximum number of URIs returned, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-3" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Sequence[str]</td>
+<td>list of URIs</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.find_uris_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.find_uris_udf">find_uris_udf</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.find_uris_udf(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    search_uri</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    include<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    exclude<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Find URIs matching a pattern in the <code>search_uri</code> path.</p>
+<p><code>include</code> and <code>exclude</code> patterns are Unix shell style (see fnmatch module).</p>
+<section id="parameters-6" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 26%">
+<col style="width: 52%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>search_uri</td>
+<td>str</td>
+<td>URI to search for VCF files</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>include</td>
+<td>Optional[str]</td>
+<td>include pattern used in the search, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>exclude</td>
+<td>Optional[str]</td>
+<td>exclude pattern applied to the search results, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>max_files</td>
+<td>Optional[int]</td>
+<td>maximum number of URIs returned, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-4" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-4">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Sequence[str]</td>
+<td>list of URIs</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.get_logger_wrapper" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.get_logger_wrapper">get_logger_wrapper</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.get_logger_wrapper(verbose<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Get a logger instance and log version information.</p>
+<section id="parameters-7" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-7">Parameters</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-5" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-5">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>logging.Logger</td>
+<td>logger instance</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.ingest_manifest_dag" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_manifest_dag">ingest_manifest_dag</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.ingest_manifest_dag(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    search_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    sample_list_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    metadata_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    metadata_attr<span class="op">=</span><span class="st">'uri'</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>MANIFEST_BATCH_SIZE</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    workers<span class="op">=</span>MANIFEST_WORKERS</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    extra_attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    vcf_attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    anchor_gap<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    compression_level<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    aws_find_mode<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    disable_manifest<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Create a DAG to load the manifest array.</p>
+<section id="parameters-8" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 23%">
+<col style="width: 54%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>acn</td>
+<td>Optional[str]</td>
+<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>namespace</td>
+<td>Optional[str]</td>
+<td>TileDB-Cloud namespace, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>search_uri</td>
+<td>Optional[str]</td>
+<td>URI to search for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>pattern</td>
+<td>Optional[str]</td>
+<td>pattern to match when searching for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>ignore</td>
+<td>Optional[str]</td>
+<td>pattern to ignore when searching for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>sample_list_uri</td>
+<td>Optional[str]</td>
+<td>URI with a list of VCF URIs, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>metadata_uri</td>
+<td>Optional[str]</td>
+<td>URI of metadata array holding VCF URIs, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>metadata_attr</td>
+<td>str</td>
+<td>name of metadata attribute containing URIs, defaults to “uri”</td>
+<td><code>'uri'</code></td>
+</tr>
+<tr class="odd">
+<td>max_files</td>
+<td>Optional[int]</td>
+<td>maximum number of URIs to ingest, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>batch_size</td>
+<td>int</td>
+<td>manifest batch size, defaults to MANIFEST_BATCH_SIZE</td>
+<td><code>MANIFEST_BATCH_SIZE</code></td>
+</tr>
+<tr class="odd">
+<td>workers</td>
+<td>int</td>
+<td>maximum number of parallel workers, defaults to MANIFEST_WORKERS</td>
+<td><code>MANIFEST_WORKERS</code></td>
+</tr>
+<tr class="even">
+<td>extra_attrs</td>
+<td>Optional[Union[Sequence[str], str]]</td>
+<td>INFO/FORMAT fields to materialize, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>vcf_attrs</td>
+<td>Optional[str]</td>
+<td>VCF with all INFO/FORMAT fields to materialize, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>anchor_gap</td>
+<td>Optional[int]</td>
+<td>anchor gap for VCF dataset, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>compression_level</td>
+<td>Optional[int]</td>
+<td>zstd compression level for the VCF dataset, defaults to None (uses the default level in TileDB-VCF)</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td>aws_find_mode</td>
+<td>bool</td>
+<td>use AWS CLI to find VCFs, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>disable_manifest</td>
+<td>bool</td>
+<td>disable manifest creation, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.ingest_manifest_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_manifest_udf">ingest_manifest_udf</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.ingest_manifest_udf(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    sample_uris</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'manifest'</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ingest sample URIs into the manifest array.</p>
+<section id="parameters-9" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-9">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 32%">
 <col style="width: 41%">
 <col style="width: 13%">
 </colgroup>
@@ -538,705 +1334,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>exclude</code></td>
-<td>Optional[Union[Sequence[str], str]]</td>
-<td>group members to exclude, defaults to MANIFEST_ARRAY</td>
-<td><code>MANIFEST_ARRAY</code></td>
-</tr>
-<tr class="even">
-<td><code>include</code></td>
-<td>Optional[Union[Sequence[str], str]]</td>
-<td>group members to include, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>id</code></td>
-<td>str</td>
-<td>profiler event id, defaults to “consolidate”</td>
-<td><code>'consolidate'</code></td>
-</tr>
-<tr class="even">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.create_dataset_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.create_dataset_udf">create_dataset_udf</h3>
-<p><code>cloud.vcf.ingestion.create_dataset_udf(dataset_uri, *, config=None, extra_attrs=None, vcf_attrs=None, anchor_gap=None, compression_level=None, annotation_dataset=False, verbose=False)</code></p>
-<p>Create a TileDB-VCF dataset.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 24%">
-<col style="width: 56%">
-<col style="width: 6%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>extra_attrs</code></td>
-<td>Optional[Union[Sequence[str], str]]</td>
-<td>INFO/FORMAT fields to materialize, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>vcf_attrs</code></td>
-<td>Optional[str]</td>
-<td>VCF with all INFO/FORMAT fields to materialize, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>anchor_gap</code></td>
-<td>Optional[int]</td>
-<td>anchor gap for VCF dataset, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>compression_level</code></td>
-<td>Optional[int]</td>
-<td>zstd compression level for the VCF dataset, defaults to None (uses the default level in TileDB-VCF)</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>annotation_dataset</code></td>
-<td>bool</td>
-<td>create an annotation dataset, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>str</td>
-<td>dataset URI</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.create_manifest" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.create_manifest">create_manifest</h3>
-<p><code>cloud.vcf.ingestion.create_manifest(dataset_uri, group)</code></p>
-<p>Create a manifest array in the dataset.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>group</code></td>
-<td>tiledb.Group</td>
-<td>dataset group</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.filter_samples_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.filter_samples_udf">filter_samples_udf</h3>
-<p><code>cloud.vcf.ingestion.filter_samples_udf(dataset_uri, *, config=None, verbose=False)</code></p>
-<p>Return URIs for samples not already in the dataset.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 34%">
-<col style="width: 38%">
-<col style="width: 12%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Sequence[str]</td>
-<td>sample URIs</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.filter_uris_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.filter_uris_udf">filter_uris_udf</h3>
-<p><code>cloud.vcf.ingestion.filter_uris_udf(dataset_uri, sample_uris, *, config=None, verbose=False)</code></p>
-<p>Return URIs from <code>sample_uris</code> that are not in the manifest.</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 15%">
-<col style="width: 34%">
-<col style="width: 38%">
-<col style="width: 12%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>sample_uris</code></td>
+<td>sample_uris</td>
 <td>Sequence[str]</td>
 <td>sample URIs</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Sequence[str]</td>
-<td>filtered sample URIs</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.find_uris_aws_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.find_uris_aws_udf">find_uris_aws_udf</h3>
-<p><code>cloud.vcf.ingestion.find_uris_aws_udf(dataset_uri, search_uri, *, config=None, include=None, exclude=None, max_files=None, verbose=False)</code></p>
-<p>Find URIs matching a pattern in the <code>search_uri</code> path with an efficient implementation for S3.</p>
-<p><code>include</code> and <code>exclude</code> patterns are Unix shell style (see fnmatch module).</p>
-<section id="parameters-5" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 26%">
-<col style="width: 52%">
-<col style="width: 9%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>search_uri</code></td>
-<td>str</td>
-<td>URI to search for VCF files</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>include</code></td>
-<td>Optional[str]</td>
-<td>include pattern used in the search, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>exclude</code></td>
-<td>Optional[str]</td>
-<td>exclude pattern applied to the search results, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>max_files</code></td>
-<td>Optional[int]</td>
-<td>maximum number of URIs returned, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Sequence[str]</td>
-<td>list of URIs</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.find_uris_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.find_uris_udf">find_uris_udf</h3>
-<p><code>cloud.vcf.ingestion.find_uris_udf(dataset_uri, search_uri, *, config=None, include=None, exclude=None, max_files=None, verbose=False)</code></p>
-<p>Find URIs matching a pattern in the <code>search_uri</code> path.</p>
-<p><code>include</code> and <code>exclude</code> patterns are Unix shell style (see fnmatch module).</p>
-<section id="parameters-6" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 26%">
-<col style="width: 52%">
-<col style="width: 9%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>search_uri</code></td>
-<td>str</td>
-<td>URI to search for VCF files</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>include</code></td>
-<td>Optional[str]</td>
-<td>include pattern used in the search, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>exclude</code></td>
-<td>Optional[str]</td>
-<td>exclude pattern applied to the search results, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>max_files</code></td>
-<td>Optional[int]</td>
-<td>maximum number of URIs returned, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-4" class="level4">
-<h4 class="anchored" data-anchor-id="returns-4">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Sequence[str]</td>
-<td>list of URIs</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.get_logger_wrapper" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.get_logger_wrapper">get_logger_wrapper</h3>
-<p><code>cloud.vcf.ingestion.get_logger_wrapper(verbose=False)</code></p>
-<p>Get a logger instance and log version information.</p>
-<section id="parameters-7" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-5" class="level4">
-<h4 class="anchored" data-anchor-id="returns-5">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>logging.Logger</td>
-<td>logger instance</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.ingest_manifest_dag" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_manifest_dag">ingest_manifest_dag</h3>
-<p><code>cloud.vcf.ingestion.ingest_manifest_dag(dataset_uri, *, acn=None, config=None, namespace=None, search_uri=None, pattern=None, ignore=None, sample_list_uri=None, metadata_uri=None, metadata_attr='uri', max_files=None, batch_size=MANIFEST_BATCH_SIZE, workers=MANIFEST_WORKERS, extra_attrs=None, vcf_attrs=None, anchor_gap=None, compression_level=None, verbose=False, aws_find_mode=False, disable_manifest=False)</code></p>
-<p>Create a DAG to load the manifest array.</p>
-<section id="parameters-8" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 11%">
-<col style="width: 22%">
-<col style="width: 53%">
-<col style="width: 12%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>acn</code></td>
-<td>Optional[str]</td>
-<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>namespace</code></td>
-<td>Optional[str]</td>
-<td>TileDB-Cloud namespace, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>search_uri</code></td>
-<td>Optional[str]</td>
-<td>URI to search for VCF files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>pattern</code></td>
-<td>Optional[str]</td>
-<td>pattern to match when searching for VCF files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>ignore</code></td>
-<td>Optional[str]</td>
-<td>pattern to ignore when searching for VCF files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>sample_list_uri</code></td>
-<td>Optional[str]</td>
-<td>URI with a list of VCF URIs, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>metadata_uri</code></td>
-<td>Optional[str]</td>
-<td>URI of metadata array holding VCF URIs, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>metadata_attr</code></td>
-<td>str</td>
-<td>name of metadata attribute containing URIs, defaults to “uri”</td>
-<td><code>'uri'</code></td>
-</tr>
-<tr class="odd">
-<td><code>max_files</code></td>
-<td>Optional[int]</td>
-<td>maximum number of URIs to ingest, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>batch_size</code></td>
-<td>int</td>
-<td>manifest batch size, defaults to MANIFEST_BATCH_SIZE</td>
-<td><code>MANIFEST_BATCH_SIZE</code></td>
-</tr>
-<tr class="odd">
-<td><code>workers</code></td>
-<td>int</td>
-<td>maximum number of parallel workers, defaults to MANIFEST_WORKERS</td>
-<td><code>MANIFEST_WORKERS</code></td>
-</tr>
-<tr class="even">
-<td><code>extra_attrs</code></td>
-<td>Optional[Union[Sequence[str], str]]</td>
-<td>INFO/FORMAT fields to materialize, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>vcf_attrs</code></td>
-<td>Optional[str]</td>
-<td>VCF with all INFO/FORMAT fields to materialize, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>anchor_gap</code></td>
-<td>Optional[int]</td>
-<td>anchor gap for VCF dataset, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>compression_level</code></td>
-<td>Optional[int]</td>
-<td>zstd compression level for the VCF dataset, defaults to None (uses the default level in TileDB-VCF)</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="odd">
-<td><code>aws_find_mode</code></td>
-<td>bool</td>
-<td>use AWS CLI to find VCFs, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>disable_manifest</code></td>
-<td>bool</td>
-<td>disable manifest creation, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.ingest_manifest_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_manifest_udf">ingest_manifest_udf</h3>
-<p><code>cloud.vcf.ingestion.ingest_manifest_udf(dataset_uri, sample_uris, *, config=None, id='manifest', verbose=False)</code></p>
-<p>Ingest sample URIs into the manifest array.</p>
-<section id="parameters-9" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-9">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 14%">
-<col style="width: 31%">
-<col style="width: 40%">
-<col style="width: 13%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>sample_uris</code></td>
-<td>Sequence[str]</td>
-<td>sample URIs</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>id</code></td>
+<td>id</td>
 <td>str</td>
 <td>profiler event id, defaults to “manifest”</td>
 <td><code>'manifest'</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -1247,16 +1369,35 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.ingestion.ingest_samples_dag" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_samples_dag">ingest_samples_dag</h3>
-<p><code>cloud.vcf.ingestion.ingest_samples_dag(dataset_uri, *, acn=None, config=None, namespace=None, contigs=Contigs.ALL, threads=VCF_THREADS, batch_size=VCF_BATCH_SIZE, workers=VCF_WORKERS, max_samples=None, resume=True, ingest_resources=None, verbose=False, create_index=True, trace_id=None, consolidate_stats=False, use_remote_tmp=False, sample_list_uri=None)</code></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.ingest_samples_dag(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    contigs<span class="op">=</span>Contigs.ALL</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    threads<span class="op">=</span>VCF_THREADS</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>VCF_BATCH_SIZE</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    workers<span class="op">=</span>VCF_WORKERS</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    max_samples<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    resume<span class="op">=</span><span class="va">True</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    consolidate_stats<span class="op">=</span><span class="va">False</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    use_remote_tmp<span class="op">=</span><span class="va">False</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    sample_list_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create a DAG to ingest samples into the dataset.</p>
 <p>Note: If <code>sample_list_uri</code> is provided, the manifest is not checked for existing samples.</p>
-<section id="parameters-10" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-10">Parameters</h4>
+<section id="parameters-10" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-10">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 8%">
-<col style="width: 19%">
-<col style="width: 63%">
+<col style="width: 20%">
+<col style="width: 64%">
 <col style="width: 7%">
 </colgroup>
 <thead>
@@ -1269,103 +1410,103 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>acn</code></td>
+<td>acn</td>
 <td>Optional[str]</td>
 <td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud namespace, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>contigs</code></td>
+<td>contigs</td>
 <td>Optional[Union[Sequence[str], Contigs]]</td>
 <td>contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE) or list of contigs to ingest, defaults to Contigs.ALL</td>
 <td><code>Contigs.ALL</code></td>
 </tr>
 <tr class="even">
-<td><code>threads</code></td>
+<td>threads</td>
 <td>int</td>
 <td>number of threads to use per ingestion task, defaults to VCF_THREADS</td>
 <td><code>VCF_THREADS</code></td>
 </tr>
 <tr class="odd">
-<td><code>batch_size</code></td>
+<td>batch_size</td>
 <td>int</td>
 <td>sample batch size, defaults to VCF_BATCH_SIZE</td>
 <td><code>VCF_BATCH_SIZE</code></td>
 </tr>
 <tr class="even">
-<td><code>workers</code></td>
+<td>workers</td>
 <td>int</td>
 <td>maximum number of parallel workers, defaults to VCF_WORKERS</td>
 <td><code>VCF_WORKERS</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_samples</code></td>
+<td>max_samples</td>
 <td>Optional[int]</td>
 <td>maximum number of samples to ingest, defaults to None (no limit)</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>resume</code></td>
+<td>resume</td>
 <td>bool</td>
 <td>enable resume ingestion mode, defaults to True</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td><code>ingest_resources</code></td>
+<td>ingest_resources</td>
 <td>Optional[Mapping[str, str]]</td>
 <td>manual override for ingest UDF resources, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>create_index</code></td>
+<td>create_index</td>
 <td>bool</td>
 <td>force creation of a local index file, defaults to True</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>trace_id</code></td>
+<td>trace_id</td>
 <td>Optional[str]</td>
 <td>trace ID for logging, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>consolidate_stats</code></td>
+<td>consolidate_stats</td>
 <td>bool</td>
 <td>consolidate the stats arrays, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>use_remote_tmp</code></td>
+<td>use_remote_tmp</td>
 <td>bool</td>
 <td>use remote tmp space if VCFs need to be bgzipped, defaults to False (preferred for small VCFs)</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>sample_list_uri</code></td>
+<td>sample_list_uri</td>
 <td>Optional[str]</td>
 <td>URI with a list of VCF URIs, defaults to None</td>
 <td><code>None</code></td>
@@ -1376,348 +1517,31 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.ingestion.ingest_samples_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_samples_udf">ingest_samples_udf</h3>
-<p><code>cloud.vcf.ingestion.ingest_samples_udf(dataset_uri, sample_uris, *, config=None, threads, memory_mb, sample_batch_size, contig_mode='all', contigs_to_keep_separate=None, contig_fragment_merging=True, resume=True, create_index=True, id='samples', verbose=False, trace_id=None, use_remote_tmp=False)</code></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.ingest_samples_udf(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    sample_uris</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    threads</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    memory_mb</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    sample_batch_size</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    contig_mode<span class="op">=</span><span class="st">'all'</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    contigs_to_keep_separate<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    contig_fragment_merging<span class="op">=</span><span class="va">True</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    resume<span class="op">=</span><span class="va">True</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span><span class="op">=</span><span class="st">'samples'</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    use_remote_tmp<span class="op">=</span><span class="va">False</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Ingest samples into the dataset.</p>
-<section id="parameters-11" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-11">Parameters</h4>
+<section id="parameters-11" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-11">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 16%">
+<col style="width: 15%">
 <col style="width: 19%">
-<col style="width: 56%">
-<col style="width: 7%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>sample_uris</code></td>
-<td>Sequence[str]</td>
-<td>sample URIs</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>threads</code></td>
-<td>int</td>
-<td>number of threads to use for ingestion</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>memory_mb</code></td>
-<td>int</td>
-<td>memory to use for ingestion in MiB</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>sample_batch_size</code></td>
-<td>int</td>
-<td>sample batch size to use for ingestion</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>contig_mode</code></td>
-<td>str</td>
-<td>ingestion mode, defaults to “all”</td>
-<td><code>'all'</code></td>
-</tr>
-<tr class="even">
-<td><code>contigs_to_keep_separate</code></td>
-<td>Optional[Sequence[str]]</td>
-<td>list of contigs to keep separate, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>contig_fragment_merging</code></td>
-<td>bool</td>
-<td>enable contig fragment merging, defaults to True</td>
-<td><code>True</code></td>
-</tr>
-<tr class="even">
-<td><code>resume</code></td>
-<td>bool</td>
-<td>enable resume ingestion mode, defaults to True</td>
-<td><code>True</code></td>
-</tr>
-<tr class="odd">
-<td><code>create_index</code></td>
-<td>bool</td>
-<td>force creation of a local index file, defaults to True</td>
-<td><code>True</code></td>
-</tr>
-<tr class="even">
-<td><code>id</code></td>
-<td>str</td>
-<td>profiler event id, defaults to “samples”</td>
-<td><code>'samples'</code></td>
-</tr>
-<tr class="odd">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>trace_id</code></td>
-<td>Optional[str]</td>
-<td>trace ID for logging, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>use_remote_tmp</code></td>
-<td>bool</td>
-<td>use remote tmp space if VCFs need to be bgzipped, defaults to False (preferred for small VCFs)</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.ingest_vcf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_vcf">ingest_vcf</h3>
-<p><code>cloud.vcf.ingestion.ingest_vcf(dataset_uri, *, acn=None, config=None, namespace=None, register_name=None, search_uri=None, pattern=None, ignore=None, sample_list_uri=None, metadata_uri=None, metadata_attr='uri', max_files=None, max_samples=None, contigs=Contigs.ALL, resume=True, extra_attrs=DEFAULT_ATTRIBUTES, vcf_attrs=None, anchor_gap=None, compression_level=None, manifest_batch_size=MANIFEST_BATCH_SIZE, manifest_workers=MANIFEST_WORKERS, vcf_batch_size=VCF_BATCH_SIZE, vcf_workers=VCF_WORKERS, vcf_threads=VCF_THREADS, ingest_resources=None, verbose=False, create_index=True, trace_id=None, consolidate_stats=True, aws_find_mode=False, use_remote_tmp=False, disable_manifest=False)</code></p>
-<p>Ingest samples into a dataset.</p>
-<section id="parameters-12" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-12">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 19%">
-<col style="width: 61%">
-<col style="width: 9%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>dataset_uri</code></td>
-<td>str</td>
-<td>dataset URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>acn</code></td>
-<td>Optional[str]</td>
-<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>config</code></td>
-<td></td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>namespace</code></td>
-<td>Optional[str]</td>
-<td>TileDB-Cloud namespace, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>register_name</code></td>
-<td>Optional[str]</td>
-<td>name to register the dataset with on TileDB Cloud, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>search_uri</code></td>
-<td>Optional[str]</td>
-<td>URI to search for VCF files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>pattern</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to match when searching for VCF files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>ignore</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to ignore when searching for VCF files, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>sample_list_uri</code></td>
-<td>Optional[str]</td>
-<td>URI with a list of VCF URIs, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>metadata_uri</code></td>
-<td>Optional[str]</td>
-<td>URI of metadata array holding VCF URIs, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>metadata_attr</code></td>
-<td>str</td>
-<td>name of metadata attribute containing URIs, defaults to “uri”</td>
-<td><code>'uri'</code></td>
-</tr>
-<tr class="even">
-<td><code>max_files</code></td>
-<td>Optional[int]</td>
-<td>maximum number of VCF URIs to read/find, defaults to None (no limit)</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>max_samples</code></td>
-<td>Optional[int]</td>
-<td>maximum number of samples to ingest, defaults to None (no limit)</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>contigs</code></td>
-<td>Optional[Union[Sequence[str], Contigs]]</td>
-<td>contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE) or list of contigs to ingest, defaults to Contigs.ALL</td>
-<td><code>Contigs.ALL</code></td>
-</tr>
-<tr class="odd">
-<td><code>resume</code></td>
-<td>bool</td>
-<td>enable resume ingestion mode, defaults to True</td>
-<td><code>True</code></td>
-</tr>
-<tr class="even">
-<td><code>extra_attrs</code></td>
-<td>Optional[Union[Sequence[str], str]]</td>
-<td>INFO/FORMAT fields to materialize, defaults to <code>repr(DEFAULT_ATTRIBUTES)</code></td>
-<td><code>DEFAULT_ATTRIBUTES</code></td>
-</tr>
-<tr class="odd">
-<td><code>vcf_attrs</code></td>
-<td>Optional[str]</td>
-<td>VCF with all INFO/FORMAT fields to materialize, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>anchor_gap</code></td>
-<td>Optional[int]</td>
-<td>anchor gap for VCF dataset, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>compression_level</code></td>
-<td>Optional[int]</td>
-<td>zstd compression level for the VCF dataset, defaults to None (uses the default level in TileDB-VCF)</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>manifest_batch_size</code></td>
-<td>int</td>
-<td>batch size for manifest ingestion, defaults to MANIFEST_BATCH_SIZE</td>
-<td><code>MANIFEST_BATCH_SIZE</code></td>
-</tr>
-<tr class="odd">
-<td><code>manifest_workers</code></td>
-<td>int</td>
-<td>number of workers for manifest ingestion, defaults to MANIFEST_WORKERS</td>
-<td><code>MANIFEST_WORKERS</code></td>
-</tr>
-<tr class="even">
-<td><code>vcf_batch_size</code></td>
-<td>int</td>
-<td>batch size for VCF ingestion, defaults to VCF_BATCH_SIZE</td>
-<td><code>VCF_BATCH_SIZE</code></td>
-</tr>
-<tr class="odd">
-<td><code>vcf_workers</code></td>
-<td>int</td>
-<td>number of workers for VCF ingestion, defaults to VCF_WORKERS</td>
-<td><code>VCF_WORKERS</code></td>
-</tr>
-<tr class="even">
-<td><code>vcf_threads</code></td>
-<td>int</td>
-<td>number of threads for VCF ingestion, defaults to VCF_THREADS</td>
-<td><code>VCF_THREADS</code></td>
-</tr>
-<tr class="odd">
-<td><code>ingest_resources</code></td>
-<td>Optional[Mapping[str, str]]</td>
-<td>manual override for ingest UDF resources, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>verbose</code></td>
-<td>bool</td>
-<td>verbose logging, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="odd">
-<td><code>create_index</code></td>
-<td>bool</td>
-<td>force creation of a local index file, defaults to True</td>
-<td><code>True</code></td>
-</tr>
-<tr class="even">
-<td><code>trace_id</code></td>
-<td>Optional[str]</td>
-<td>trace ID for logging, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>consolidate_stats</code></td>
-<td>bool</td>
-<td>consolidate the stats arrays, defaults to True</td>
-<td><code>True</code></td>
-</tr>
-<tr class="even">
-<td><code>aws_find_mode</code></td>
-<td>bool</td>
-<td>use AWS CLI to find VCFs, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-<tr class="odd">
-<td><code>use_remote_tmp</code></td>
-<td>bool</td>
-<td>use remote tmp space if VCFs need to be sorted and bgzipped, defaults to False (preferred for small VCFs)</td>
-<td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>disable_manifest</code></td>
-<td>bool</td>
-<td>disable manifest creation, defaults to False</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.ingest_vcf_annotations" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_vcf_annotations">ingest_vcf_annotations</h3>
-<p><code>cloud.vcf.ingestion.ingest_vcf_annotations(dataset_uri, *, vcf_uri=None, search_uri=None, pattern=None, ignore=None, create_index=True, config=None, acn=None, namespace=None, register_name=None, ingest_resources=None, verbose=False)</code></p>
-<p>Ingest annotation VCF into a dataset. For example, a ClinVar or gnomAD VCF.</p>
-<section id="parameters-13" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-13">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
-<col style="width: 21%">
 <col style="width: 57%">
 <col style="width: 7%">
 </colgroup>
@@ -1731,92 +1555,144 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>vcf_uri</code></td>
-<td>Optional[str]</td>
-<td>VCF URI, defaults to None</td>
+<td>sample_uris</td>
+<td>Sequence[str]</td>
+<td>sample URIs</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>threads</td>
+<td>int</td>
+<td>number of threads to use for ingestion</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>memory_mb</td>
+<td>int</td>
+<td>memory to use for ingestion in MiB</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>sample_batch_size</td>
+<td>int</td>
+<td>sample batch size to use for ingestion</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>search_uri</code></td>
-<td>Optional[str]</td>
-<td>URI to search for VCF files, defaults to None</td>
-<td><code>None</code></td>
+<td>contig_mode</td>
+<td>str</td>
+<td>ingestion mode, defaults to “all”</td>
+<td><code>'all'</code></td>
 </tr>
 <tr class="even">
-<td><code>pattern</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to match when searching for VCF files, defaults to None</td>
+<td>contigs_to_keep_separate</td>
+<td>Optional[Sequence[str]]</td>
+<td>list of contigs to keep separate, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>ignore</code></td>
-<td>Optional[str]</td>
-<td>Unix shell style pattern to ignore when searching for VCF files, defaults to None</td>
-<td><code>None</code></td>
+<td>contig_fragment_merging</td>
+<td>bool</td>
+<td>enable contig fragment merging, defaults to True</td>
+<td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>create_index</code></td>
+<td>resume</td>
+<td>bool</td>
+<td>enable resume ingestion mode, defaults to True</td>
+<td><code>True</code></td>
+</tr>
+<tr class="odd">
+<td>create_index</td>
 <td>bool</td>
 <td>force creation of a local index file, defaults to True</td>
 <td><code>True</code></td>
 </tr>
-<tr class="odd">
-<td><code>config</code></td>
-<td></td>
-<td>config dictionary, defaults to None</td>
-<td><code>None</code></td>
-</tr>
 <tr class="even">
-<td><code>acn</code></td>
-<td>Optional[str]</td>
-<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
-<td><code>None</code></td>
+<td>id</td>
+<td>str</td>
+<td>profiler event id, defaults to “samples”</td>
+<td><code>'samples'</code></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
-<td>Optional[str]</td>
-<td>TileDB-Cloud namespace, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>register_name</code></td>
-<td>Optional[str]</td>
-<td>name to register the dataset with on TileDB Cloud, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
-<td><code>ingest_resources</code></td>
-<td>Optional[Mapping[str, str]]</td>
-<td>manual override for ingest UDF resources, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>trace_id</td>
+<td>Optional[str]</td>
+<td>trace ID for logging, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>use_remote_tmp</td>
+<td>bool</td>
+<td>use remote tmp space if VCFs need to be bgzipped, defaults to False (preferred for small VCFs)</td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 </section>
 </section>
-<section id="tiledb.cloud.vcf.ingestion.read_metadata_uris_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.read_metadata_uris_udf">read_metadata_uris_udf</h3>
-<p><code>cloud.vcf.ingestion.read_metadata_uris_udf(dataset_uri, *, config=None, metadata_uri, metadata_attr='uri', max_files=None, verbose=False)</code></p>
-<p>Read a list of URIs from a TileDB array. The URIs will be read from the attribute specified in the <code>metadata_attr</code> argument.</p>
-<section id="parameters-14" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-14">Parameters</h4>
+<section id="tiledb.cloud.vcf.ingestion.ingest_vcf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_vcf">ingest_vcf</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.ingest_vcf(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    register_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    search_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    sample_list_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    metadata_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    metadata_attr<span class="op">=</span><span class="st">'uri'</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    max_samples<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    contigs<span class="op">=</span>Contigs.ALL</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    resume<span class="op">=</span><span class="va">True</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    extra_attrs<span class="op">=</span>DEFAULT_ATTRIBUTES</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    vcf_attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    anchor_gap<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    compression_level<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    manifest_batch_size<span class="op">=</span>MANIFEST_BATCH_SIZE</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    manifest_workers<span class="op">=</span>MANIFEST_WORKERS</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    vcf_batch_size<span class="op">=</span>VCF_BATCH_SIZE</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    vcf_workers<span class="op">=</span>VCF_WORKERS</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    vcf_threads<span class="op">=</span>VCF_THREADS</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    consolidate_stats<span class="op">=</span><span class="va">True</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    aws_find_mode<span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    use_remote_tmp<span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    disable_manifest<span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ingest samples into a dataset.</p>
+<section id="parameters-12" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-12">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 26%">
-<col style="width: 50%">
+<col style="width: 8%">
+<col style="width: 19%">
+<col style="width: 62%">
 <col style="width: 9%">
 </colgroup>
 <thead>
@@ -1829,74 +1705,227 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
-<td>TileDB config, defaults to None</td>
+<td>acn</td>
+<td>Optional[str]</td>
+<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>metadata_uri</code></td>
-<td>str</td>
-<td>metadata array URI</td>
-<td><em>required</em></td>
+<td>config</td>
+<td></td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>metadata_attr</code></td>
+<td>namespace</td>
+<td>Optional[str]</td>
+<td>TileDB-Cloud namespace, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>register_name</td>
+<td>Optional[str]</td>
+<td>name to register the dataset with on TileDB Cloud, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>search_uri</td>
+<td>Optional[str]</td>
+<td>URI to search for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>pattern</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to match when searching for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>ignore</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to ignore when searching for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>sample_list_uri</td>
+<td>Optional[str]</td>
+<td>URI with a list of VCF URIs, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>metadata_uri</td>
+<td>Optional[str]</td>
+<td>URI of metadata array holding VCF URIs, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>metadata_attr</td>
 <td>str</td>
 <td>name of metadata attribute containing URIs, defaults to “uri”</td>
 <td><code>'uri'</code></td>
 </tr>
-<tr class="odd">
-<td><code>max_files</code></td>
+<tr class="even">
+<td>max_files</td>
 <td>Optional[int]</td>
-<td>maximum number of URIs returned, defaults to None</td>
+<td>maximum number of VCF URIs to read/find, defaults to None (no limit)</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>max_samples</td>
+<td>Optional[int]</td>
+<td>maximum number of samples to ingest, defaults to None (no limit)</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>contigs</td>
+<td>Optional[Union[Sequence[str], Contigs]]</td>
+<td>contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE) or list of contigs to ingest, defaults to Contigs.ALL</td>
+<td><code>Contigs.ALL</code></td>
+</tr>
+<tr class="odd">
+<td>resume</td>
+<td>bool</td>
+<td>enable resume ingestion mode, defaults to True</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>extra_attrs</td>
+<td>Optional[Union[Sequence[str], str]]</td>
+<td>INFO/FORMAT fields to materialize, defaults to <code>repr(DEFAULT_ATTRIBUTES)</code></td>
+<td><code>DEFAULT_ATTRIBUTES</code></td>
+</tr>
+<tr class="odd">
+<td>vcf_attrs</td>
+<td>Optional[str]</td>
+<td>VCF with all INFO/FORMAT fields to materialize, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>anchor_gap</td>
+<td>Optional[int]</td>
+<td>anchor gap for VCF dataset, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>compression_level</td>
+<td>Optional[int]</td>
+<td>zstd compression level for the VCF dataset, defaults to None (uses the default level in TileDB-VCF)</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>manifest_batch_size</td>
+<td>int</td>
+<td>batch size for manifest ingestion, defaults to MANIFEST_BATCH_SIZE</td>
+<td><code>MANIFEST_BATCH_SIZE</code></td>
+</tr>
+<tr class="odd">
+<td>manifest_workers</td>
+<td>int</td>
+<td>number of workers for manifest ingestion, defaults to MANIFEST_WORKERS</td>
+<td><code>MANIFEST_WORKERS</code></td>
+</tr>
+<tr class="even">
+<td>vcf_batch_size</td>
+<td>int</td>
+<td>batch size for VCF ingestion, defaults to VCF_BATCH_SIZE</td>
+<td><code>VCF_BATCH_SIZE</code></td>
+</tr>
+<tr class="odd">
+<td>vcf_workers</td>
+<td>int</td>
+<td>number of workers for VCF ingestion, defaults to VCF_WORKERS</td>
+<td><code>VCF_WORKERS</code></td>
+</tr>
+<tr class="even">
+<td>vcf_threads</td>
+<td>int</td>
+<td>number of threads for VCF ingestion, defaults to VCF_THREADS</td>
+<td><code>VCF_THREADS</code></td>
+</tr>
+<tr class="odd">
+<td>ingest_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for ingest UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td>create_index</td>
+<td>bool</td>
+<td>force creation of a local index file, defaults to True</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>trace_id</td>
+<td>Optional[str]</td>
+<td>trace ID for logging, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>consolidate_stats</td>
+<td>bool</td>
+<td>consolidate the stats arrays, defaults to True</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>aws_find_mode</td>
+<td>bool</td>
+<td>use AWS CLI to find VCFs, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td>use_remote_tmp</td>
+<td>bool</td>
+<td>use remote tmp space if VCFs need to be sorted and bgzipped, defaults to False (preferred for small VCFs)</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>disable_manifest</td>
+<td>bool</td>
+<td>disable manifest creation, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="returns-6" class="level4">
-<h4 class="anchored" data-anchor-id="returns-6">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Sequence[str]</td>
-<td>list of URIs</td>
-</tr>
-</tbody>
-</table>
 </section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.read_uris_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.read_uris_udf">read_uris_udf</h3>
-<p><code>cloud.vcf.ingestion.read_uris_udf(dataset_uri, list_uri, *, config=None, max_files=None, verbose=False)</code></p>
-<p>Read a list of URIs from a URI.</p>
-<section id="parameters-15" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-15">Parameters</h4>
+<section id="tiledb.cloud.vcf.ingestion.ingest_vcf_annotations" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.ingest_vcf_annotations">ingest_vcf_annotations</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.ingest_vcf_annotations(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    vcf_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    search_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    register_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ingest annotation VCF into a dataset. For example, a ClinVar or gnomAD VCF.</p>
+<section id="parameters-13" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-13">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 29%">
-<col style="width: 45%">
-<col style="width: 10%">
+<col style="width: 12%">
+<col style="width: 22%">
+<col style="width: 57%">
+<col style="width: 8%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1908,31 +1937,73 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>list_uri</code></td>
-<td>str</td>
-<td>URI of the list of URIs</td>
-<td><em>required</em></td>
+<td>vcf_uri</td>
+<td>Optional[str]</td>
+<td>VCF URI, defaults to None</td>
+<td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
-<td>Optional[Mapping[str, Any]]</td>
+<td>search_uri</td>
+<td>Optional[str]</td>
+<td>URI to search for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>pattern</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to match when searching for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>ignore</td>
+<td>Optional[str]</td>
+<td>Unix shell style pattern to ignore when searching for VCF files, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>create_index</td>
+<td>bool</td>
+<td>force creation of a local index file, defaults to True</td>
+<td><code>True</code></td>
+</tr>
+<tr class="odd">
+<td>config</td>
+<td></td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>max_files</code></td>
-<td>Optional[int]</td>
-<td>maximum number of URIs returned, defaults to None</td>
+<td>acn</td>
+<td>Optional[str]</td>
+<td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>namespace</td>
+<td>Optional[str]</td>
+<td>TileDB-Cloud namespace, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>register_name</td>
+<td>Optional[str]</td>
+<td>name to register the dataset with on TileDB Cloud, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>ingest_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for ingest UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -1940,34 +2011,25 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-7" class="level4">
-<h4 class="anchored" data-anchor-id="returns-7">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Sequence[str]</td>
-<td>list of URIs</td>
-</tr>
-</tbody>
-</table>
 </section>
-</section>
-<section id="tiledb.cloud.vcf.ingestion.register_dataset_udf" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.register_dataset_udf">register_dataset_udf</h3>
-<p><code>cloud.vcf.ingestion.register_dataset_udf(dataset_uri, *, register_name, acn, namespace=None, config=None, verbose=False)</code></p>
-<p>Register the dataset on TileDB Cloud.</p>
-<section id="parameters-16" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-16">Parameters</h4>
+<section id="tiledb.cloud.vcf.ingestion.read_metadata_uris_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.read_metadata_uris_udf">read_metadata_uris_udf</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.read_metadata_uris_udf(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    metadata_uri</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    metadata_attr<span class="op">=</span><span class="st">'uri'</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Read a list of URIs from a TileDB array. The URIs will be read from the attribute specified in the <code>metadata_attr</code> argument.</p>
+<section id="parameters-14" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-14">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 25%">
+<col style="width: 12%">
+<col style="width: 26%">
 <col style="width: 51%">
 <col style="width: 9%">
 </colgroup>
@@ -1981,31 +2043,202 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>register_name</code></td>
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>TileDB config, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>metadata_uri</td>
+<td>str</td>
+<td>metadata array URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>metadata_attr</td>
+<td>str</td>
+<td>name of metadata attribute containing URIs, defaults to “uri”</td>
+<td><code>'uri'</code></td>
+</tr>
+<tr class="odd">
+<td>max_files</td>
+<td>Optional[int]</td>
+<td>maximum number of URIs returned, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-6" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-6">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Sequence[str]</td>
+<td>list of URIs</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.read_uris_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.read_uris_udf">read_uris_udf</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.read_uris_udf(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    list_uri</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Read a list of URIs from a URI.</p>
+<section id="parameters-15" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-15">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 30%">
+<col style="width: 46%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>list_uri</td>
+<td>str</td>
+<td>URI of the list of URIs</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>config</td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>max_files</td>
+<td>Optional[int]</td>
+<td>maximum number of URIs returned, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>verbose</td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-7" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-7">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Sequence[str]</td>
+<td>list of URIs</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.vcf.ingestion.register_dataset_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.register_dataset_udf">register_dataset_udf</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.ingestion.register_dataset_udf(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    register_name</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    acn</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Register the dataset on TileDB Cloud.</p>
+<section id="parameters-16" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-16">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 26%">
+<col style="width: 52%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_uri</td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>register_name</td>
 <td>str</td>
 <td>name to register the dataset with on TileDB Cloud</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB Cloud namespace, defaults to the user’s default namespace</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>

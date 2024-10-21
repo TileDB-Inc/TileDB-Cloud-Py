@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -434,15 +468,20 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.files.udfs.chunk_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.udfs.chunk_udf">chunk_udf</h3>
-<p><code>cloud.files.udfs.chunk_udf(items, batch_size=None, flatten_items=False, verbose=False)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.files.udfs.chunk_udf(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    items</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    flatten_items<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Flatten and break an iterable into batches of a specified size.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
+<col style="width: 12%">
 <col style="width: 14%">
-<col style="width: 14%">
-<col style="width: 61%">
+<col style="width: 62%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -455,25 +494,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>items</code></td>
+<td>items</td>
 <td>Sequence[_T]</td>
 <td>An iterable to be split into chunks.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>batch_size</code></td>
+<td>batch_size</td>
 <td>Optional[int]</td>
 <td>Resulting chunk size, defaults to None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>flatten_items</code></td>
+<td>flatten_items</td>
 <td>bool</td>
 <td>If set to True, it will flatten the <code>items</code> iterable, defaults to False</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>Verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -481,17 +520,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>List[List[str]]</td>
 <td>A list of chunks as lists.</td>
 </tr>
@@ -501,16 +542,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.udfs.find_uris_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.udfs.find_uris_udf">find_uris_udf</h3>
-<p><code>cloud.files.udfs.find_uris_udf(search_uri, *, config=None, include=None, exclude=None, max_files=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.files.udfs.find_uris_udf(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    search_uri</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    include<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    exclude<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Find URIs matching a pattern in the <code>search_uri</code> path.</p>
 <p><code>include</code> and <code>exclude</code> patterns are Unix shell style (see fnmatch module).</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 26%">
-<col style="width: 52%">
+<col style="width: 9%">
+<col style="width: 27%">
+<col style="width: 53%">
 <col style="width: 9%">
 </colgroup>
 <thead>
@@ -523,37 +572,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>search_uri</code></td>
+<td>search_uri</td>
 <td>str</td>
 <td>URI to search for files</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>include</code></td>
+<td>include</td>
 <td>Optional[str]</td>
 <td>include pattern used in the search, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>exclude</code></td>
+<td>exclude</td>
 <td>Optional[str]</td>
 <td>exclude pattern applied to the search results, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_files</code></td>
+<td>max_files</td>
 <td>Optional[int]</td>
 <td>maximum number of URIs returned, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -561,17 +610,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Sequence[str]</td>
 <td>list of URIs</td>
 </tr>

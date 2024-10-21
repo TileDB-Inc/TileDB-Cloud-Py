@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -455,16 +489,22 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.files.ingestion.add_arrays_to_group_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.ingestion.add_arrays_to_group_udf">add_arrays_to_group_udf</h3>
-<p><code>cloud.files.ingestion.add_arrays_to_group_udf(array_uris, group_uri, *, config=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.files.ingestion.add_arrays_to_group_udf(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    array_uris</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    group_uri</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Add a list of TileDB array uris in a TileDB group.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 17%">
+<col style="width: 15%">
 <col style="width: 22%">
-<col style="width: 45%">
-<col style="width: 14%">
+<col style="width: 46%">
+<col style="width: 15%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -476,25 +516,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>array_uris</code></td>
+<td>array_uris</td>
 <td>Sequence[str]</td>
 <td>An iterable of TileDB URIs.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>group_uri</code></td>
+<td>group_uri</td>
 <td>str</td>
 <td>A TileDB Group URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[dict]</td>
 <td>Config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>Verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -505,15 +545,30 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.ingestion.ingest_files" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.ingestion.ingest_files">ingest_files</h3>
-<p><code>cloud.files.ingestion.ingest_files(dataset_uri, *, search_uri=None, pattern=None, ignore=None, max_files=None, batch_size=file_udfs.DEFAULT_BATCH_SIZE, acn=None, config=None, namespace=None, group_uri=None, taskgraph_name=DEFAULT_FILE_INGESTION_NAME, ingest_resources=dag.MIN_BATCH_RESOURCES, verbose=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.files.ingestion.ingest_files(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    search_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span>file_udfs.DEFAULT_BATCH_SIZE</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    group_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    taskgraph_name<span class="op">=</span>DEFAULT_FILE_INGESTION_NAME</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span>dag.MIN_BATCH_RESOURCES</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Ingest files into a dataset.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 10%">
 <col style="width: 23%">
-<col style="width: 47%">
+<col style="width: 48%">
 <col style="width: 17%">
 </colgroup>
 <thead>
@@ -526,79 +581,79 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>The dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>search_uri</code></td>
+<td>search_uri</td>
 <td>Optional[Union[Sequence[str], str]]</td>
 <td>URI or an iterable of URIs of input files. Defaults to None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>pattern</code></td>
+<td>pattern</td>
 <td>Optional[str]</td>
 <td>UNIX shell style pattern to filter files in the search, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>ignore</code></td>
+<td>ignore</td>
 <td>Optional[str]</td>
 <td>UNIX shell style pattern to filter files out of the search, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_files</code></td>
+<td>max_files</td>
 <td>Optional[int]</td>
 <td>maximum number of File URIs to read/find, defaults to None (no limit)</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>batch_size</code></td>
+<td>batch_size</td>
 <td>Optional[int]</td>
 <td>Batch size for file ingestion, defaults to 100.</td>
 <td><code>file_udfs.DEFAULT_BATCH_SIZE</code></td>
 </tr>
 <tr class="odd">
-<td><code>acn</code></td>
+<td>acn</td>
 <td>Optional[str]</td>
 <td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[dict]</td>
 <td>Config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud namespace, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>group_uri</code></td>
+<td>group_uri</td>
 <td>Optional[str]</td>
 <td>A TileDB Group URI, defaults to None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>taskgraph_name</code></td>
+<td>taskgraph_name</td>
 <td>Optional[str]</td>
 <td>Optional name for taskgraph, defaults to “file-ingestion”.</td>
 <td><code>DEFAULT_FILE_INGESTION_NAME</code></td>
 </tr>
 <tr class="even">
-<td><code>ingest_resources</code></td>
+<td>ingest_resources</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>Configuration for node specs, defaults to {“cpu”: “1”, “memory”: “2Gi”}</td>
 <td><code>dag.MIN_BATCH_RESOURCES</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>Verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -606,17 +661,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>str</td>
 <td>The resulting TaskGraph’s server UUID.</td>
 </tr>
@@ -626,15 +683,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.ingestion.ingest_files_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.ingestion.ingest_files_udf">ingest_files_udf</h3>
-<p><code>cloud.files.ingestion.ingest_files_udf(dataset_uri, file_uris, *, acn=None, namespace=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.files.ingestion.ingest_files_udf(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    file_uris</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Ingest files.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 12%">
-<col style="width: 66%">
+<col style="width: 10%">
+<col style="width: 13%">
+<col style="width: 67%">
 <col style="width: 9%">
 </colgroup>
 <thead>
@@ -647,31 +711,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>The dataset URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>file_uris</code></td>
+<td>file_uris</td>
 <td>Sequence[str]</td>
 <td>An iterable of file URIs.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>acn</code></td>
+<td>acn</td>
 <td>Optional[str]</td>
 <td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud namespace, defaults to None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>Verbose logging, defaults to False.</td>
 <td><code>False</code></td>
@@ -679,17 +743,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>List[str]</td>
 <td>A list of the ingested files’ resulting URIs.</td>
 </tr>

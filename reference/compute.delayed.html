@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -446,19 +480,35 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.compute.delayed.Delayed" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.Delayed">Delayed</h3>
-<p><code>cloud.compute.delayed.Delayed(self, func_exec, *args, local=False, mode=Mode.REALTIME, **kwargs)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.Delayed(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    func_exec</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>args</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    local<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span>Mode.REALTIME</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Serverless Python function execution as a future.</p>
 <p>Extends <a href="#tiledb.cloud.compute.delayed.DelayedBase">DelayedBase</a></p>
 </section>
 <section id="tiledb.cloud.compute.delayed.DelayedArrayUDF" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.DelayedArrayUDF">DelayedArrayUDF</h3>
-<p><code>cloud.compute.delayed.DelayedArrayUDF(self, uri, func_exec, *args, **kwargs)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.DelayedArrayUDF(<span class="va">self</span>, uri, func_exec, <span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Serverless Array UDF called with the <a href="#tiledb.cloud.compute.delayed.Delayed">Delayed API</a></p>
 <p>Extends <a href="#tiledb.cloud.compute.delayed.DelayedBase">DelayedBase</a></p>
 </section>
 <section id="tiledb.cloud.compute.delayed.DelayedBase" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.DelayedBase">DelayedBase</h3>
-<p><code>cloud.compute.delayed.DelayedBase(self, func, *args, name=None, dag=None, local_mode=False, mode=Mode.REALTIME, **kwargs)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.DelayedBase(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>args</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    dag<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    local_mode<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span>Mode.REALTIME</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Base Delayed interface class</p>
 <section id="methods" class="level4">
 <h4 class="anchored" data-anchor-id="methods">Methods</h4>
@@ -486,15 +536,15 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.compute.delayed.DelayedBase.all" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.DelayedBase.all">all</h5>
-<p><code>cloud.compute.delayed.DelayedBase.all(futures, namespace=None)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.DelayedBase.<span class="bu">all</span>(futures, namespace<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Run a list of Delayed object all in parallel</p>
-<section id="parameters" class="level6">
-<h6 class="anchored" data-anchor-id="parameters">Parameters</h6>
+<section id="parameters" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 17%">
-<col style="width: 10%">
-<col style="width: 54%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 56%">
 <col style="width: 16%">
 </colgroup>
 <thead>
@@ -507,13 +557,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>futures</code></td>
+<td>futures</td>
 <td></td>
 <td>list of Delayed objects to run</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>optional namespace to run all tasks in</td>
 <td><code>None</code></td>
@@ -521,17 +571,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level6">
-<h6 class="anchored" data-anchor-id="returns">Returns</h6>
+<section id="returns" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>list of results in order of futures</td>
 </tr>
@@ -541,15 +593,19 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.compute.delayed.DelayedBase.compute" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.DelayedBase.compute">compute</h5>
-<p><code>cloud.compute.delayed.DelayedBase.compute(namespace=None, name=None, max_workers=None)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.DelayedBase.compute(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    max_workers<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Starts execution of all Delayed tasks associated with this node.</p>
-<section id="parameters-1" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
+<section id="parameters-1" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
+<col style="width: 9%">
 <col style="width: 14%">
-<col style="width: 65%">
+<col style="width: 66%">
 <col style="width: 9%">
 </colgroup>
 <thead>
@@ -562,13 +618,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>The namespace to execute tasks under, if different than the user’s default.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>An optional name to identify the task graph in logs.</td>
 <td><code>None</code></td>
@@ -576,17 +632,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level6">
-<h6 class="anchored" data-anchor-id="returns-1">Returns</h6>
+<section id="returns-1" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Any</td>
 <td>results</td>
 </tr>
@@ -596,15 +654,19 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.compute.delayed.DelayedBase.visualize" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.DelayedBase.visualize">visualize</h5>
-<p><code>cloud.compute.delayed.DelayedBase.visualize(notebook=True, auto_update=True, force_plotly=False)</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.DelayedBase.visualize(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    notebook<span class="op">=</span><span class="va">True</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    auto_update<span class="op">=</span><span class="va">True</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    force_plotly<span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Build and render a tree diagram of the DAG.</p>
-<section id="parameters-2" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
+<section id="parameters-2" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 14%">
+<col style="width: 13%">
 <col style="width: 7%">
-<col style="width: 67%">
+<col style="width: 69%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -617,19 +679,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>notebook</code></td>
+<td>notebook</td>
 <td></td>
 <td>Is the visualization inside a jupyter notebook? If so we’ll use a widget</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>auto_update</code></td>
+<td>auto_update</td>
 <td></td>
 <td>Should the diagram be auto updated with each status change</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td><code>force_plotly</code></td>
+<td>force_plotly</td>
 <td></td>
 <td>Force the use of plotly graphs instead of TileDB Plot Widget</td>
 <td><code>False</code></td>
@@ -637,17 +699,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level6">
-<h6 class="anchored" data-anchor-id="returns-2">Returns</h6>
+<section id="returns-2" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>returns plotly figure</td>
 </tr>
@@ -659,13 +723,19 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.compute.delayed.DelayedMultiArrayUDF" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.DelayedMultiArrayUDF">DelayedMultiArrayUDF</h3>
-<p><code>cloud.compute.delayed.DelayedMultiArrayUDF(self, func, array_list, *args, **kwargs)</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.DelayedMultiArrayUDF(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    array_list</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>args</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Serverless Multi-Array UDF called with the <a href="#tiledb.cloud.compute.delayed.Delayed">Delayed API</a></p>
 <p>Extends <a href="#tiledb.cloud.compute.delayed.DelayedBase">DelayedBase</a></p>
 </section>
 <section id="tiledb.cloud.compute.delayed.DelayedSQL" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.compute.delayed.DelayedSQL">DelayedSQL</h3>
-<p><code>cloud.compute.delayed.DelayedSQL(self, *args, **kwargs)</code></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.compute.delayed.DelayedSQL(<span class="va">self</span>, <span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Serverless SQL query on a registered Array called with the <a href="#tiledb.cloud.compute.delayed.Delayed">Delayed API</a></p>
 <p>Extends <a href="#tiledb.cloud.compute.delayed.DelayedBase">DelayedBase</a></p>
 

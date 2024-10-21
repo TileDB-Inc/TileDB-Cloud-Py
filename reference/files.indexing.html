@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -438,20 +472,105 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.files.indexing.create_dataset_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.indexing.create_dataset_udf">create_dataset_udf</h3>
-<p><code>cloud.files.indexing.create_dataset_udf(search_uri, index_uri, *, config=None, environment_variables=None, verbose=False, index_type=IndexTypes.IVF_FLAT, index_creation_kwargs=None, pattern='*', ignore=('[.]*', '*/[.]*'), suffixes=None, max_files=None, text_splitter='RecursiveCharacterTextSplitter', text_splitter_kwargs=None, embedding_class='LangChainEmbedding', embedding_kwargs=None)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.files.indexing.create_dataset_udf(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    search_uri</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    index_uri</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    environment_variables<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    index_type<span class="op">=</span>IndexTypes.IVF_FLAT</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    index_creation_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="st">'*'</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ignore<span class="op">=</span>(<span class="st">'[.]*'</span>, <span class="st">'*/[.]*'</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    suffixes<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    text_splitter<span class="op">=</span><span class="st">'RecursiveCharacterTextSplitter'</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    text_splitter_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    embedding_class<span class="op">=</span><span class="st">'LangChainEmbedding'</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    embedding_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create a TileDB vector search dataset.</p>
 </section>
 <section id="tiledb.cloud.files.indexing.index_files_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.indexing.index_files_udf">index_files_udf</h3>
-<p><code>cloud.files.indexing.index_files_udf(index_uri, *, acn=None, config=None, environment_variables=None, openai_key=None, namespace=None, verbose=False, trace_id=None, index_timestamp=None, workers=-1, worker_resources=None, worker_image=None, extra_worker_modules=None, driver_resources=None, driver_image=None, extra_driver_modules=None, max_tasks_per_stage=-1, embeddings_generation_mode=dag.Mode.BATCH, embeddings_generation_driver_mode=dag.Mode.BATCH, vector_indexing_mode=dag.Mode.BATCH, index_update_kwargs=None)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.files.indexing.index_files_udf(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    index_uri</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    environment_variables<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    openai_key<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    index_timestamp<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    workers<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    worker_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    worker_image<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    extra_worker_modules<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    driver_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    driver_image<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    extra_driver_modules<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    max_tasks_per_stage<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    embeddings_generation_mode<span class="op">=</span>dag.Mode.BATCH</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    embeddings_generation_driver_mode<span class="op">=</span>dag.Mode.BATCH</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    vector_indexing_mode<span class="op">=</span>dag.Mode.BATCH</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    index_update_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Ingest files into a vector search text index.</p>
 </section>
 <section id="tiledb.cloud.files.indexing.ingest_files" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.indexing.ingest_files">ingest_files</h3>
-<p><code>cloud.files.indexing.ingest_files(search_uri, index_uri, *, acn=None, config=None, environment_variables=None, namespace=None, verbose=False, trace_id=None, index_type=IndexTypes.IVF_FLAT, index_creation_kwargs=None, index_dag_resources=dag.MIN_BATCH_RESOURCES, include='*', exclude=('[.]*', '*/[.]*'), suffixes=None, max_files=None, text_splitter='RecursiveCharacterTextSplitter', text_splitter_kwargs=None, embedding_class='LangChainEmbedding', embedding_kwargs=None, openai_key=None, index_timestamp=None, workers=-1, worker_resources=None, worker_image=None, extra_worker_modules=None, driver_resources=None, driver_image=None, extra_driver_modules=None, max_tasks_per_stage=-1, embeddings_generation_mode=dag.Mode.BATCH, embeddings_generation_driver_mode=dag.Mode.BATCH, vector_indexing_mode=dag.Mode.BATCH, index_update_kwargs=None, threads='16', ingest_resources=None, consolidate_partition_resources=None, copy_centroids_resources=None, random_sample_resources=None, kmeans_resources=None, compute_new_centroids_resources=None, assign_points_and_partial_new_centroids_resources=None, write_centroids_resources=None, partial_index_resources=None)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.files.indexing.ingest_files(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    search_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    index_uri</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    environment_variables<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    index_type<span class="op">=</span>IndexTypes.IVF_FLAT</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    index_creation_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    index_dag_resources<span class="op">=</span>dag.MIN_BATCH_RESOURCES</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    include<span class="op">=</span><span class="st">'*'</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    exclude<span class="op">=</span>(<span class="st">'[.]*'</span>, <span class="st">'*/[.]*'</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    suffixes<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    max_files<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    text_splitter<span class="op">=</span><span class="st">'RecursiveCharacterTextSplitter'</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    text_splitter_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    embedding_class<span class="op">=</span><span class="st">'LangChainEmbedding'</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    embedding_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    openai_key<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    index_timestamp<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    workers<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    worker_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    worker_image<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    extra_worker_modules<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    driver_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    driver_image<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    extra_driver_modules<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    max_tasks_per_stage<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    embeddings_generation_mode<span class="op">=</span>dag.Mode.BATCH</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    embeddings_generation_driver_mode<span class="op">=</span>dag.Mode.BATCH</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    vector_indexing_mode<span class="op">=</span>dag.Mode.BATCH</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    index_update_kwargs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    threads<span class="op">=</span><span class="st">'16'</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    consolidate_partition_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    copy_centroids_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    random_sample_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    kmeans_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    compute_new_centroids_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    assign_points_and_partial_new_centroids_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    write_centroids_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    partial_index_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Ingest files into a vector search text index.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 8%">
@@ -469,235 +588,235 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>search_uri</code></td>
+<td>search_uri</td>
 <td>str</td>
 <td>Uri to load files from. This can be a directory URI or a FileStore file URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>index_uri</code></td>
+<td>index_uri</td>
 <td>str</td>
 <td>URI of the vector index to load files to.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>acn</code></td>
+<td>acn</td>
 <td>Optional[str]</td>
 <td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[dict]</td>
 <td>config dictionary, defaults to None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>environment_variables</code></td>
+<td>environment_variables</td>
 <td>Optional[Mapping[str, str]]</td>
 <td>Environment variables to use during ingestion.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud namespace, defaults to None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False.</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>trace_id</code></td>
+<td>trace_id</td>
 <td>Optional[str]</td>
 <td>trace ID for logging, defaults to None. # Vector Index params</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>index_type</code></td>
+<td>index_type</td>
 <td>IndexTypes</td>
 <td>Vector search index type (“FLAT”, “IVF_FLAT”).</td>
 <td><code>IndexTypes.IVF_FLAT</code></td>
 </tr>
 <tr class="even">
-<td><code>index_creation_kwargs</code></td>
+<td>index_creation_kwargs</td>
 <td>Optional[Dict]</td>
 <td>Arguments to be passed to the index creation method.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>index_dag_resources</code></td>
+<td>index_dag_resources</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>Index creation Node Specs configuration. # DirectoryTextReader params.</td>
 <td><code>dag.MIN_BATCH_RESOURCES</code></td>
 </tr>
 <tr class="even">
-<td><code>include</code></td>
+<td>include</td>
 <td>str</td>
 <td>File pattern to include relative to <code>search_uri</code>. By default set to include all files.</td>
 <td><code>'*'</code></td>
 </tr>
 <tr class="odd">
-<td><code>exclude</code></td>
+<td>exclude</td>
 <td>Optional[Sequence[str]]</td>
 <td>File patterns to exclude relative to <code>search_uri</code>. By default set to ignore all hidden files.</td>
 <td><code>('[.]*', '*/[.]*')</code></td>
 </tr>
 <tr class="even">
-<td><code>suffixes</code></td>
+<td>suffixes</td>
 <td>Optional[Sequence[str]]</td>
 <td>Provide to keep only files with these suffixes Useful when wanting to keep files with different suffixes Suffixes must include the dot, e.g.&nbsp;“.txt”</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_files</code></td>
+<td>max_files</td>
 <td>Optional[int]</td>
 <td>Maximum number of files to include.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>text_splitter_kwargs</code></td>
+<td>text_splitter_kwargs</td>
 <td>Optional[Dict]</td>
 <td>Arguments for the splitter class. # Index update params.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>index_timestamp</code></td>
+<td>index_timestamp</td>
 <td>Optional[int]</td>
 <td>Timestamp to add index updates at.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>workers</code></td>
+<td>workers</td>
 <td>int</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this is the number of distributed workers to be used.</td>
 <td><code>-1</code></td>
 </tr>
 <tr class="odd">
-<td><code>worker_resources</code></td>
+<td>worker_resources</td>
 <td>Optional[Dict]</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this can be used to specify the worker resources.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>worker_image</code></td>
+<td>worker_image</td>
 <td>Optional[str]</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this can be used to specify the worker Docker image.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>extra_worker_modules</code></td>
+<td>extra_worker_modules</td>
 <td>Optional[List[str]]</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this can be used to install extra pip package to the image.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>driver_resources</code></td>
+<td>driver_resources</td>
 <td>Optional[Dict]</td>
 <td>If <code>embeddings_generation_driver_mode=BATCH</code> this can be used to specify the driver resources.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>driver_image</code></td>
+<td>driver_image</td>
 <td>Optional[str]</td>
 <td>If <code>embeddings_generation_driver_mode=BATCH</code> this can be used to specify the driver Docker image.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>extra_driver_modules</code></td>
+<td>extra_driver_modules</td>
 <td>Optional[List[str]]</td>
 <td>If <code>embeddings_generation_driver_mode=BATCH</code> this can be used to install extra pip package to the image.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_tasks_per_stage</code></td>
+<td>max_tasks_per_stage</td>
 <td>int</td>
 <td>Number of maximum udf tasks per computation stage.</td>
 <td><code>-1</code></td>
 </tr>
 <tr class="even">
-<td><code>embeddings_generation_mode</code></td>
+<td>embeddings_generation_mode</td>
 <td>dag.Mode</td>
 <td>TaskGraph execution mode for embeddings generation.</td>
 <td><code>dag.Mode.BATCH</code></td>
 </tr>
 <tr class="odd">
-<td><code>embeddings_generation_driver_mode</code></td>
+<td>embeddings_generation_driver_mode</td>
 <td>dag.Mode</td>
 <td>TaskGraph execution mode for the ingestion driver.</td>
 <td><code>dag.Mode.BATCH</code></td>
 </tr>
 <tr class="even">
-<td><code>vector_indexing_mode</code></td>
+<td>vector_indexing_mode</td>
 <td>dag.Mode</td>
 <td>TaskGraph execution mode for the vector indexing.</td>
 <td><code>dag.Mode.BATCH</code></td>
 </tr>
 <tr class="odd">
-<td><code>index_update_kwargs</code></td>
+<td>index_update_kwargs</td>
 <td>Optional[Dict]</td>
 <td>Extra arguments to pass to the index update job. These can be any of the documented tiledb.vector_search.ingest method with the exception of BATCH Embedding Resources (see next params): https://tiledb-inc.github.io/TileDB-Vector-Search/documentation/reference/ingestion.html#tiledb.vector_search.ingestion.ingest Also <code>files_per_partition: int</code> can be included (defaults to -1) ## Vector Search BATCH Embedding Resources ## These are only applicable if indexing update is executed in BATCH mode.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>threads</code></td>
+<td>threads</td>
 <td>str</td>
 <td>Threads to be used in the Nodes, defaults to 16.</td>
 <td><code>'16'</code></td>
 </tr>
 <tr class="odd">
-<td><code>ingest_resources</code></td>
+<td>ingest_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing vector ingestion.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>consolidate_partition_resources</code></td>
+<td>consolidate_partition_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing consolidation of a partition.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>copy_centroids_resources</code></td>
+<td>copy_centroids_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing copy of centroids from input array to output array.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>random_sample_resources</code></td>
+<td>random_sample_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing random sample selection.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>kmeans_resources</code></td>
+<td>kmeans_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing kmeans task.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>compute_new_centroids_resources</code></td>
+<td>compute_new_centroids_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing centroid computation.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>assign_points_and_partial_new_centroids_resources</code></td>
+<td>assign_points_and_partial_new_centroids_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing the computation of partial centroids.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>write_centroids_resources</code></td>
+<td>write_centroids_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing the write of centroids.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>partial_index_resources</code></td>
+<td>partial_index_resources</td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing the computation of partial indexing.</td>
 <td><code>None</code></td>
@@ -705,17 +824,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>The resulting TaskGraph’s server UUID.</td>
 </tr>

@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -450,16 +484,16 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.files.utils.basename_match" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.utils.basename_match">basename_match</h3>
-<p><code>cloud.files.utils.basename_match(file_uri, pattern=None)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.files.utils.basename_match(file_uri, pattern<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Checks if the basename of a given file uri matches the given UNIX shell style pattern.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 19%">
-<col style="width: 52%">
-<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 20%">
+<col style="width: 54%">
+<col style="width: 14%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -471,13 +505,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>file_uri</code></td>
+<td>file_uri</td>
 <td>str</td>
 <td>A file URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>pattern</code></td>
+<td>pattern</td>
 <td>Optional[str]</td>
 <td>A UNIX shell style pattern, defaults to None</td>
 <td><code>None</code></td>
@@ -485,17 +519,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>bool</td>
 <td>Pattern matches the file basename or not.</td>
 </tr>
@@ -505,15 +541,23 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.utils.create_file" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.utils.create_file">create_file</h3>
-<p><code>cloud.files.utils.create_file(namespace, input_uri, output_uri, name=None, access_credentials_name=None, access_credential_name=None, async_req=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.files.utils.create_file(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    namespace</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    input_uri</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    output_uri</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    access_credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    access_credential_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Creates a TileDB file at the specified location</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 24%">
+<col style="width: 23%">
 <col style="width: 15%">
-<col style="width: 48%">
+<col style="width: 49%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -526,43 +570,43 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>str</td>
 <td>namespace the create file operation belongs to</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>name to use for registration in TileDB Cloud</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>input_uri</code></td>
+<td>input_uri</td>
 <td>str</td>
 <td>input file uri</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>output array uri</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>access_credential_name</code></td>
+<td>access_credential_name</td>
 <td>Optional[str]</td>
 <td>DEPRECATED. Use <code>access_credential_name</code> instead.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>access_credentials_name</code></td>
+<td>access_credentials_name</td>
 <td>Optional[str]</td>
 <td>optional access credentials to use</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td>bool</td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -570,21 +614,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 74%">
+<col style="width: 9%">
+<col style="width: 23%">
+<col style="width: 67%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>models.FileCreated</td>
 <td>FileCreated details, including file_uuid and output_uri</td>
 </tr>
@@ -594,16 +641,16 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.utils.export_file" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.utils.export_file">export_file</h3>
-<p><code>cloud.files.utils.export_file(uri, output_uri, async_req=False)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.files.utils.export_file(uri, output_uri, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Exports a TileDB File back to its original file format</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 16%">
+<col style="width: 14%">
 <col style="width: 9%">
-<col style="width: 60%">
-<col style="width: 13%">
+<col style="width: 61%">
+<col style="width: 14%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -615,19 +662,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>The <code>tiledb://...</code> URI of the file to export</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>output file uri</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td>bool</td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -635,17 +682,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 28%">
+<col style="width: 60%">
+</colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>models.FileExported</td>
 <td>FileExported details, including output_uri</td>
 </tr>
@@ -655,15 +709,20 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.utils.export_file_local" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.utils.export_file_local">export_file_local</h3>
-<p><code>cloud.files.utils.export_file_local(uri, output_uri, timestamp=None, async_req=False)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.files.utils.export_file_local(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    uri</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    output_uri</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    timestamp<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Exports a TileDB File back to its original file format</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 8%">
+<col style="width: 7%">
 <col style="width: 4%">
-<col style="width: 79%">
+<col style="width: 80%">
 <col style="width: 7%">
 </colgroup>
 <thead>
@@ -676,25 +735,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>The <code>tiledb://...</code> URI of the file to export</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>output file uri</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>timestamp</code></td>
+<td>timestamp</td>
 <td>tuple</td>
 <td>(default None) If int, open the array at a given TileDB timestamp. If tuple, open at the given start and end TileDB timestamps.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td>bool</td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -702,17 +761,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
+<section id="returns-3" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h4>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 28%">
+<col style="width: 60%">
+</colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>models.FileExported</td>
 <td>FileExported details, including output_uri</td>
 </tr>
@@ -722,10 +788,10 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.utils.sanitize_filename" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.utils.sanitize_filename">sanitize_filename</h3>
-<p><code>cloud.files.utils.sanitize_filename(fname)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.files.utils.sanitize_filename(fname)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Sanitizes a filename by removing invalid characters.</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -737,7 +803,7 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>fname</code></td>
+<td>fname</td>
 <td>str</td>
 <td>A filename to sanitize</td>
 <td><em>required</em></td>
@@ -745,17 +811,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-4" class="level4">
-<h4 class="anchored" data-anchor-id="returns-4">Returns</h4>
+<section id="returns-4" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-4">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>str</td>
 <td>The sanitized string</td>
 </tr>
@@ -765,15 +833,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.files.utils.upload_file" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.files.utils.upload_file">upload_file</h3>
-<p><code>cloud.files.utils.upload_file(input_uri, output_uri, *, filename=None, content_type='application/octet-stream', access_credentials_name=None)</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.files.utils.upload_file(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    input_uri</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    output_uri</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    filename<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    content_type<span class="op">=</span><span class="st">'application/octet-stream'</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    access_credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Uploads a file to TileDB Cloud.</p>
-<section id="parameters-5" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<section id="parameters-5" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
+<col style="width: 12%">
 <col style="width: 8%">
-<col style="width: 62%">
+<col style="width: 63%">
 <col style="width: 15%">
 </colgroup>
 <thead>
@@ -786,31 +861,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>input_uri</code></td>
+<td>input_uri</td>
 <td>str</td>
 <td>The URI or path of the input file. May be an ordinary path or any URI accessible via TileDB VFS.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>The TileDB URI to write the file to.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>filename</code></td>
+<td>filename</td>
 <td>Optional[str]</td>
 <td>If present, the value to store as the original filename.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>content_type</code></td>
+<td>content_type</td>
 <td>str</td>
 <td>The MIME type of the file.</td>
 <td><code>'application/octet-stream'</code></td>
 </tr>
 <tr class="odd">
-<td><code>access_credentials_name</code></td>
+<td>access_credentials_name</td>
 <td>Optional[str]</td>
 <td>If present, the name of the credentials to use when writing the uploaded file to backend storage instead of the defaults.</td>
 <td><code>None</code></td>
@@ -818,17 +893,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-5" class="level4">
-<h4 class="anchored" data-anchor-id="returns-5">Returns</h4>
+<section id="returns-5" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-5">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>str</td>
 <td>The <code>tiledb://</code> URI of the uploaded file.</td>
 </tr>

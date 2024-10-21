@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -446,13 +480,31 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.vcf.query.build_read_dag" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.query.build_read_dag">build_read_dag</h3>
-<p><code>cloud.vcf.query.build_read_dag(dataset_uri, *, config=None, attrs=None, regions=None, bed_file=None, num_region_partitions=1, max_workers=MAX_WORKERS, samples=None, memory_budget_mb=1024, af_filter=None, transform_result=None, max_sample_batch_size=MAX_SAMPLE_BATCH_SIZE, log_uri=None, namespace=None, resource_class=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.query.build_read_dag(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    regions<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    bed_file<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    num_region_partitions<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    max_workers<span class="op">=</span>MAX_WORKERS</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    samples<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    memory_budget_mb<span class="op">=</span><span class="dv">1024</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    af_filter<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    transform_result<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    max_sample_batch_size<span class="op">=</span>MAX_SAMPLE_BATCH_SIZE</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    resource_class<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Build the DAG for a distributed read on a TileDB-VCF dataset.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 44%">
 <col style="width: 34%">
 <col style="width: 10%">
@@ -467,91 +519,91 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>attrs</code></td>
+<td>attrs</td>
 <td>Optional[Union[Sequence[str], str]]</td>
 <td>attribute names to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>regions</code></td>
+<td>regions</td>
 <td>Optional[Union[Sequence[str], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL]]</td>
 <td>genomics regions to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>bed_file</code></td>
+<td>bed_file</td>
 <td>Optional[str]</td>
 <td>URI of a BED file containing genomics regions to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>num_region_partitions</code></td>
+<td>num_region_partitions</td>
 <td>int</td>
 <td>number of region partitions, defaults to 1</td>
 <td><code>1</code></td>
 </tr>
 <tr class="odd">
-<td><code>samples</code></td>
+<td>samples</td>
 <td>Optional[Union[Sequence[str], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL]]</td>
 <td>sample names to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>memory_budget_mb</code></td>
+<td>memory_budget_mb</td>
 <td>int</td>
 <td>VCF memory budget in MiB, defaults to 1024</td>
 <td><code>1024</code></td>
 </tr>
 <tr class="odd">
-<td><code>af_filter</code></td>
+<td>af_filter</td>
 <td>Optional[str]</td>
 <td>allele frequency filter, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>transform_result</code></td>
+<td>transform_result</td>
 <td>Optional[Callable[[pa.Table], pa.Table]]</td>
 <td>function to apply to each partition; by default, does not transform the result</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_sample_batch_size</code></td>
+<td>max_sample_batch_size</td>
 <td>int</td>
 <td>maximum number of samples to read in a single node, defaults to 500</td>
 <td><code>MAX_SAMPLE_BATCH_SIZE</code></td>
 </tr>
 <tr class="even">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI for profiling, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud namespace, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>resource_class</code></td>
+<td>resource_class</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud resource class for UDFs, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -559,21 +611,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 72%">
-<col style="width: 28%">
+<col style="width: 9%">
+<col style="width: 65%">
+<col style="width: 25%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Tuple[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node]</td>
 <td>DAG and result Node</td>
 </tr>
@@ -583,15 +638,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.query.concat_tables_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.query.concat_tables_udf">concat_tables_udf</h3>
-<p><code>cloud.vcf.query.concat_tables_udf(tables, *, config=None, log_uri=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.query.concat_tables_udf(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    tables</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Concatenate a list of Arrow tables.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
+<col style="width: 9%">
 <col style="width: 34%">
-<col style="width: 42%">
+<col style="width: 43%">
 <col style="width: 12%">
 </colgroup>
 <thead>
@@ -604,25 +665,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>tables</code></td>
+<td>tables</td>
 <td>List[pa.Table]</td>
 <td>Arrow tables</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log URI for profiling, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -630,17 +691,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>pa.table</td>
 <td>concatenated Arrow table</td>
 </tr>
@@ -650,13 +713,31 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.query.read" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.query.read">read</h3>
-<p><code>cloud.vcf.query.read(dataset_uri, *, config=None, attrs=None, regions=None, bed_file=None, num_region_partitions=1, max_workers=MAX_WORKERS, samples=None, memory_budget_mb=1024, af_filter=None, transform_result=None, max_sample_batch_size=MAX_SAMPLE_BATCH_SIZE, log_uri=None, namespace=None, resource_class=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.query.read(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    regions<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    bed_file<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    num_region_partitions<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    max_workers<span class="op">=</span>MAX_WORKERS</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    samples<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    memory_budget_mb<span class="op">=</span><span class="dv">1024</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    af_filter<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    transform_result<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    max_sample_batch_size<span class="op">=</span>MAX_SAMPLE_BATCH_SIZE</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    resource_class<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Run a distributed read on a TileDB-VCF dataset.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 44%">
 <col style="width: 34%">
 <col style="width: 10%">
@@ -671,91 +752,91 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>attrs</code></td>
+<td>attrs</td>
 <td>Optional[Union[Sequence[str], str]]</td>
 <td>attribute names to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>regions</code></td>
+<td>regions</td>
 <td>Optional[Union[Sequence[str], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL]]</td>
 <td>genomics regions to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>bed_file</code></td>
+<td>bed_file</td>
 <td>Optional[str]</td>
 <td>URI of a BED file containing genomics regions to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>num_region_partitions</code></td>
+<td>num_region_partitions</td>
 <td>int</td>
 <td>number of region partitions, defaults to 1</td>
 <td><code>1</code></td>
 </tr>
 <tr class="odd">
-<td><code>samples</code></td>
+<td>samples</td>
 <td>Optional[Union[Sequence[str], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL]]</td>
 <td>sample names to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>memory_budget_mb</code></td>
+<td>memory_budget_mb</td>
 <td>int</td>
 <td>VCF memory budget in MiB, defaults to 1024</td>
 <td><code>1024</code></td>
 </tr>
 <tr class="odd">
-<td><code>af_filter</code></td>
+<td>af_filter</td>
 <td>Optional[str]</td>
 <td>allele frequency filter, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>transform_result</code></td>
+<td>transform_result</td>
 <td>Optional[Callable[[pa.Table], pa.Table]]</td>
 <td>function to apply to each partition; by default, does not transform the result</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_sample_batch_size</code></td>
+<td>max_sample_batch_size</td>
 <td>int</td>
 <td>maximum number of samples to read in a single node, defaults to 500</td>
 <td><code>MAX_SAMPLE_BATCH_SIZE</code></td>
 </tr>
 <tr class="even">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI for profiling, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud namespace, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>resource_class</code></td>
+<td>resource_class</td>
 <td>Optional[str]</td>
 <td>TileDB-Cloud resource class for UDFs, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -763,17 +844,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>pa.Table</td>
 <td>Arrow table containing the query results</td>
 </tr>
@@ -783,15 +866,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.query.setup" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.query.setup">setup</h3>
-<p><code>cloud.vcf.query.setup(config=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.query.setup(config<span class="op">=</span><span class="va">None</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Set the default TileDB context, OS environment variables for AWS, and return a logger instance.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
-<col style="width: 36%">
-<col style="width: 40%">
+<col style="width: 8%">
+<col style="width: 37%">
+<col style="width: 41%">
 <col style="width: 12%">
 </colgroup>
 <thead>
@@ -804,7 +887,7 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
@@ -812,17 +895,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
+<section id="returns-3" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>logging.Logger</td>
 <td>logger instance</td>
 </tr>
@@ -832,15 +917,31 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.query.vcf_query_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.query.vcf_query_udf">vcf_query_udf</h3>
-<p><code>cloud.vcf.query.vcf_query_udf(dataset_uri, *, config=None, attrs=None, regions=None, bed_file=None, samples=None, region_partition=None, sample_partition=None, memory_budget_mb=1024, af_filter=None, transform_result=None, log_uri=None, log_id='query', verbose=False)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.query.vcf_query_udf(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    attrs<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    regions<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    bed_file<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    samples<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    region_partition<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    sample_partition<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    memory_budget_mb<span class="op">=</span><span class="dv">1024</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    af_filter<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    transform_result<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    log_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    log_id<span class="op">=</span><span class="st">'query'</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Run a query on a TileDB-VCF dataset.</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
+<col style="width: 10%">
 <col style="width: 33%">
-<col style="width: 47%">
+<col style="width: 48%">
 <col style="width: 7%">
 </colgroup>
 <thead>
@@ -853,85 +954,85 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>attrs</code></td>
+<td>attrs</td>
 <td>Optional[Union[Sequence[str], str]]</td>
 <td>attribute names to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>regions</code></td>
+<td>regions</td>
 <td>Optional[Union[Sequence[str], str, pd.DataFrame]]</td>
 <td>genomics regions to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>bed_file</code></td>
+<td>bed_file</td>
 <td>Optional[str]</td>
 <td>URI of a BED file containing genomics regions to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>samples</code></td>
+<td>samples</td>
 <td>Optional[Union[Sequence[str], str]]</td>
 <td>sample names to read, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>region_partition</code></td>
+<td>region_partition</td>
 <td>Optional[Tuple[int, int]]</td>
 <td>region partition tuple (0-based indexed, num_partitions), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>sample_partition</code></td>
+<td>sample_partition</td>
 <td>Optional[Tuple[int, int]]</td>
 <td>sample partition tuple (0-based indexed, num_partitions), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>memory_budget_mb</code></td>
+<td>memory_budget_mb</td>
 <td>int</td>
 <td>VCF memory budget in MiB, defaults to 1024</td>
 <td><code>1024</code></td>
 </tr>
 <tr class="even">
-<td><code>af_filter</code></td>
+<td>af_filter</td>
 <td>Optional[str]</td>
 <td>allele frequency filter, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>transform_result</code></td>
+<td>transform_result</td>
 <td>Optional[Callable[[pa.Table], pa.Table]]</td>
 <td>function to apply to the result table; by default, does not transform the result</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>log_uri</code></td>
+<td>log_uri</td>
 <td>Optional[str]</td>
 <td>log array URI for profiling, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>log_id</code></td>
+<td>log_id</td>
 <td>str</td>
 <td>profiler event ID, defaults to “query”</td>
 <td><code>'query'</code></td>
 </tr>
 <tr class="even">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -939,17 +1040,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-4" class="level4">
-<h4 class="anchored" data-anchor-id="returns-4">Returns</h4>
+<section id="returns-4" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-4">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>pa.table</td>
 <td>Arrow table containing the query results</td>
 </tr>

@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -486,15 +520,15 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.udf.delete" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.delete">delete</h3>
-<p><code>cloud.udf.delete(uri, *, async_req=False)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.delete(uri, <span class="op">*</span>, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Deletes a registered udf</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
+<col style="width: 13%">
 <col style="width: 9%">
-<col style="width: 61%">
+<col style="width: 62%">
 <col style="width: 14%">
 </colgroup>
 <thead>
@@ -507,13 +541,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>TileDB URI of the udf, defaults to None.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td>bool</td>
 <td>Return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -521,17 +555,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>None</td>
 <td>deleted udf details</td>
 </tr>
@@ -541,15 +577,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.deregister" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.deregister">deregister</h3>
-<p><code>cloud.udf.deregister(uri, *, async_req=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.deregister(uri, <span class="op">*</span>, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>De-registers a registered udf, by de-registering the array that it is registered on. This does not physically delete the array, it will remain in your bucket. All access to the array and cloud metadata will be removed.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
+<col style="width: 13%">
 <col style="width: 9%">
-<col style="width: 61%">
+<col style="width: 62%">
 <col style="width: 14%">
 </colgroup>
 <thead>
@@ -562,13 +598,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>TileDB URI of the array.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td>bool</td>
 <td>Return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -579,27 +615,47 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.exec" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.exec">exec</h3>
-<p><code>cloud.udf.exec(*args, **kwargs)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.<span class="bu">exec</span>(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Run a user defined function, synchronously, returning only the result.</p>
 <p>Arguments are exactly as in :func:<code>exec_base</code>.</p>
 </section>
 <section id="tiledb.cloud.udf.exec_async" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.exec_async">exec_async</h3>
-<p><code>cloud.udf.exec_async(*args, **kwargs)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.exec_async(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Run a user defined function, asynchronously.</p>
 <p>Arguments are exactly as in :func:<code>exec_base</code>.</p>
 </section>
 <section id="tiledb.cloud.udf.exec_base" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.exec_base">exec_base</h3>
-<p><code>cloud.udf.exec_base(func, *args, name=None, namespace=None, image_name='default', http_compressor='deflate', include_source_lines=True, task_name=None, result_format='tiledb_json', result_format_version=None, store_results=False, stored_param_uuids=(), timeout=None, resource_class=None, _download_results=True, _server_graph_uuid=None, _client_node_uuid=None, access_credentials_name=None, **kwargs)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.exec_base(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>args</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="st">'default'</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    http_compressor<span class="op">=</span><span class="st">'deflate'</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    task_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    result_format<span class="op">=</span><span class="st">'tiledb_json'</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    result_format_version<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    store_results<span class="op">=</span><span class="va">False</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    stored_param_uuids<span class="op">=</span>()</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    timeout<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    resource_class<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    _download_results<span class="op">=</span><span class="va">True</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    _server_graph_uuid<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    _client_node_uuid<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    access_credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Run a user defined function, returning the result and metadata.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 9%">
+<col style="width: 8%">
 <col style="width: 10%">
-<col style="width: 73%">
+<col style="width: 74%">
 <col style="width: 6%">
 </colgroup>
 <thead>
@@ -612,103 +668,103 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td>Union[str, Callable, Any]</td>
 <td>The function to call, either as a callable function, or as the name of a registered user-defined function. (If <code>name</code> is set, this is instead prepended to <code>args</code> for backwards compatibility.)</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>args</code></td>
+<td>args</td>
 <td>Any</td>
 <td>The arguments to pass to the function.</td>
 <td><code>()</code></td>
 </tr>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>DEPRECATED. If present, the name of the user-defined function to run.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>namespace to run udf under</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td>str</td>
 <td>udf image name to use, useful for testing beta features</td>
 <td><code>'default'</code></td>
 </tr>
 <tr class="even">
-<td><code>http_compressor</code></td>
+<td>http_compressor</td>
 <td>Optional[str]</td>
 <td>set http compressor for results</td>
 <td><code>'deflate'</code></td>
 </tr>
 <tr class="odd">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td>bool</td>
 <td>True to send the source code of your UDF to the server with your request. (This means it can be shown to you in stack traces if an error occurs.) False to send only compiled Python bytecode.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>task_name</code></td>
+<td>task_name</td>
 <td>str</td>
 <td>optional name to assign the task for logging and audit purposes</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>result_format</code></td>
+<td>result_format</td>
 <td>ResultFormat</td>
 <td>result serialization format</td>
 <td><code>'tiledb_json'</code></td>
 </tr>
 <tr class="even">
-<td><code>result_format_version</code></td>
+<td>result_format_version</td>
 <td>str</td>
 <td>Deprecated and ignored.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>store_results</code></td>
+<td>store_results</td>
 <td>bool</td>
 <td>True to temporarily store results on the server side for later retrieval (in addition to downloading them).</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>timeout</code></td>
+<td>timeout</td>
 <td>int</td>
 <td>Timeout for UDF in seconds</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>resource_class</code></td>
+<td>resource_class</td>
 <td>Optional[str]</td>
 <td>The name of the resource class to use. Resource classes define maximum limits for cpu and memory usage.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>_download_results</code></td>
+<td>_download_results</td>
 <td>bool</td>
 <td>True to download and parse results eagerly. False to not download results by default and only do so lazily (e.g.&nbsp;for an intermediate node in a graph).</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td><code>_server_graph_uuid</code></td>
+<td>_server_graph_uuid</td>
 <td>Optional[uuid.UUID]</td>
 <td>If this function is being executed within a DAG, the server-generated ID of the graph’s log. Otherwise, None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>_client_node_uuid</code></td>
+<td>_client_node_uuid</td>
 <td>Optional[uuid.UUID]</td>
 <td>If this function is being executed within a DAG, the ID of this function’s node within the graph. Otherwise, None.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>kwargs</code></td>
+<td>kwargs</td>
 <td></td>
 <td>named arguments to pass to function</td>
 <td><code>{}</code></td>
@@ -719,15 +775,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.info" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.info">info</h3>
-<p><code>cloud.udf.info(namespace=None, name=None, async_req=False)</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.info(namespace<span class="op">=</span><span class="va">None</span>, name<span class="op">=</span><span class="va">None</span>, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetch info on a registered udf</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
+<col style="width: 13%">
 <col style="width: 9%">
-<col style="width: 61%">
+<col style="width: 63%">
 <col style="width: 13%">
 </colgroup>
 <thead>
@@ -740,19 +796,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to filter to</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to get info</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -760,17 +816,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>registered udf details</td>
 </tr>
@@ -780,14 +838,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.register_generic_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.register_generic_udf">register_generic_udf</h3>
-<p><code>cloud.udf.register_generic_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)</code></p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.register_generic_udf(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 23%">
+<col style="width: 21%">
 <col style="width: 7%">
-<col style="width: 57%">
+<col style="width: 58%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -800,37 +865,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>function to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to register in</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td></td>
 <td>optional image name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td></td>
 <td>disables sending sources lines of function along with udf</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -838,17 +903,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -858,14 +925,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.register_multi_array_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.register_multi_array_udf">register_multi_array_udf</h3>
-<p><code>cloud.udf.register_multi_array_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)</code></p>
-<section id="parameters-5" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.register_multi_array_udf(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-5" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 23%">
+<col style="width: 21%">
 <col style="width: 7%">
-<col style="width: 57%">
+<col style="width: 58%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -878,37 +952,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>function to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to register in</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td></td>
 <td>optional image name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td></td>
 <td>disables sending sources lines of function along with udf</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -916,17 +990,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
+<section id="returns-3" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -936,14 +1012,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.register_single_array_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.register_single_array_udf">register_single_array_udf</h3>
-<p><code>cloud.udf.register_single_array_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)</code></p>
-<section id="parameters-6" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.register_single_array_udf(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-6" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 23%">
+<col style="width: 21%">
 <col style="width: 7%">
-<col style="width: 57%">
+<col style="width: 58%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -956,37 +1039,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>function to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to register in</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td></td>
 <td>optional image name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td></td>
 <td>disables sending sources lines of function along with udf</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -994,17 +1077,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-4" class="level4">
-<h4 class="anchored" data-anchor-id="returns-4">Returns</h4>
+<section id="returns-4" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-4">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -1014,14 +1099,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.register_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.register_udf">register_udf</h3>
-<p><code>cloud.udf.register_udf(func, name, namespace=None, image_name=None, type=None, include_source_lines=True, async_req=False)</code></p>
-<section id="parameters-7" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.register_udf(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span><span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-7" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-7">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 23%">
+<col style="width: 21%">
 <col style="width: 7%">
-<col style="width: 57%">
+<col style="width: 58%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -1034,43 +1127,43 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>function to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to register in</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td></td>
 <td>optional image name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>type</code></td>
+<td>type</td>
 <td></td>
 <td>type of udf, generic or single_array</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td></td>
 <td>disables sending sources lines of function along with udf</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -1078,17 +1171,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-5" class="level4">
-<h4 class="anchored" data-anchor-id="returns-5">Returns</h4>
+<section id="returns-5" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-5">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -1098,15 +1193,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.share" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.share">share</h3>
-<p><code>cloud.udf.share(name=None, namespace=None, async_req=False)</code></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.share(name<span class="op">=</span><span class="va">None</span>, namespace<span class="op">=</span><span class="va">None</span>, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Share a registered udf</p>
-<section id="parameters-8" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
+<section id="parameters-8" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
+<col style="width: 13%">
 <col style="width: 9%">
-<col style="width: 61%">
+<col style="width: 63%">
 <col style="width: 13%">
 </colgroup>
 <thead>
@@ -1119,19 +1214,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf in “namespace/name” format</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to share array with</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -1139,17 +1234,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-6" class="level4">
-<h4 class="anchored" data-anchor-id="returns-6">Returns</h4>
+<section id="returns-6" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-6">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>registered udf details</td>
 </tr>
@@ -1159,15 +1256,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.unshare" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.unshare">unshare</h3>
-<p><code>cloud.udf.unshare(name=None, namespace=None, async_req=False)</code></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.unshare(name<span class="op">=</span><span class="va">None</span>, namespace<span class="op">=</span><span class="va">None</span>, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Share a registered udf</p>
-<section id="parameters-9" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-9">Parameters</h4>
+<section id="parameters-9" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-9">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
+<col style="width: 13%">
 <col style="width: 9%">
-<col style="width: 61%">
+<col style="width: 63%">
 <col style="width: 13%">
 </colgroup>
 <thead>
@@ -1180,19 +1277,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf in “namespace/name” format</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to share array with</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -1200,17 +1297,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-7" class="level4">
-<h4 class="anchored" data-anchor-id="returns-7">Returns</h4>
+<section id="returns-7" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-7">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>registered udf details</td>
 </tr>
@@ -1220,14 +1319,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.update_generic_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.update_generic_udf">update_generic_udf</h3>
-<p><code>cloud.udf.update_generic_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)</code></p>
-<section id="parameters-10" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-10">Parameters</h4>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.update_generic_udf(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-10" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-10">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 23%">
+<col style="width: 21%">
 <col style="width: 7%">
-<col style="width: 57%">
+<col style="width: 58%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -1240,37 +1346,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>function to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to register in</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td></td>
 <td>optional image name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td></td>
 <td>disables sending sources lines of function along with udf</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -1278,17 +1384,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-8" class="level4">
-<h4 class="anchored" data-anchor-id="returns-8">Returns</h4>
+<section id="returns-8" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-8">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -1298,14 +1406,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.update_single_array_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.update_single_array_udf">update_single_array_udf</h3>
-<p><code>cloud.udf.update_single_array_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)</code></p>
-<section id="parameters-11" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-11">Parameters</h4>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.update_single_array_udf(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-11" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-11">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 23%">
+<col style="width: 21%">
 <col style="width: 7%">
-<col style="width: 57%">
+<col style="width: 58%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -1318,37 +1433,37 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>function to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to register in</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td></td>
 <td>optional image name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td></td>
 <td>disables sending sources lines of function along with udf</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -1356,17 +1471,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-9" class="level4">
-<h4 class="anchored" data-anchor-id="returns-9">Returns</h4>
+<section id="returns-9" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-9">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -1376,14 +1493,26 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.udf.update_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.update_udf">update_udf</h3>
-<p><code>cloud.udf.update_udf(func, name, namespace=None, update_name=None, image_name=None, type=None, license_id=None, license_text=None, readme=None, include_source_lines=True, async_req=False)</code></p>
-<section id="parameters-12" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-12">Parameters</h4>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cloud.udf.update_udf(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    update_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    image_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span><span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    license_id<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    license_text<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    readme<span class="op">=</span><span class="va">None</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    include_source_lines<span class="op">=</span><span class="va">True</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-12" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-12">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 18%">
+<col style="width: 16%">
 <col style="width: 6%">
-<col style="width: 66%">
+<col style="width: 67%">
 <col style="width: 9%">
 </colgroup>
 <thead>
@@ -1396,67 +1525,67 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>function to update register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name of udf to register</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td></td>
 <td>namespace to register in</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>update_name</code></td>
+<td>update_name</td>
 <td></td>
 <td>new name for udf - physical folder will not be renamed, just the registered array name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>image_name</code></td>
+<td>image_name</td>
 <td></td>
 <td>optional image name</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>type</code></td>
+<td>type</td>
 <td></td>
 <td>type of udf, generic or single_array</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>license_id</code></td>
+<td>license_id</td>
 <td></td>
 <td>license id for udf according to https://spdx.org/licenses/</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>license_text</code></td>
+<td>license_text</td>
 <td></td>
 <td>text of license for udf</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>readme</code></td>
+<td>readme</td>
 <td></td>
 <td>readme of udf</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>include_source_lines</code></td>
+<td>include_source_lines</td>
 <td></td>
 <td>disables sending sources lines of function along with udf</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -1464,17 +1593,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-10" class="level4">
-<h4 class="anchored" data-anchor-id="returns-10">Returns</h4>
+<section id="returns-10" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-10">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>

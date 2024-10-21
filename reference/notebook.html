@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -431,7 +465,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.notebook.OnExists" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.notebook.OnExists">OnExists</h3>
-<p><code>cloud.notebook.OnExists()</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.notebook.OnExists()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Action to take if the array already exists.</p>
 </section>
 </section>
@@ -469,15 +503,15 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.notebook.download_notebook_contents" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.notebook.download_notebook_contents">download_notebook_contents</h3>
-<p><code>cloud.notebook.download_notebook_contents(tiledb_uri, *, timestamp=None)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.notebook.download_notebook_contents(tiledb_uri, <span class="op">*</span>, timestamp<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Downloads a notebook file from TileDB Cloud to contents as a string, nominally in JSON format.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 32%">
-<col style="width: 45%">
+<col style="width: 10%">
+<col style="width: 33%">
+<col style="width: 46%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -490,13 +524,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>tiledb_uri</code></td>
+<td>tiledb_uri</td>
 <td>str</td>
 <td>such as “tiledb://TileDB-Inc/quickstart_dense”.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>timestamp</code></td>
+<td>timestamp</td>
 <td>Union[int, datetime.datetime, None]</td>
 <td>If set, the timestamp to download the notebook as of.</td>
 <td><code>None</code></td>
@@ -504,21 +538,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
-<col style="width: 89%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 81%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>str</td>
 <td>contents of the notebook file as a string, nominally in JSON format.</td>
 </tr>
@@ -528,13 +565,18 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.notebook.download_notebook_to_file" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.notebook.download_notebook_to_file">download_notebook_to_file</h3>
-<p><code>cloud.notebook.download_notebook_to_file(tiledb_uri, ipynb_file_name, *, timestamp=None)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.notebook.download_notebook_to_file(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    tiledb_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    ipynb_file_name</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    timestamp<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Downloads a notebook file from TileDB Cloud to local disk.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 22%">
 <col style="width: 60%">
 <col style="width: 6%">
@@ -549,19 +591,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>tiledb_uri</code></td>
+<td>tiledb_uri</td>
 <td>str</td>
 <td>such as “tiledb://TileDB-Inc/quickstart_dense”.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>ipynb_file_name</code></td>
+<td>ipynb_file_name</td>
 <td>str</td>
 <td>path to save to, such as “./mycopy.ipynb”. Must be local; no other VFS backends are currently supported.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>timestamp</code></td>
+<td>timestamp</td>
 <td>Union[int, datetime.datetime, None]</td>
 <td>If set, the timestamp to download the notebook as of.</td>
 <td><code>None</code></td>
@@ -572,15 +614,20 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.notebook.rename_notebook" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.notebook.rename_notebook">rename_notebook</h3>
-<p><code>cloud.notebook.rename_notebook(tiledb_uri, notebook_name=None, access_credentials_name=None, async_req=False)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.notebook.rename_notebook(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    tiledb_uri</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    notebook_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    access_credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Update an array’s info</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 18%">
+<col style="width: 17%">
 <col style="width: 5%">
-<col style="width: 67%">
+<col style="width: 68%">
 <col style="width: 8%">
 </colgroup>
 <thead>
@@ -593,25 +640,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>tiledb_uri</code></td>
+<td>tiledb_uri</td>
 <td>str</td>
 <td>such as “tiledb://TileDB-Inc/quickstart_dense”.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>notebook_name</code></td>
+<td>notebook_name</td>
 <td>str</td>
 <td>such as “quickstart_dense_new_name”.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>access_credentials_name</code></td>
+<td>access_credentials_name</td>
 <td>str</td>
 <td>optional name of access credentials to use. If left blank. default for namespace will be used.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td>bool</td>
 <td>return future instead of results for async support.</td>
 <td><code>False</code></td>
@@ -622,15 +669,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.notebook.upload_notebook_contents" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.notebook.upload_notebook_contents">upload_notebook_contents</h3>
-<p><code>cloud.notebook.upload_notebook_contents(ipynb_file_contents, *, dest_uri=None, namespace=None, array_name=None, storage_path=None, storage_credential_name=None, on_exists)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.notebook.upload_notebook_contents(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ipynb_file_contents</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    dest_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    array_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    storage_path<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    storage_credential_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    on_exists</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Uploads a notebook file to TileDB Cloud.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 12%">
-<col style="width: 7%">
-<col style="width: 73%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 74%">
 <col style="width: 5%">
 </colgroup>
 <thead>
@@ -643,25 +699,43 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>ipynb_file_contents</code></td>
+<td>ipynb_file_contents</td>
 <td>str</td>
 <td>The contents of the notebook file as a string, nominally in JSON format.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>dest_uri</code></td>
+<td>dest_uri</td>
 <td>Optional[str]</td>
 <td>The destination URI to upload the notebook to, such as <code>tiledb://janedoe/testing-upload</code>. If this is set, <code>namespace</code> and <code>array_name</code> may not be set.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>storage_path</code></td>
+<td>storage_path</td>
 <td>Optional[str]</td>
 <td>such as “s3://acmecorp-janedoe”, typically from the user’s account settings.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td>`<code>| array_name      | name to be seen in the UI, such as "testing-upload"                                                                                                          | _required_ | |</code>namespace<code>| Optional\[str\] | such as "janedoe".                                                                                                                                           |</code>None<code>| |</code>storage_credential_name<code>| Optional\[str\] | such as "janedoe-creds", typically from the user's account settings.                                                                                         |</code>None<code>| |</code>on_exists`</td>
+<td></td>
+<td>array_name</td>
+<td>name to be seen in the UI, such as “testing-upload”</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>namespace</td>
+<td>Optional[str]</td>
+<td>such as “janedoe”.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>storage_credential_name</td>
+<td>Optional[str]</td>
+<td>such as “janedoe-creds”, typically from the user’s account settings.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>on_exists</td>
 <td>OnExists</td>
 <td>such as OnExists.FAIL (default), OVERWRITE or AUTO-INCREMENT</td>
 <td><em>required</em></td>
@@ -669,21 +743,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 88%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 79%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>str</td>
 <td>TileDB array name, such as “tiledb://janedoe/testing-upload”.</td>
 </tr>
@@ -693,13 +770,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.notebook.upload_notebook_from_file" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.notebook.upload_notebook_from_file">upload_notebook_from_file</h3>
-<p><code>cloud.notebook.upload_notebook_from_file(ipynb_file_name, *, dest_uri=None, namespace=None, array_name=None, storage_path=None, storage_credential_name=None, on_exists=OnExists.FAIL)</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.notebook.upload_notebook_from_file(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ipynb_file_name</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    dest_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    array_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    storage_path<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    storage_credential_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    on_exists<span class="op">=</span>OnExists.FAIL</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Uploads a local-disk notebook file to TileDB Cloud.</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 12%">
+<col style="width: 11%">
 <col style="width: 7%">
 <col style="width: 72%">
 <col style="width: 7%">
@@ -714,43 +800,43 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>ipnyb_file_name</code></td>
+<td>ipnyb_file_name</td>
 <td></td>
 <td>such as “./mycopy.ipynb”. Must be local; no S3 URI support at present.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>dest_uri</code></td>
+<td>dest_uri</td>
 <td>Optional[str]</td>
 <td>The destination URI to upload the notebook to, such as <code>tiledb://janedoe/testing-upload</code>. If this is set, <code>namespace</code> and <code>array_name</code> may not be set.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>such as “janedoe”.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>array_name</code></td>
+<td>array_name</td>
 <td>Optional[str]</td>
 <td>name to be seen in the UI, such as “testing-upload”.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>storage_path</code></td>
+<td>storage_path</td>
 <td>Optional[str]</td>
 <td>such as “s3://acmecorp-janedoe”, typically from the user’s account settings.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>storage_credential_name</code></td>
+<td>storage_credential_name</td>
 <td>Optional[str]</td>
 <td>such as “janedoe-creds”, typically from the user’s account settings.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>on_exists</code></td>
+<td>on_exists</td>
 <td>OnExists</td>
 <td>such as OnExists.FAIL (default), OVERWRITE or AUTO-INCREMENT</td>
 <td><code>OnExists.FAIL</code></td>
@@ -758,21 +844,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 88%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 79%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>str</td>
 <td>TileDB array name, such as “tiledb://janedoe/testing-upload”.</td>
 </tr>

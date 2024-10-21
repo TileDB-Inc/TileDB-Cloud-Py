@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -442,15 +476,24 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.soma.ingest.ingest_h5ad" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.soma.ingest.ingest_h5ad">ingest_h5ad</h3>
-<p><code>cloud.soma.ingest.ingest_h5ad(output_uri, input_uri, measurement_name, extra_tiledb_config=None, platform_config=None, ingest_mode='write', logging_level=logging.INFO, dry_run=False)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.soma.ingest.ingest_h5ad(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    output_uri</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    input_uri</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    measurement_name</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    extra_tiledb_config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    platform_config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    ingest_mode<span class="op">=</span><span class="st">'write'</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    logging_level<span class="op">=</span>logging.INFO</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    dry_run<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Performs the actual work of ingesting H5AD data into TileDB.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
+<col style="width: 10%">
 <col style="width: 17%">
-<col style="width: 64%">
+<col style="width: 65%">
 <col style="width: 6%">
 </colgroup>
 <thead>
@@ -463,43 +506,43 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>The output URI to write to. This will probably look like <code>tiledb://namespace/some://storage/uri</code>.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>input_uri</code></td>
+<td>input_uri</td>
 <td>str</td>
 <td>The URI of the H5AD file to read from. This file is read using TileDB VFS, so any path supported (and accessible) will work.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>measurement_name</code></td>
+<td>measurement_name</td>
 <td>str</td>
 <td>The name of the Measurement within the Experiment to store the data.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>extra_tiledb_config</code></td>
+<td>extra_tiledb_config</td>
 <td>Optional[Dict[str, object]]</td>
 <td>Extra configuration for TileDB.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>platform_config</code></td>
+<td>platform_config</td>
 <td>Optional[Dict[str, object]]</td>
 <td>The SOMA <code>platform_config</code> value to pass in, if any.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>ingest_mode</code></td>
+<td>ingest_mode</td>
 <td>str</td>
 <td>One of the ingest modes supported by <code>tiledbsoma.io.read_h5ad</code>.</td>
 <td><code>'write'</code></td>
 </tr>
 <tr class="odd">
-<td><code>dry_run</code></td>
+<td>dry_run</td>
 <td>bool</td>
 <td>If provided and set to <code>True</code>, does the input-path traversals without ingesting data.</td>
 <td><code>False</code></td>
@@ -510,15 +553,23 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.soma.ingest.register_dataset_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.soma.ingest.register_dataset_udf">register_dataset_udf</h3>
-<p><code>cloud.soma.ingest.register_dataset_udf(dataset_uri, *, register_name, acn, namespace=None, config=None, verbose=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.soma.ingest.register_dataset_udf(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    dataset_uri</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    register_name</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    acn</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Register the dataset on TileDB Cloud.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 25%">
-<col style="width: 51%">
+<col style="width: 11%">
+<col style="width: 26%">
+<col style="width: 52%">
 <col style="width: 9%">
 </colgroup>
 <thead>
@@ -531,31 +582,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dataset_uri</code></td>
+<td>dataset_uri</td>
 <td>str</td>
 <td>dataset URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>register_name</code></td>
+<td>register_name</td>
 <td>str</td>
 <td>name to register the dataset with on TileDB Cloud</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB Cloud namespace, defaults to the user’s default namespace</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
@@ -566,10 +617,25 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.soma.ingest.run_ingest_workflow" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.soma.ingest.run_ingest_workflow">run_ingest_workflow</h3>
-<p><code>cloud.soma.ingest.run_ingest_workflow(output_uri, input_uri, measurement_name, pattern=None, extra_tiledb_config=None, platform_config=None, ingest_mode='write', resources=None, namespace=None, register_name=None, acn=None, logging_level=logging.INFO, dry_run=False, **kwargs)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.soma.ingest.run_ingest_workflow(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    output_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    input_uri</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    measurement_name</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    extra_tiledb_config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    platform_config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    ingest_mode<span class="op">=</span><span class="st">'write'</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    register_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    logging_level<span class="op">=</span>logging.INFO</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    dry_run<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Starts a workflow to ingest H5AD data into SOMA.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 2%">
@@ -587,35 +653,38 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>The output URI to write to. This will probably look like <code>tiledb://namespace/some://storage/uri</code>.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>input_uri</code></td>
+<td>input_uri</td>
 <td>str</td>
-<td>The URI of the H5AD file(s) to read from. These are read using TileDB VFS, so any path supported (and accessible) will work. If the <code>input_uri</code> passes <code>vfs.is_file</code>, it’s ingested. If the <code>input_uri</code> passes <code>vfs.is_dir</code>, then all first-level entries are ingested . In the latter, directory case, an input file is skipped if <code>pattern</code> is provided and doesn’t match the input file. As well, in the directory case, each entry’s basename is appended to the <code>output_uri</code> to form the entry’s output URI. For example, if <code>a.h5ad` and</code>b.h5ad<code>are present within</code>input_uri<code>of</code>s3://bucket/h5ads/<code>and</code>output_uri<code>is</code>tiledb://namespace/s3://bucket/somas<code>, then</code>tiledb://namespace/s3://bucket/somas/a<code>and</code>tiledb://namespace/s3://bucket/somas/b<code>are written. | _required_ | | `measurement_name`    | str                             | The name of the Measurement within the Experiment to store the data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | _required_ | | `pattern`             | Optional\[str\]                 | As described for</code>input_uri<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | `extra_tiledb_config` | Optional\[Dict\[str, object\]\] | Extra configuration for TileDB.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | `platform_config`     | Optional\[Dict\[str, object\]\] | The SOMA</code>platform_config<code>value to pass in, if any.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `None`     | | `ingest_mode`         | str                             | One of the ingest modes supported by</code>tiledbsoma.io.read_h5ad<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `'write'`  | | `resources`           | Optional\[Dict\[str, object\]\] | A specification for the amount of resources to provide to the UDF executing the ingestion process, to override the default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `None`     | | `namespace`           | Optional\[str\]                 | An alternate namespace to run the ingestion process under.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `None`     | | `register_name`       | Optional\[str\]                 | name to register the dataset with on TileDB Cloud.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `None`     | | `acn`                 | Optional\[str\]                 | The name of the credentials to pass to the executing UDF.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `None`     | | `dry_run`             | bool                            | If provided and set to</code>True`<code>, does the input-path traversals without ingesting data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |</code>False`</td>
+<td>The URI of the H5AD file(s) to read from. These are read using TileDB VFS, so any path supported (and accessible) will work. If the <code>input_uri</code> passes <code>vfs.is_file</code>, it’s ingested. If the <code>input_uri</code> passes <code>vfs.is_dir</code>, then all first-level entries are ingested . In the latter, directory case, an input file is skipped if <code>pattern</code> is provided and doesn’t match the input file. As well, in the directory case, each entry’s basename is appended to the <code>output_uri</code> to form the entry’s output URI. For example, if <code>a.h5ad` and</code>b.h5ad<code>are present within</code>input_uri<code>of</code>s3://bucket/h5ads/<code>and</code>output_uri<code>is</code>tiledb://namespace/s3://bucket/somas<code>, then</code>tiledb://namespace/s3://bucket/somas/a<code>and</code>tiledb://namespace/s3://bucket/somas/b<code>are written. | _required_ | | measurement_name    | str                             | The name of the Measurement within the Experiment to store the data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | _required_ | | pattern             | Optional\[str\]                 | As described for</code>input_uri<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | extra_tiledb_config | Optional\[Dict\[str, object\]\] | Extra configuration for TileDB.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | platform_config     | Optional\[Dict\[str, object\]\] | The SOMA</code>platform_config<code>value to pass in, if any.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `None`     | | ingest_mode         | str                             | One of the ingest modes supported by</code>tiledbsoma.io.read_h5ad<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `'write'`  | | ingest_resources    | Optional\[Dict\[str, object\]\] | A specification for the amount of resources to provide to the UDF executing the ingestion process, to override the default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `None`     | | namespace           | Optional\[str\]                 | An alternate namespace to run the ingestion process under.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `None`     | | register_name       | Optional\[str\]                 | name to register the dataset with on TileDB Cloud.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `None`     | | acn                 | Optional\[str\]                 | The name of the credentials to pass to the executing UDF.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `None`     | | dry_run             | bool                            | If provided and set to</code>True`<code>, does the input-path traversals without ingesting data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |</code>False`</td>
 <td></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <colgroup>
+<col style="width: 4%">
 <col style="width: 9%">
-<col style="width: 90%">
+<col style="width: 86%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Dict[str, str]</td>
 <td>A dictionary of <code>{"status": "started", "graph_id": ...}</code>, with the UUID of the graph on the server side, which can be used to manage execution and monitor progress.</td>
 </tr>
@@ -625,7 +694,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.soma.ingest.run_ingest_workflow_udf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.soma.ingest.run_ingest_workflow_udf">run_ingest_workflow_udf</h3>
-<p><code>cloud.soma.ingest.run_ingest_workflow_udf(output_uri, input_uri, measurement_name, pattern=None, extra_tiledb_config=None, platform_config=None, ingest_mode='write', resources=None, namespace=None, register_name=None, acn=None, logging_level=logging.INFO, dry_run=False, **kwargs)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.soma.ingest.run_ingest_workflow_udf(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    output_uri</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    input_uri</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    measurement_name</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    pattern<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    extra_tiledb_config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    platform_config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ingest_mode<span class="op">=</span><span class="st">'write'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    register_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    logging_level<span class="op">=</span>logging.INFO</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    dry_run<span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This is the highest-level ingestor component that runs on-node. Only here can we do VFS with access_credentials_name – that does not work correctly on the client.</p>
 
 

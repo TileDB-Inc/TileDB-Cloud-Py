@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -442,15 +476,21 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.utilities.consolidate.consolidate" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.consolidate.consolidate">consolidate</h3>
-<p><code>cloud.utilities.consolidate.consolidate(array_uri, fragments, *, config=None, max_fragment_size=MAX_FRAGMENT_SIZE_BYTES)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.utilities.consolidate.consolidate(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    array_uri</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    fragments</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    max_fragment_size<span class="op">=</span>MAX_FRAGMENT_SIZE_BYTES</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Consolidate fragments</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
+<col style="width: 12%">
 <col style="width: 21%">
-<col style="width: 47%">
+<col style="width: 48%">
 <col style="width: 17%">
 </colgroup>
 <thead>
@@ -463,25 +503,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>array_uri</code></td>
+<td>array_uri</td>
 <td>str</td>
 <td>array URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>fragments</code></td>
+<td>fragments</td>
 <td>Sequence[tiledb.FragmentInfo]</td>
 <td>list of fragments</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>max_fragment_size</code></td>
+<td>max_fragment_size</td>
 <td>int</td>
 <td>max size of consolidated fragments, defaults to MAX_FRAGMENT_SIZE_BYTES</td>
 <td><code>MAX_FRAGMENT_SIZE_BYTES</code></td>
@@ -492,15 +532,20 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.utilities.consolidate.consolidate_and_vacuum" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.consolidate.consolidate_and_vacuum">consolidate_and_vacuum</h3>
-<p><code>cloud.utilities.consolidate.consolidate_and_vacuum(array_uri, *, config=None, vacuum_fragments=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.utilities.consolidate.consolidate_and_vacuum(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    array_uri</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    vacuum_fragments<span class="op">=</span><span class="va">False</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Consolidate and vacuum commits and fragment metadata, with an option to vacuum fragments as the first step.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 18%">
-<col style="width: 30%">
-<col style="width: 39%">
+<col style="width: 16%">
+<col style="width: 31%">
+<col style="width: 40%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -513,19 +558,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>array_uri</code></td>
+<td>array_uri</td>
 <td>str</td>
 <td>array URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>vacuum_fragments</code></td>
+<td>vacuum_fragments</td>
 <td>bool</td>
 <td>vacuum fragments first, defaults to False</td>
 <td><code>False</code></td>
@@ -536,16 +581,27 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.utilities.consolidate.consolidate_fragments" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.consolidate.consolidate_fragments">consolidate_fragments</h3>
-<p><code>cloud.utilities.consolidate.consolidate_fragments(array_uri, *, acn=None, config=None, group_by_first_dim=False, graph=None, dependencies=None, consolidate_resources=None, namespace=None, max_fragment_size=MAX_FRAGMENT_SIZE_BYTES)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.utilities.consolidate.consolidate_fragments(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    array_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    group_by_first_dim<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    graph<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    dependencies<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    consolidate_resources<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    max_fragment_size<span class="op">=</span>MAX_FRAGMENT_SIZE_BYTES</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Consolidate fragments in an array.</p>
 <p>If <code>group_by_first_dim</code> is True, fragments with the same value for the first dimension will be consolidated together. Otherwise, all fragments will be consolidated together.</p>
 <p>If <code>graph</code> is provided, the consolidation task nodes will be submitted to the graph. If <code>dependencies</code> is provided, the consolidation nodes will depend on the nodes in the list.</p>
 <p>If <code>graph</code> is not provided, a new graph will be created and submitted to TileDB Cloud.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 14%">
+<col style="width: 13%">
 <col style="width: 19%">
 <col style="width: 50%">
 <col style="width: 15%">
@@ -560,55 +616,55 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>array_uri</code></td>
+<td>array_uri</td>
 <td>str</td>
 <td>array URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>acn</code></td>
+<td>acn</td>
 <td>Optional[str]</td>
 <td>Access Credentials Name (ACN) registered in TileDB Cloud (ARN type), defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>group_by_first_dim</code></td>
+<td>group_by_first_dim</td>
 <td>bool</td>
 <td>group fragment by first dimension, defaults to True</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>graph</code></td>
+<td>graph</td>
 <td>Optional[dag.DAG]</td>
 <td>graph to submit nodes to, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>dependencies</code></td>
+<td>dependencies</td>
 <td>Optional[Sequence[dag.Node]]</td>
 <td>list of nodes in the graph to depend on, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>consolidate_resources</code></td>
+<td>consolidate_resources</td>
 <td>Optional[Mapping[str, str]]</td>
 <td>resources for the consolidate node, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>TileDB Cloud namespace, defaults to the user’s default namespace</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>max_fragment_size</code></td>
+<td>max_fragment_size</td>
 <td>int</td>
 <td>max size of consolidated fragments, defaults to MAX_FRAGMENT_SIZE_BYTES</td>
 <td><code>MAX_FRAGMENT_SIZE_BYTES</code></td>
@@ -619,16 +675,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.utilities.consolidate.group_fragments" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.consolidate.group_fragments">group_fragments</h3>
-<p><code>cloud.utilities.consolidate.group_fragments(array_uri, *, config=None, group_by_first_dim=True)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.utilities.consolidate.group_fragments(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    array_uri</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    group_by_first_dim<span class="op">=</span><span class="va">True</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Get a list of fragment info objects, optionally grouping fragments that have the same value for the first dimension.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 19%">
-<col style="width: 29%">
-<col style="width: 39%">
-<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 30%">
+<col style="width: 40%">
+<col style="width: 11%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -640,19 +701,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>array_uri</code></td>
+<td>array_uri</td>
 <td>str</td>
 <td>array URI</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, Any]]</td>
 <td>config dictionary, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>group_by_first_dim</code></td>
+<td>group_by_first_dim</td>
 <td>bool</td>
 <td>group by first dimension, defaults to True</td>
 <td><code>True</code></td>
@@ -660,21 +721,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 52%">
-<col style="width: 47%">
+<col style="width: 8%">
+<col style="width: 48%">
+<col style="width: 43%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Sequence[Sequence[tiledb.FragmentInfo]]</td>
 <td>list of lists of fragment info objects</td>
 </tr>

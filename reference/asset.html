@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -467,15 +501,15 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.asset.delete" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.delete">delete</h3>
-<p><code>cloud.asset.delete(uri, *, recursive=False)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.delete(uri, <span class="op">*</span>, recursive<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Deregister an asset and remove its objects from storage.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 15%">
-<col style="width: 63%">
+<col style="width: 64%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -488,13 +522,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>tiledb URI of the asset.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>recursive</code></td>
+<td>recursive</td>
 <td>Optional[bool]</td>
 <td>if True, contents of an asset will be recursively deleted. Default: False.</td>
 <td><code>False</code></td>
@@ -505,15 +539,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.deregister" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.deregister">deregister</h3>
-<p><code>cloud.asset.deregister(uri, *, recursive=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.deregister(uri, <span class="op">*</span>, recursive<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Deregister an asset.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 14%">
-<col style="width: 65%">
+<col style="width: 66%">
 <col style="width: 9%">
 </colgroup>
 <thead>
@@ -526,13 +560,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>tiledb URI of the asset.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>recursive</code></td>
+<td>recursive</td>
 <td>Optional[bool]</td>
 <td>if True, contents of an asset will be recursively deregistered Default: False.</td>
 <td><code>False</code></td>
@@ -543,10 +577,10 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.info" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.info">info</h3>
-<p><code>cloud.asset.info(uri)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.info(uri)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Retrieve information about an asset.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -558,7 +592,7 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>tiledb URI of the asset.</td>
 <td><em>required</em></td>
@@ -566,21 +600,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 64%">
-<col style="width: 35%">
+<col style="width: 10%">
+<col style="width: 57%">
+<col style="width: 32%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Union[models.ArrayInfo, models.GroupInfo]</td>
 <td>ArrayInfo or GroupInfo.</td>
 </tr>
@@ -590,15 +627,25 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.list" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.list">list</h3>
-<p><code>cloud.asset.list(namespace=None, search=None, type=None, ownership_level=None, depth=None, expand=None, page=None, per_page=None, order_by=None)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.<span class="bu">list</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    search<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span><span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ownership_level<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    depth<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    page<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    per_page<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    order_by<span class="op">=</span><span class="va">None</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>List/search for stored assets.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 5%">
 <col style="width: 9%">
-<col style="width: 81%">
+<col style="width: 82%">
 <col style="width: 3%">
 </colgroup>
 <thead>
@@ -611,55 +658,55 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>The namespace to use, or the current user if absent.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>search</code></td>
+<td>search</td>
 <td>Optional[str]</td>
 <td>A search string to use.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>type</code></td>
+<td>type</td>
 <td>Optional[_AssetType]</td>
 <td>If provided, include only assets of the specified type (“array” or “group”).</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>ownership_level</code></td>
+<td>ownership_level</td>
 <td>Optional[_OwnershipLevel]</td>
 <td>If provided, include only assets you own (“owned”), or only assets that are shared with you (“shared”).</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>depth</code></td>
+<td>depth</td>
 <td>Optional[_Depth]</td>
 <td>The depth to provide return information. If “root”, only root assets (i.e., arrays and groups that are not contained within another group) will be returned. If “all”, all assets that match (including those which are contained in another group) will be included.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>expand</code></td>
+<td>expand</td>
 <td>Optional[_CSVString]</td>
 <td>Comma-separated string specifying additional information to include in the response. As of this writing, “metadata” is supported.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>page</code></td>
+<td>page</td>
 <td>Optional[int]</td>
 <td>Which page of results to retrieve. 1-based.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>per_page</code></td>
+<td>per_page</td>
 <td>Optional[int]</td>
 <td>How many results to include on each page.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>order_by</code></td>
+<td>order_by</td>
 <td>Optional[str]</td>
 <td>The order to return assets, by default “created_at desc”. Supported keys are “created_at”, “name”, and “asset_type”. They can be used alone or with “asc” or “desc” separated by a space (e.g.&nbsp;“created_at”, “asset_type asc”).</td>
 <td><code>None</code></td>
@@ -670,15 +717,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.list_public" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.list_public">list_public</h3>
-<p><code>cloud.asset.list_public(search=None, type=None, depth=None, page=None, per_page=None, order_by=None)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.list_public(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    search<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span><span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    depth<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    page<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    per_page<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    order_by<span class="op">=</span><span class="va">None</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>List/search for publicly-shared assets.</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 3%">
 <col style="width: 7%">
-<col style="width: 84%">
+<col style="width: 85%">
 <col style="width: 3%">
 </colgroup>
 <thead>
@@ -691,43 +745,43 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>search</code></td>
+<td>search</td>
 <td>Optional[str]</td>
 <td>A search string to use.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>type</code></td>
+<td>type</td>
 <td>Optional[_AssetType]</td>
 <td>If provided, include only assets of the specified type (“array” or “group”).</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>depth</code></td>
+<td>depth</td>
 <td>Optional[_Depth]</td>
 <td>The depth to provide return information. If “root”, only root assets (i.e., arrays and groups that are not contained within another group) will be returned. If “all”, all assets that match (including those which are contained in another group) will be included.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>expand</code></td>
+<td>expand</td>
 <td></td>
 <td>Comma-separated string specifying additional information to include in the response. As of this writing, “metadata” is supported.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>page</code></td>
+<td>page</td>
 <td>Optional[int]</td>
 <td>Which page of results to retrieve. 1-based.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>per_page</code></td>
+<td>per_page</td>
 <td>Optional[int]</td>
 <td>How many results to include on each page.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>order_by</code></td>
+<td>order_by</td>
 <td>Optional[str]</td>
 <td>The order to return assets, by default “created_at desc”. Supported keys are “created_at”, “name”, and “asset_type”. They can be used alone or with “asc” or “desc” separated by a space (e.g.&nbsp;“created_at”, “asset_type asc”).</td>
 <td><code>None</code></td>
@@ -738,10 +792,10 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.list_shared_with" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.list_shared_with">list_shared_with</h3>
-<p><code>cloud.asset.list_shared_with(uri)</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.list_shared_with(uri)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>List an asset’s sharing policies.</p>
-<section id="parameters-5" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<section id="parameters-5" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -753,7 +807,7 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>tiledb URI of the asset.</td>
 <td><em>required</em></td>
@@ -761,17 +815,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>None</td>
 <td>a list of ArraySharing or GroupSharing objects.</td>
 </tr>
@@ -781,15 +837,24 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.register" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.register">register</h3>
-<p><code>cloud.asset.register(storage_uri, type, *, dest_uri=None, name=None, namespace=None, credentials_name=None, parent_uri=None)</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.register(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    storage_uri</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">type</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    dest_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    parent_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Register stored objects as an asset.</p>
-<section id="parameters-6" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
+<section id="parameters-6" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 12%">
+<col style="width: 11%">
 <col style="width: 10%">
-<col style="width: 69%">
+<col style="width: 70%">
 <col style="width: 7%">
 </colgroup>
 <thead>
@@ -802,43 +867,43 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>storage_uri</code></td>
+<td>storage_uri</td>
 <td>str</td>
 <td>S3, for example, URI of the data to be registered.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>type</code></td>
+<td>type</td>
 <td>_AssetType</td>
 <td>The type of asset, “array” or “group”.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>The user or organization to register the asset under. If unset will default to the logged-in user’s namespace.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>Name of asset.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>description</code></td>
+<td>description</td>
 <td>str</td>
 <td>Optional description.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>credentials_name</code></td>
+<td>credentials_name</td>
 <td>Optional[str]</td>
 <td>Optional name of access credentials to use. If omitted, the default for namespace will be used.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>parent_uri</code></td>
+<td>parent_uri</td>
 <td>Optional[str]</td>
 <td>Optional parent URI for group type assets.</td>
 <td><code>None</code></td>
@@ -849,15 +914,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.share" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.share">share</h3>
-<p><code>cloud.asset.share(uri, namespace, permissions='read')</code></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.share(uri, namespace, permissions<span class="op">=</span><span class="st">'read'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Give another namespace permission to access an asset.</p>
-<section id="parameters-7" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
+<section id="parameters-7" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-7">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 14%">
-<col style="width: 36%">
+<col style="width: 12%">
 <col style="width: 37%">
+<col style="width: 38%">
 <col style="width: 11%">
 </colgroup>
 <thead>
@@ -870,19 +935,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>tiledb URI of the asset.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>str</td>
 <td>the target namespace.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>permissions</code></td>
+<td>permissions</td>
 <td>Optional[Union[str, List[str]]]</td>
 <td>‘read’, ‘write’, or [‘read’, ‘write’].</td>
 <td><code>'read'</code></td>
@@ -893,10 +958,10 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.unshare" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.unshare">unshare</h3>
-<p><code>cloud.asset.unshare(uri, namespace)</code></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.unshare(uri, namespace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Remove access permissions for another namespace.</p>
-<section id="parameters-8" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
+<section id="parameters-8" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -908,13 +973,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>tiledb URI of the asset.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>str</td>
 <td>the target namespace.</td>
 <td><em>required</em></td>
@@ -925,15 +990,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.asset.update_info" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.update_info">update_info</h3>
-<p><code>cloud.asset.update_info(uri, *, description=None, name=None, tags=None, access_credentials_name=None)</code></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cloud.asset.update_info(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    uri</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    tags<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    access_credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Update asset info settings.</p>
-<section id="parameters-9" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-9">Parameters</h4>
+<section id="parameters-9" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-9">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 16%">
+<col style="width: 14%">
 <col style="width: 28%">
-<col style="width: 41%">
+<col style="width: 42%">
 <col style="width: 13%">
 </colgroup>
 <thead>
@@ -946,25 +1018,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>tiledb URI of the asset.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>description</code></td>
+<td>description</td>
 <td>Optional[str]</td>
 <td>Asset description, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>Asset name, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>tags</code></td>
+<td>tags</td>
 <td>Optional[List[str]]</td>
 <td>Asset tags, defaults to None</td>
 <td><code>None</code></td>

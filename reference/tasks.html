@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -450,26 +484,39 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.tasks.fetch_results" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.fetch_results">fetch_results</h3>
-<p><code>cloud.tasks.fetch_results(task_id, *, result_format=None)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.tasks.fetch_results(task_id, <span class="op">*</span>, result_format<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetches the results of a previously-executed UDF or SQL query.</p>
 </section>
 <section id="tiledb.cloud.tasks.fetch_results_pandas" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.fetch_results_pandas">fetch_results_pandas</h3>
-<p><code>cloud.tasks.fetch_results_pandas(task_id, *, result_format=models.ResultFormat.NATIVE)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.tasks.fetch_results_pandas(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    task_id</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    result_format<span class="op">=</span>models.ResultFormat.NATIVE</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetches the results of a previously-executed UDF or SQL query.</p>
 </section>
 <section id="tiledb.cloud.tasks.fetch_tasks" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.fetch_tasks">fetch_tasks</h3>
-<p><code>cloud.tasks.fetch_tasks(namespace=None, array=None, start=None, end=datetime.datetime.now(datetime.timezone.utc), status=None, page=None, per_page=None, async_req=False)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.tasks.fetch_tasks(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    array<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    start<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    end<span class="op">=</span>datetime.datetime.now(datetime.timezone.utc)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    status<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    page<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    per_page<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    async_req<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetch all tasks a user has access too.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 8%">
+<col style="width: 7%">
 <col style="width: 6%">
-<col style="width: 51%">
-<col style="width: 32%">
+<col style="width: 52%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -481,49 +528,49 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>str</td>
 <td>optional filter by namespace</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>array</code></td>
+<td>array</td>
 <td>str</td>
 <td>optional limit tasks to specific array</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>start</code></td>
+<td>start</td>
 <td>datetime</td>
 <td>optional start time for listing of tasks, defaults to 7 days ago</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>end</code></td>
+<td>end</td>
 <td>datetime</td>
 <td>optional end time for listing of tasks defaults to now</td>
 <td><code>datetime.datetime.now(datetime.timezone.utc)</code></td>
 </tr>
 <tr class="odd">
-<td><code>status</code></td>
+<td>status</td>
 <td>str</td>
 <td>optional filter on status can be one of [‘FAILED’, ‘RUNNING’, ‘COMPLETED’]</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>page</code></td>
+<td>page</td>
 <td>int</td>
 <td>optional page for pagenating results</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>per_page</code></td>
+<td>per_page</td>
 <td>int</td>
 <td>optional records to return per page</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -531,21 +578,24 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 48%">
-<col style="width: 51%">
+<col style="width: 8%">
+<col style="width: 44%">
+<col style="width: 47%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Dict[str, Sequence[Dict[str, Any]]]</td>
 <td>Mapping of task data organized by task type.</td>
 </tr>
@@ -555,19 +605,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.tasks.last_sql_task" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.last_sql_task">last_sql_task</h3>
-<p><code>cloud.tasks.last_sql_task()</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.tasks.last_sql_task()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetch the last run sql array task</p>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>object with task details</td>
 </tr>
@@ -577,19 +629,21 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.tasks.last_udf_task" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.last_udf_task">last_udf_task</h3>
-<p><code>cloud.tasks.last_udf_task()</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.tasks.last_udf_task()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetch the last run udf task</p>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>object with task details</td>
 </tr>
@@ -599,15 +653,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.tasks.task" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.task">task</h3>
-<p><code>cloud.tasks.task(id, async_req=False)</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.tasks.task(<span class="bu">id</span>, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetch a single array task</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
+<col style="width: 13%">
 <col style="width: 9%">
-<col style="width: 61%">
+<col style="width: 62%">
 <col style="width: 14%">
 </colgroup>
 <thead>
@@ -620,13 +674,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>id</code></td>
+<td>id</td>
 <td>str</td>
 <td>id to lookup</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -634,17 +688,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
+<section id="returns-3" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>object with task details</td>
 </tr>

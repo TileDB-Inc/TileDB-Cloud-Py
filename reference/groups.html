@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -462,15 +496,22 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.groups.create" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.groups.create">create</h3>
-<p><code>cloud.groups.create(name, *, namespace=None, parent_uri=None, storage_uri=None, credentials_name=None)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.create(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    name</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    parent_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    storage_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Creates a new TileDB Cloud group.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 9%">
 <col style="width: 8%">
-<col style="width: 74%">
+<col style="width: 75%">
 <col style="width: 6%">
 </colgroup>
 <thead>
@@ -483,31 +524,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td>str</td>
 <td>The name of the group to create, or its URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>The namespace to create the group in. If <code>name</code> is a URI, this must not be provided. If not provided, the current logged-in user will be used.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>parent_uri</code></td>
+<td>parent_uri</td>
 <td>Optional[str]</td>
 <td>The parent URI to add the group to, if desired.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>storage_uri</code></td>
+<td>storage_uri</td>
 <td>Optional[str]</td>
 <td>The backend URI where the group will be stored. If not provided, uses the namespace’s default storage path for groups.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>credentials_name</code></td>
+<td>credentials_name</td>
 <td>Optional[str]</td>
 <td>The name of the storage credential to use for creating the group. If not provided, uses the namespace’s default credential for groups.</td>
 <td><code>None</code></td>
@@ -518,15 +559,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.groups.delete" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.groups.delete">delete</h3>
-<p><code>cloud.groups.delete(uri, recursive=False)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.delete(uri, recursive<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Deletes a group.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 14%">
-<col style="width: 8%">
-<col style="width: 62%">
+<col style="width: 12%">
+<col style="width: 9%">
+<col style="width: 64%">
 <col style="width: 13%">
 </colgroup>
 <thead>
@@ -539,13 +580,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>TileDB Group URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>recursive</code></td>
+<td>recursive</td>
 <td>bool</td>
 <td>Delete all off the group’s contents, defaults to False</td>
 <td><code>False</code></td>
@@ -556,15 +597,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.groups.deregister" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.groups.deregister">deregister</h3>
-<p><code>cloud.groups.deregister(uri, *, recursive=False)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.deregister(uri, <span class="op">*</span>, recursive<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Deregisters the given group from TileDB Cloud.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 6%">
+<col style="width: 5%">
 <col style="width: 3%">
-<col style="width: 84%">
+<col style="width: 85%">
 <col style="width: 5%">
 </colgroup>
 <thead>
@@ -577,13 +618,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>The URI of the group to deregister.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>recursive</code></td>
+<td>recursive</td>
 <td>bool</td>
 <td>If true, deregister the group recursively by deregistering all of the elements of the group (and all elements of those groups, recursively) before deregistering the group itself.</td>
 <td><code>False</code></td>
@@ -594,147 +635,20 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.groups.info" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.groups.info">info</h3>
-<p><code>cloud.groups.info(uri)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.info(uri)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Gets metadata about the named TileDB Cloud group.</p>
 </section>
 <section id="tiledb.cloud.groups.list_shared_with" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.groups.list_shared_with">list_shared_with</h3>
-<p><code>cloud.groups.list_shared_with(uri, async_req=False)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.list_shared_with(uri, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>List a group’s sharing policies.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-3" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
-<col style="width: 9%">
-<col style="width: 61%">
 <col style="width: 13%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>uri</code></td>
-<td>str</td>
-<td>tiledb URI of the asset.</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>async_req</code></td>
-<td></td>
-<td>return future instead of results for async support.</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>a list of GroupSharing objects.</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.groups.register" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.groups.register">register</h3>
-<p><code>cloud.groups.register(storage_uri, *, dest_uri=None, name=None, namespace=None, credentials_name=None, parent_uri=None)</code></p>
-<p>Registers a pre-existing group.</p>
-</section>
-<section id="tiledb.cloud.groups.share_group" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.groups.share_group">share_group</h3>
-<p><code>cloud.groups.share_group(uri, namespace, permissions, async_req=False)</code></p>
-<p>Shares group with given namespace and permissions.</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 12%">
-<col style="width: 58%">
-<col style="width: 13%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>uri</code></td>
-<td>str</td>
-<td>tiledb URI of the asset.</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>namespace</code></td>
-<td>str</td>
-<td></td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>permissions</code></td>
-<td>list(str)</td>
-<td></td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>async_req</code></td>
-<td></td>
-<td>return future instead of results for async support.</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>None.</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.groups.unshare_group" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.groups.unshare_group">unshare_group</h3>
-<p><code>cloud.groups.unshare_group(uri, namespace, async_req=False)</code></p>
-<p>Removes sharing of a group from given namespace</p>
-<section id="parameters-5" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 15%">
 <col style="width: 9%">
-<col style="width: 61%">
+<col style="width: 63%">
 <col style="width: 14%">
 </colgroup>
 <thead>
@@ -747,13 +661,152 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>uri</td>
+<td>str</td>
+<td>tiledb URI of the asset.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>async_req</td>
+<td></td>
+<td>return future instead of results for async support.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>a list of GroupSharing objects.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.groups.register" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.groups.register">register</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.register(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    storage_uri</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    dest_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    credentials_name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    parent_uri<span class="op">=</span><span class="va">None</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Registers a pre-existing group.</p>
+</section>
+<section id="tiledb.cloud.groups.share_group" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.groups.share_group">share_group</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.share_group(uri, namespace, permissions, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Shares group with given namespace and permissions.</p>
+<section id="parameters-4" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 59%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>uri</td>
+<td>str</td>
+<td>tiledb URI of the asset.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>namespace</td>
+<td>str</td>
+<td></td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td>permissions</td>
+<td>list(str)</td>
+<td></td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>async_req</td>
+<td></td>
+<td>return future instead of results for async support.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>None.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.groups.unshare_group" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.groups.unshare_group">unshare_group</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.unshare_group(uri, namespace, async_req<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Removes sharing of a group from given namespace</p>
+<section id="parameters-5" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 62%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>namespace</td>
 <td>str</td>
 <td>namespace to remove shared access to the group</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>async_req</code></td>
+<td>async_req</td>
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
@@ -761,17 +814,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -781,15 +836,22 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.groups.update_info" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.groups.update_info">update_info</h3>
-<p><code>cloud.groups.update_info(uri, *, description=None, name=None, logo=None, tags=None)</code></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.groups.update_info(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    uri</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    logo<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    tags<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Update Group Attributes</p>
-<section id="parameters-6" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
+<section id="parameters-6" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
+<col style="width: 11%">
 <col style="width: 22%">
-<col style="width: 53%">
+<col style="width: 54%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -802,31 +864,31 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td>uri</td>
 <td>str</td>
 <td>URI of the group in the form ‘tiledb://<namespace>/<group>’</group></namespace></td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>description</code></td>
+<td>description</td>
 <td>Optional[str]</td>
 <td>Group description, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>Group’s name, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>logo</code></td>
+<td>logo</td>
 <td>Optional[str]</td>
 <td>Group’s logo, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>tags</code></td>
+<td>tags</td>
 <td>Optional[List[str]]</td>
 <td>Group tags, defaults to None</td>
 <td><code>None</code></td>
@@ -834,17 +896,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
+<section id="returns-3" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>None</td>
 <td>None</td>
 </tr>

@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -439,15 +473,15 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.vcf.split.ls_samples" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.split.ls_samples">ls_samples</h3>
-<p><code>cloud.vcf.split.ls_samples(vcf_uri, config=None)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.split.ls_samples(vcf_uri, config<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>List samples in an aggregate VCF.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 39%">
-<col style="width: 32%">
+<col style="width: 11%">
+<col style="width: 40%">
+<col style="width: 33%">
 <col style="width: 14%">
 </colgroup>
 <thead>
@@ -460,13 +494,13 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>vcf_uri</code></td>
+<td>vcf_uri</td>
 <td>str</td>
 <td>S3 path to aggregate VCF.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, str]]</td>
 <td>TileDB config params.</td>
 <td><code>None</code></td>
@@ -474,17 +508,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<section id="returns" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>list[str]</td>
 <td>Samples included in VCF.</td>
 </tr>
@@ -494,15 +530,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.split.split_one_sample" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.split.split_one_sample">split_one_sample</h3>
-<p><code>cloud.vcf.split.split_one_sample(vcf_uri, sample, output_uri, config=None)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.split.split_one_sample(vcf_uri, sample, output_uri, config<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Split one sample from multi-sample VCF.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-1" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
+<col style="width: 13%">
 <col style="width: 37%">
-<col style="width: 33%">
+<col style="width: 34%">
 <col style="width: 13%">
 </colgroup>
 <thead>
@@ -515,25 +551,25 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>vcf_uri</code></td>
+<td>vcf_uri</td>
 <td>str</td>
 <td>URI of VCF to isolate from.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>sample</code></td>
+<td>sample</td>
 <td>str</td>
 <td>Sample name to isolate.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>URI to deposit isolated VCF.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, str]]</td>
 <td>TileDB config object.</td>
 <td><code>None</code></td>
@@ -541,17 +577,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<section id="returns-1" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>str</td>
 <td>URI of isolated sample.</td>
 </tr>
@@ -561,14 +599,26 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.split.split_vcf" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.split.split_vcf">split_vcf</h3>
-<p><code>cloud.vcf.split.split_vcf(vcf_uri, output_uri, namespace, acn, resources={'cpu': '2', 'memory': '30Gi'}, compute=True, verbose=False, samples=None, retry_count=1, max_workers=100, config=None)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.vcf.split.split_vcf(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    vcf_uri</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    output_uri</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    namespace</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    acn</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    resources<span class="op">=</span>{<span class="st">'cpu'</span>: <span class="st">'2'</span>, <span class="st">'memory'</span>: <span class="st">'30Gi'</span>}</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    compute<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    samples<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    retry_count<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    max_workers<span class="op">=</span><span class="dv">100</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    config<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Split individual sample VCFs from an aggreate VCF.</p>
 <p>Given an aggregate VCF file containing multiple samples, split all samples into isolated VCFs, one per sample. Alternatively, specify sample(s) to split apart from VCF if not all isolated VCFs are needed.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-2" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 7%">
+<col style="width: 6%">
 <col style="width: 16%">
 <col style="width: 58%">
 <col style="width: 17%">
@@ -583,67 +633,67 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>vcf_uri</code></td>
+<td>vcf_uri</td>
 <td>str</td>
 <td>Aggregate VCF URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>output_uri</code></td>
+<td>output_uri</td>
 <td>str</td>
 <td>Output URI to write isolated VCFs.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>str</td>
 <td>TileDB Cloud namespace to process task graph.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>acn</code></td>
+<td>acn</td>
 <td>str</td>
 <td>Access credential friendly name to auth storage i/o.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>resources</code></td>
+<td>resources</td>
 <td>Mapping[str, str]</td>
 <td>Resources applied to splitting UDF (start with default).</td>
 <td><code>{'cpu': '2', 'memory': '30Gi'}</code></td>
 </tr>
 <tr class="even">
-<td><code>compute</code></td>
+<td>compute</td>
 <td>bool</td>
 <td>Whether to execute DAG.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td><code>verbose</code></td>
+<td>verbose</td>
 <td>bool</td>
 <td>Logging verbosity.</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>samples</code></td>
+<td>samples</td>
 <td>Optional[Sequence[str]]</td>
 <td>Indicate a batch of sample names within <code>vcf_uri</code> to isolate if it is undesired to isolate all samples (default).</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>retry_count</code></td>
+<td>retry_count</td>
 <td>int</td>
 <td>Number of Node retries.</td>
 <td><code>1</code></td>
 </tr>
 <tr class="even">
-<td><code>max_workers</code></td>
+<td>max_workers</td>
 <td>int</td>
 <td>Max workers to engage simultaneously.</td>
 <td><code>100</code></td>
 </tr>
 <tr class="odd">
-<td><code>config</code></td>
+<td>config</td>
 <td>Optional[Mapping[str, int]]</td>
 <td>TileDB configuration parameters used to configure virtual filesystem handler.</td>
 <td><code>None</code></td>
@@ -651,17 +701,19 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<section id="returns-2" class="level4 doc-section doc-section-returns">
+<h4 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>DAG</td>
 <td>DAG instantiated as specified.</td>
 </tr>

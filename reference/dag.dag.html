@@ -468,13 +468,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="tiledb.cloud.dag.dag.DAG" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG">DAG</h3>
-<p><code>cloud.dag.dag.DAG(self, max_workers=None, use_processes=False, done_callback=None, update_callback=None, namespace=None, name=None, mode=Mode.REALTIME, retry_strategy=None, workflow_retry_strategy=None, deadline=None)</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    max_workers<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    use_processes<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    done_callback<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    update_callback<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span>Mode.REALTIME</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    retry_strategy<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    workflow_retry_strategy<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    deadline<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Low-level API for creating and managing direct acyclic graphs as TileDB Cloud Task Graphs.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
+<col style="width: 12%">
 <col style="width: 19%">
 <col style="width: 59%">
 <col style="width: 8%">
@@ -489,61 +501,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>max_workers</code></td>
+<td>max_workers</td>
 <td>Optional[int]</td>
 <td>Number of workers to allocate to execute DAG.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>use_processes</code></td>
+<td>use_processes</td>
 <td>bool</td>
 <td>If true will use processes instead of threads.</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>done_callback</code></td>
+<td>done_callback</td>
 <td>Optional[Callable[[DAG], None]]</td>
 <td>Optional call back function to register for when dag is completed. Function will be passed reference to this DAG.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>update_callback</code></td>
+<td>update_callback</td>
 <td>Optional[Callable[[DAG], None]]</td>
 <td>Optional call back function to register for when dag status is updated. Function will be passed reference to this DAG.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>Namespace to execute DAG in.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>Human-readable name for DAG to be showin in Task Graph logs.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>mode</code></td>
+<td>mode</td>
 <td>Mode</td>
 <td>Mode the DAG is to run in, valid options are: Mode.REALTIME, Mode.BATCH.</td>
 <td><code>Mode.REALTIME</code></td>
 </tr>
 <tr class="even">
-<td><code>retry_strategy</code></td>
+<td>retry_strategy</td>
 <td>Optional[models.RetryStrategy]</td>
 <td>K8S retry policy to be applied to each Node.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>workflow_retry_strategy</code></td>
+<td>workflow_retry_strategy</td>
 <td>Optional[models.RetryStrategy]</td>
 <td>K8S retry policy to be applied to DAG.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>deadline</code></td>
+<td>deadline</td>
 <td>Optional[int]</td>
 <td>Duration (sec) DAG allowed to execute before timeout.</td>
 <td><code>None</code></td>
@@ -742,10 +754,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="tiledb.cloud.dag.dag.DAG.add_done_callback" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_done_callback">add_done_callback</h5>
-<p><code>cloud.dag.dag.DAG.add_done_callback(func)</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.add_done_callback(func)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Add a callback for when DAG is completed</p>
-<section id="parameters-1" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
+<section id="parameters-1" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-1">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 6%">
@@ -763,7 +775,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>Function to call when DAG status is updated. The function will be passed reference to this dag</td>
 <td><em>required</em></td>
@@ -774,11 +786,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.add_node" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_node">add_node</h5>
-<p><code>cloud.dag.dag.DAG.add_node(func_exec, *args, name=None, local_mode=True, **kwargs)</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.add_node(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    func_exec</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>args</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    local_mode<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create and add a node.</p>
 <p>DEPRECATED. Use <code>submit_local</code> instead.</p>
-<section id="parameters-2" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
+<section id="parameters-2" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-2">Parameters</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -790,19 +808,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func_exec</code></td>
+<td>func_exec</td>
 <td></td>
 <td>function to execute</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>args</code></td>
+<td>args</td>
 <td></td>
 <td>arguments for function execution</td>
 <td><code>()</code></td>
 </tr>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td></td>
 <td>name</td>
 <td><code>None</code></td>
@@ -810,17 +828,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns" class="level6">
-<h6 class="anchored" data-anchor-id="returns">Returns</h6>
+<section id="returns" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>Node that is created</td>
 </tr>
@@ -830,10 +850,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.add_node_obj" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_node_obj">add_node_obj</h5>
-<p><code>cloud.dag.dag.DAG.add_node_obj(node)</code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.add_node_obj(node)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Add node to DAG.</p>
-<section id="parameters-3" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-3">Parameters</h6>
+<section id="parameters-3" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-3">Parameters</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -845,7 +865,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>node</code></td>
+<td>node</td>
 <td></td>
 <td>to add to dag</td>
 <td><em>required</em></td>
@@ -853,17 +873,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-1" class="level6">
-<h6 class="anchored" data-anchor-id="returns-1">Returns</h6>
+<section id="returns-1" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-1">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Node</td>
 <td>Node instance.</td>
 </tr>
@@ -873,10 +895,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.add_update_callback" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_update_callback">add_update_callback</h5>
-<p><code>cloud.dag.dag.DAG.add_update_callback(func)</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.add_update_callback(func)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Add a callback for when DAG status is updated</p>
-<section id="parameters-4" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-4">Parameters</h6>
+<section id="parameters-4" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-4">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 6%">
@@ -894,7 +916,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td></td>
 <td>Function to call when DAG status is updated. The function will be passed reference to this dag</td>
 <td><em>required</em></td>
@@ -905,31 +927,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.cancel" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.cancel">cancel</h5>
-<p><code>cloud.dag.dag.DAG.cancel()</code></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.cancel()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Cancel DAG.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.compute" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.compute">compute</h5>
-<p><code>cloud.dag.dag.DAG.compute()</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.compute()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Start the DAG by executing root nodes.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.end_nodes" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.end_nodes">end_nodes</h5>
-<p><code>cloud.dag.dag.DAG.end_nodes()</code></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.end_nodes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Find all end nodes</p>
 <p>dag = DAG() dag.add_node(Node())</p>
 <p>end_nodes = dag.end_nodes()</p>
-<section id="returns-2" class="level6">
-<h6 class="anchored" data-anchor-id="returns-2">Returns</h6>
+<section id="returns-2" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-2">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>list of root nodes</td>
 </tr>
@@ -939,21 +963,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.end_results" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.end_results">end_results</h5>
-<p><code>cloud.dag.dag.DAG.end_results()</code></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.end_results()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Get all end results, will block if all results are not ready</p>
 <p>dag = DAG() dag.add_node(Node())</p>
 <p>end_results = dag.end_results()</p>
-<section id="returns-3" class="level6">
-<h6 class="anchored" data-anchor-id="returns-3">Returns</h6>
+<section id="returns-3" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-3">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>map of results by node ID</td>
 </tr>
@@ -963,21 +989,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.end_results_by_name" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.end_results_by_name">end_results_by_name</h5>
-<p><code>cloud.dag.dag.DAG.end_results_by_name()</code></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.end_results_by_name()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Get all end results, will block if all results are not ready</p>
 <p>dag = DAG() dag.add_node(Node())</p>
 <p>end_results = dag.end_results_by_name()</p>
-<section id="returns-4" class="level6">
-<h6 class="anchored" data-anchor-id="returns-4">Returns</h6>
+<section id="returns-4" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-4">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>map of results by node name</td>
 </tr>
@@ -987,19 +1015,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.find_end_nodes" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.find_end_nodes">find_end_nodes</h5>
-<p><code>cloud.dag.dag.DAG.find_end_nodes()</code></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.find_end_nodes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Find all end nodes.</p>
-<section id="returns-5" class="level6">
-<h6 class="anchored" data-anchor-id="returns-5">Returns</h6>
+<section id="returns-5" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-5">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>List[Node]</td>
 <td>list of end nodes</td>
 </tr>
@@ -1009,19 +1039,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details">get_tiledb_plot_node_details</h5>
-<p><code>cloud.dag.dag.DAG.get_tiledb_plot_node_details()</code></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.get_tiledb_plot_node_details()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Build list of details needed for tiledb node graph</p>
-<section id="returns-6" class="level6">
-<h6 class="anchored" data-anchor-id="returns-6">Returns</h6>
+<section id="returns-6" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-6">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Dict[str, Dict[str, str]]</td>
 <td>Node summary</td>
 </tr>
@@ -1031,16 +1063,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.initial_setup" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.initial_setup">initial_setup</h5>
-<p><code>cloud.dag.dag.DAG.initial_setup()</code></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.initial_setup()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Performs one-time server-side setup tasks.</p>
 <p>Can safely be called multiple times.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.report_node_complete" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.report_node_complete">report_node_complete</h5>
-<p><code>cloud.dag.dag.DAG.report_node_complete(node)</code></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.report_node_complete(node)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Report a node as complete.</p>
-<section id="parameters-5" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-5">Parameters</h6>
+<section id="parameters-5" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-5">Parameters</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1052,7 +1084,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>node</code></td>
+<td>node</td>
 <td>Node</td>
 <td>Node to mark as complete.</td>
 <td><em>required</em></td>
@@ -1063,24 +1095,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.retry_all" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.retry_all">retry_all</h5>
-<p><code>cloud.dag.dag.DAG.retry_all()</code></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.retry_all()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Retries all failed and cancelled nodes.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.stats" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.stats">stats</h5>
-<p><code>cloud.dag.dag.DAG.stats()</code></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.stats()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Get DAG node statistics.</p>
-<section id="returns-7" class="level6">
-<h6 class="anchored" data-anchor-id="returns-7">Returns</h6>
+<section id="returns-7" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-7">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Dict[str, Union[int, float]]</td>
 <td>All node stats.</td>
 </tr>
@@ -1090,136 +1124,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.submit_array_udf" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_array_udf">submit_array_udf</h5>
-<p><code>cloud.dag.dag.DAG.submit_array_udf(func, *args, **kwargs)</code></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.submit_array_udf(func, <span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Submit a function that will be executed in the cloud serverlessly.</p>
-<section id="parameters-6" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-6">Parameters</h6>
+<section id="parameters-6" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-6">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
 <col style="width: 11%">
-<col style="width: 60%">
-<col style="width: 13%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>func</code></td>
-<td>Callable</td>
-<td>Function to execute in UDF task.</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>*args</code></td>
-<td>Any</td>
-<td>Postional arguments to pass into Node instantation.</td>
-<td><code>()</code></td>
-</tr>
-<tr class="odd">
-<td><code>**kwargs</code></td>
-<td>Any</td>
-<td>Keyword args to pass into Node instantiation.</td>
-<td><code>{}</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-8" class="level6">
-<h6 class="anchored" data-anchor-id="returns-8">Returns</h6>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>Node that is created.</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.dag.dag.DAG.submit_local" class="level5">
-<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_local">submit_local</h5>
-<p><code>cloud.dag.dag.DAG.submit_local(func, *args, **kwargs)</code></p>
-<p>Submit a function that will run locally.</p>
-<section id="parameters-7" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-7">Parameters</h6>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 13%">
 <col style="width: 11%">
-<col style="width: 60%">
-<col style="width: 13%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>func</code></td>
-<td>Callable</td>
-<td>Function to execute in UDF task.</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>*args</code></td>
-<td>Any</td>
-<td>Postional arguments to pass into Node instantation.</td>
-<td><code>()</code></td>
-</tr>
-<tr class="odd">
-<td><code>**kwargs</code></td>
-<td></td>
-<td>Keyword args to pass into Node instantiation.</td>
-<td><code>{}</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-9" class="level6">
-<h6 class="anchored" data-anchor-id="returns-9">Returns</h6>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>Node that is created</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.dag.dag.DAG.submit_sql" class="level5">
-<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_sql">submit_sql</h5>
-<p><code>cloud.dag.dag.DAG.submit_sql(*args, **kwargs)</code></p>
-<p>Submit a sql query to run serverlessly in the cloud.</p>
-<section id="parameters-8" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-8">Parameters</h6>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 14%">
-<col style="width: 9%">
 <col style="width: 62%">
 <col style="width: 14%">
 </colgroup>
@@ -1233,19 +1145,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>sql</code></td>
-<td></td>
-<td>Query to execute.</td>
+<td>func</td>
+<td>Callable</td>
+<td>Function to execute in UDF task.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>*args</code></td>
+<td>*args</td>
 <td>Any</td>
 <td>Postional arguments to pass into Node instantation.</td>
 <td><code>()</code></td>
 </tr>
 <tr class="odd">
-<td><code>**kwargs</code></td>
+<td>**kwargs</td>
 <td>Any</td>
 <td>Keyword args to pass into Node instantiation.</td>
 <td><code>{}</code></td>
@@ -1253,36 +1165,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-10" class="level6">
-<h6 class="anchored" data-anchor-id="returns-10">Returns</h6>
+<section id="returns-8" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-8">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Node</td>
-<td>Node that is created</td>
+<td></td>
+<td></td>
+<td>Node that is created.</td>
 </tr>
 </tbody>
 </table>
 </section>
 </section>
-<section id="tiledb.cloud.dag.dag.DAG.submit_udf" class="level5">
-<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_udf">submit_udf</h5>
-<p><code>cloud.dag.dag.DAG.submit_udf(func, *args, **kwargs)</code></p>
-<p>Submit a function that will be executed in the cloud serverlessly.</p>
-<section id="parameters-9" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-9">Parameters</h6>
+<section id="tiledb.cloud.dag.dag.DAG.submit_local" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_local">submit_local</h5>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.submit_local(func, <span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Submit a function that will run locally.</p>
+<section id="parameters-7" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-7">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
 <col style="width: 11%">
-<col style="width: 60%">
-<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 62%">
+<col style="width: 14%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1294,19 +1208,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td>Callable</td>
 <td>Function to execute in UDF task.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>*args</code></td>
-<td></td>
+<td>*args</td>
+<td>Any</td>
 <td>Postional arguments to pass into Node instantation.</td>
 <td><code>()</code></td>
 </tr>
 <tr class="odd">
-<td><code>**kwargs</code></td>
+<td>**kwargs</td>
 <td></td>
 <td>Keyword args to pass into Node instantiation.</td>
 <td><code>{}</code></td>
@@ -1314,17 +1228,145 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-11" class="level6">
-<h6 class="anchored" data-anchor-id="returns-11">Returns</h6>
+<section id="returns-9" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-9">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
+<td></td>
+<td>Node that is created</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.submit_sql" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_sql">submit_sql</h5>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.submit_sql(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Submit a sql query to run serverlessly in the cloud.</p>
+<section id="parameters-8" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-8">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 9%">
+<col style="width: 63%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sql</td>
+<td></td>
+<td>Query to execute.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>*args</td>
+<td>Any</td>
+<td>Postional arguments to pass into Node instantation.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td>**kwargs</td>
+<td>Any</td>
+<td>Keyword args to pass into Node instantiation.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-10" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-10">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Node</td>
+<td>Node that is created</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.submit_udf" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_udf">submit_udf</h5>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.submit_udf(func, <span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Submit a function that will be executed in the cloud serverlessly.</p>
+<section id="parameters-9" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-9">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 62%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>func</td>
+<td>Callable</td>
+<td>Function to execute in UDF task.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td>*args</td>
+<td></td>
+<td>Postional arguments to pass into Node instantation.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td>**kwargs</td>
+<td></td>
+<td>Keyword args to pass into Node instantiation.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-11" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-11">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
 <td></td>
 <td>Node that is created.</td>
 </tr>
@@ -1334,22 +1376,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.submit_udf_stage" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_udf_stage">submit_udf_stage</h5>
-<p><code>cloud.dag.dag.DAG.submit_udf_stage(func, *args, expand_node_output=None, **kwargs)</code></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.submit_udf_stage(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>args</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    expand_node_output<span class="op">=</span><span class="va">None</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Submit a function that will be executed in the cloud serverlessly.</p>
 <p>Expand on node output simply means to dynamically allocate works to this UDF stage based on the output of the node indicated via the <code>expand_node_output</code> arg.</p>
 <p>For example, if a node, <code>NodeA</code> (<code>NodeA = DAG.submit(...)</code>), returns a list of str values and <code>NodeA</code> is passed to <code>expand_node_output</code>, along with an arg in the <code>func</code> passed to <code>submit_udf_stage</code> that accepts a str is also passed <code>NodeA</code>, a node will spawn in parallel for each str value in the result of <code>NodeA</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> DAG(...)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>NodeA <span class="op">=</span> graph.submit()</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>NodeB <span class="op">=</span> graph.submit_udf_stage(..., expand_node_output<span class="op">=</span>NodeA, str_arg<span class="op">=</span>NodeA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="parameters-10" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-10">Parameters</h6>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> DAG(...)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>NodeA <span class="op">=</span> graph.submit()</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>NodeB <span class="op">=</span> graph.submit_udf_stage(..., expand_node_output<span class="op">=</span>NodeA, str_arg<span class="op">=</span>NodeA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-10" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-10">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 14%">
+<col style="width: 13%">
 <col style="width: 12%">
-<col style="width: 65%">
+<col style="width: 66%">
 <col style="width: 8%">
 </colgroup>
 <thead>
@@ -1362,25 +1409,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td>Callable</td>
 <td>Function to execute in UDF task.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>*args</code></td>
+<td>*args</td>
 <td>Any</td>
 <td>Postional arguments to pass into Node instantation.</td>
 <td><code>()</code></td>
 </tr>
 <tr class="odd">
-<td><code>expand_node_output</code></td>
+<td>expand_node_output</td>
 <td>Optional[Node]</td>
 <td>Node that we want to expand the output of. The output of the node should be a JSON encoded list.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>**kwargs</code></td>
+<td>**kwargs</td>
 <td>Any</td>
 <td>Keyword args to pass into Node instantiation.</td>
 <td><code>{}</code></td>
@@ -1388,17 +1435,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-12" class="level6">
-<h6 class="anchored" data-anchor-id="returns-12">Returns</h6>
+<section id="returns-12" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-12">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Node</td>
 <td>Node that is created.</td>
 </tr>
@@ -1408,15 +1457,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.visualize" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.visualize">visualize</h5>
-<p><code>cloud.dag.dag.DAG.visualize(notebook=True, auto_update=True, force_plotly=False)</code></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.visualize(notebook<span class="op">=</span><span class="va">True</span>, auto_update<span class="op">=</span><span class="va">True</span>, force_plotly<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Build and render a tree diagram of the DAG.</p>
-<section id="parameters-11" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-11">Parameters</h6>
+<section id="parameters-11" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-11">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 14%">
+<col style="width: 12%">
 <col style="width: 7%">
-<col style="width: 68%">
+<col style="width: 69%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -1429,19 +1478,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>notebook</code></td>
+<td>notebook</td>
 <td></td>
 <td>Is the visualization inside a jupyter notebook? If so we’ll use a widget.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>auto_update</code></td>
+<td>auto_update</td>
 <td></td>
 <td>Should the diagram be auto updated with each status change.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td><code>force_plotly</code></td>
+<td>force_plotly</td>
 <td></td>
 <td>Force the use of plotly graphs instead of TileDB Plot Widget.</td>
 <td><code>False</code></td>
@@ -1449,17 +1498,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-13" class="level6">
-<h6 class="anchored" data-anchor-id="returns-13">Returns</h6>
+<section id="returns-13" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-13">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td></td>
 <td>returns figure.</td>
 </tr>
@@ -1469,16 +1520,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.DAG.wait" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.wait">wait</h5>
-<p><code>cloud.dag.dag.DAG.wait(timeout=None)</code></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.DAG.wait(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Wait for DAG to be completed.</p>
-<section id="parameters-12" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-12">Parameters</h6>
+<section id="parameters-12" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-12">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
-<col style="width: 18%">
-<col style="width: 59%">
-<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 19%">
+<col style="width: 61%">
+<col style="width: 11%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1490,7 +1541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>timeout</code></td>
+<td>timeout</td>
 <td>Optional[float]</td>
 <td>optional timeout in seconds to wait for DAG to be completed</td>
 <td><code>None</code></td>
@@ -1498,17 +1549,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-14" class="level6">
-<h6 class="anchored" data-anchor-id="returns-14">Returns</h6>
+<section id="returns-14" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-14">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>None</td>
 <td>None or raises TimeoutError if timeout occurs</td>
 </tr>
@@ -1520,13 +1573,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.Node" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node">Node</h3>
-<p><code>cloud.dag.dag.Node(self, func, *args, name=None, dag=None, mode=Mode.REALTIME, expand_node_output=None, _download_results=None, _internal_prewrapped_func=None, _internal_accepts_stored_params=True, **kwargs)</code></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    func</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>args</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    dag<span class="op">=</span><span class="va">None</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span>Mode.REALTIME</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    expand_node_output<span class="op">=</span><span class="va">None</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    _download_results<span class="op">=</span><span class="va">None</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    _internal_prewrapped_func<span class="op">=</span><span class="va">None</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    _internal_accepts_stored_params<span class="op">=</span><span class="va">True</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Representation of a function to run in a DAG.</p>
-<section id="parameters-13" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-13">Parameters</h4>
+<section id="parameters-13" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-13">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 9%">
+<col style="width: 8%">
 <col style="width: 10%">
 <col style="width: 75%">
 <col style="width: 4%">
@@ -1541,61 +1606,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>func</code></td>
+<td>func</td>
 <td>Callable[…, _T]</td>
 <td>Function to run as UDF task.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>*args</code></td>
+<td>*args</td>
 <td>Any</td>
 <td>Positional arguments to pass to UDF.</td>
 <td><code>()</code></td>
 </tr>
 <tr class="odd">
-<td><code>name</code></td>
+<td>name</td>
 <td>Optional[str]</td>
 <td>Human-readable name of Node task.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>dag</code></td>
+<td>dag</td>
 <td>Optional[DAG]</td>
 <td>DAG this node is associated with.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>mode</code></td>
+<td>mode</td>
 <td>Mode</td>
 <td>Mode the Node is to run in.</td>
 <td><code>Mode.REALTIME</code></td>
 </tr>
 <tr class="even">
-<td><code>expand_node_output</code></td>
+<td>expand_node_output</td>
 <td>Optional[Node]</td>
 <td>Node to expand processes upon.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>_download_results</code></td>
+<td>_download_results</td>
 <td>Optional[bool]</td>
 <td>An optional boolean to override default result-downloading behavior. If True, will always download the results of the function immediately upon completion. If False, will not download the results of the function immediately, but will be downloaded when <code>.result()</code> is called.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>_internal_prewrapped_func</code></td>
+<td>_internal_prewrapped_func</td>
 <td>Callable[…, results.Result[_T]]</td>
 <td>For internal use only. A function that returns. something that is already a Result, which does not require wrapping. We assume that all prewrapped functions make server calls.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>_internal_accepts_stored_params</code></td>
+<td>_internal_accepts_stored_params</td>
 <td>bool</td>
 <td>For internal use only. Applies only when <code>_prewrapped_func</code> is used. <code>True</code> if <code>_prewrapped_func</code> can accept stored parameters. <code>False</code> if it cannot, and all parameters must be serialized.</td>
 <td><code>True</code></td>
 </tr>
 <tr class="even">
-<td><code>**kwargs</code></td>
+<td>**kwargs</td>
 <td>Any</td>
 <td>Keyword arguments to pass to UDF.</td>
 <td><code>{}</code></td>
@@ -1714,10 +1779,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="tiledb.cloud.dag.dag.Node.add_done_callback" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.add_done_callback">add_done_callback</h5>
-<p><code>cloud.dag.dag.Node.add_done_callback(fn)</code></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.add_done_callback(fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Add callback function to execute at Node completion.</p>
-<section id="parameters-14" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-14">Parameters</h6>
+<section id="parameters-14" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-14">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 10%">
@@ -1735,7 +1800,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>fn</code></td>
+<td>fn</td>
 <td>Callable[[Node[_T]], None]</td>
 <td>Callaback to execute.</td>
 <td><em>required</em></td>
@@ -1746,20 +1811,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.Node.cancel" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.cancel">cancel</h5>
-<p><code>cloud.dag.dag.Node.cancel()</code></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.cancel()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Cancel Node.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.Node.cancelled" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.cancelled">cancelled</h5>
-<p><code>cloud.dag.dag.Node.cancelled()</code></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.cancelled()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Whether Node is cancelled.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.Node.depends_on" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.depends_on">depends_on</h5>
-<p><code>cloud.dag.dag.Node.depends_on(node)</code></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.depends_on(node)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create dependency chain for node, useful when there is a dependency that does not rely directly on passing results from one to another.</p>
-<section id="parameters-15" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-15">Parameters</h6>
+<section id="parameters-15" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-15">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 11%">
@@ -1777,7 +1842,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>node</code></td>
+<td>node</td>
 <td>Node</td>
 <td>node to mark as a dependency of this node</td>
 <td><em>required</em></td>
@@ -1788,20 +1853,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.Node.exception" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.exception">exception</h5>
-<p><code>cloud.dag.dag.Node.exception(timeout=None)</code></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.exception(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Return execption if one was raised.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.Node.result" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.result">result</h5>
-<p><code>cloud.dag.dag.Node.result(timeout=None)</code></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.result(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Fetch Node return.</p>
-<section id="parameters-16" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-16">Parameters</h6>
+<section id="parameters-16" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-16">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
-<col style="width: 26%">
-<col style="width: 43%">
+<col style="width: 12%">
+<col style="width: 27%">
+<col style="width: 44%">
 <col style="width: 15%">
 </colgroup>
 <thead>
@@ -1814,7 +1879,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>timeout</code></td>
+<td>timeout</td>
 <td>Optional[float]</td>
 <td>Time to wait to fetch result.</td>
 <td><code>None</code></td>
@@ -1822,17 +1887,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-15" class="level6">
-<h6 class="anchored" data-anchor-id="returns-15">Returns</h6>
+<section id="returns-15" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-15">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>_T</td>
 <td>Results of Node processing.</td>
 </tr>
@@ -1842,33 +1909,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.Node.retry" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.retry">retry</h5>
-<p><code>cloud.dag.dag.Node.retry()</code></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.retry()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Retry Node.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.Node.running" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.running">running</h5>
-<p><code>cloud.dag.dag.Node.running()</code></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.running()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Whether Node is actively running.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.Node.task_id" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.task_id">task_id</h5>
-<p><code>cloud.dag.dag.Node.task_id()</code></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.task_id()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Gets the server-side Task ID of this node.</p>
-<section id="returns-16" class="level6">
-<h6 class="anchored" data-anchor-id="returns-16">Returns</h6>
+<section id="returns-16" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-16">Returns</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 8%">
+<col style="width: 23%">
+<col style="width: 67%">
 </colgroup>
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>Optional[uuid.UUID]</td>
 <td>None if this has no task ID (as it was run on the client side).</td>
 </tr>
@@ -1878,15 +1948,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.Node.wait" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.wait">wait</h5>
-<p><code>cloud.dag.dag.Node.wait(timeout=None)</code></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.Node.wait(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Wait for node to be completed.</p>
-<section id="parameters-17" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-17">Parameters</h6>
+<section id="parameters-17" class="level6 doc-section doc-section-parameters">
+<h6 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-17">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 10%">
+<col style="width: 8%">
 <col style="width: 18%">
-<col style="width: 60%">
+<col style="width: 61%">
 <col style="width: 10%">
 </colgroup>
 <thead>
@@ -1899,7 +1969,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>timeout</code></td>
+<td>timeout</td>
 <td>Optional[float]</td>
 <td>optional timeout in seconds to wait for DAG to be completed.</td>
 <td><code>None</code></td>
@@ -1907,17 +1977,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="returns-17" class="level6">
-<h6 class="anchored" data-anchor-id="returns-17">Returns</h6>
+<section id="returns-17" class="level6 doc-section doc-section-returns">
+<h6 class="doc-section doc-section-returns anchored" data-anchor-id="returns-17">Returns</h6>
 <table class="caption-top table">
 <thead>
 <tr class="header">
+<th>Name</th>
 <th>Type</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td></td>
 <td>None</td>
 <td>None or raises TimeoutError if timeout occurs.</td>
 </tr>
@@ -1954,14 +2026,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="tiledb.cloud.dag.dag.list_logs" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.list_logs">list_logs</h3>
-<p><code>cloud.dag.dag.list_logs(namespace=None, created_by=None, search=None, start_time=None, end_time=None, page=1, per_page=10)</code></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.list_logs(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    created_by<span class="op">=</span><span class="va">None</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    search<span class="op">=</span><span class="va">None</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    start_time<span class="op">=</span><span class="va">None</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    end_time<span class="op">=</span><span class="va">None</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    page<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    per_page<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Retrieves the list of task graph logs you can view.</p>
 <p>The returned graph logs will be “light” versions, meaning they will not include any details about the execution state of an individual DAG. To retrieve those, pass the ID to :func:<code>server_logs</code>.</p>
-<section id="parameters-18" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-18">Parameters</h4>
+<section id="parameters-18" class="level4 doc-section doc-section-parameters">
+<h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-18">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 8%">
+<col style="width: 7%">
 <col style="width: 18%">
 <col style="width: 67%">
 <col style="width: 6%">
@@ -1976,43 +2056,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>namespace</code></td>
+<td>namespace</td>
 <td>Optional[str]</td>
 <td>If present, include logs for only this namespace. If absent, include logs for all namespaces you have access to.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>created_by</code></td>
+<td>created_by</td>
 <td>Optional[str]</td>
 <td>Include only logs from this user (if present).</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>search</code></td>
+<td>search</td>
 <td>Optional[str]</td>
 <td>A search string for the name of the task graph.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>start_time</code></td>
+<td>start_time</td>
 <td>Optional[datetime.datetime]</td>
 <td>Include logs created after this time.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>end_time</code></td>
+<td>end_time</td>
 <td>Optional[datetime.datetime]</td>
 <td>Include logs created before this time.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>page</code></td>
+<td>page</td>
 <td>int</td>
 <td>The page number to use, starting from 1.</td>
 <td><code>1</code></td>
 </tr>
 <tr class="odd">
-<td><code>per_page</code></td>
+<td>per_page</td>
 <td>int</td>
 <td>The number of items per page.</td>
 <td><code>10</code></td>
@@ -2023,12 +2103,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tiledb.cloud.dag.dag.replace_stored_params" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.replace_stored_params">replace_stored_params</h3>
-<p><code>cloud.dag.dag.replace_stored_params(tree, loader)</code></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.replace_stored_params(tree, loader)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Descends into data structures and replaces Stored Params with results.</p>
 </section>
 <section id="tiledb.cloud.dag.dag.server_logs" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.server_logs">server_logs</h3>
-<p><code>cloud.dag.dag.server_logs(dag_or_id, namespace=None)</code></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cloud.dag.dag.server_logs(dag_or_id, namespace<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Retrieves the full server-side logs for the given DAG.</p>
 <p>The DAG can be provided as a DAG object, or the server-provided UUID of a DAG’s execution log in either :class:<code>uuid.UUID</code> or string form. This can be used to access both completed DAGs and in-progress DAGs. The returned DAGs will include full data</p>
 <p>Will return None if called with a DAG object that has no server-side nodes.</p>
