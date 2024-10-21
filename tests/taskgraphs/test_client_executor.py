@@ -6,7 +6,6 @@ import unittest
 
 import numpy
 import pyarrow
-import pytest
 
 from tiledb.cloud._common import futures
 from tiledb.cloud.taskgraphs import builder
@@ -433,7 +432,6 @@ class ClientExecutorTestEnvironment(unittest.TestCase):
             exec.node(slept).result(30)
         self.assertIs(client_executor.Status.FAILED, exec.node(slept).status)
 
-    @pytest.mark.xfail(reason="Requires resolution of upstream issue.")
     def test_resource_class(self):
         def big_sum():
             # An experimentally determined value where reifying the sequence
