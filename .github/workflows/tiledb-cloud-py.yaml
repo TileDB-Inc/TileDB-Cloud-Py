@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ matrix.path }}
-          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles(format('./requirements-py{0}.txt', matrix.python-version)) }}
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles(format('./ci/requirements-py{0}.txt', matrix.python-version)) }}
           restore-keys: |
             ${{ runner.os }}-py${{ matrix.python-version }}-pip-
 
@@ -107,7 +107,7 @@ jobs:
       - name: Install pinned dependencies
         if: ${{ matrix.dependencies == 'pinned' }}
         run: |
-          pip install -r requirements-py${{ matrix.python-version }}.txt
+          pip install -r ci/requirements-py${{ matrix.python-version }}.txt
 
       - name: Install TileDB-Cloud-Py
         run: |
@@ -224,7 +224,7 @@ jobs:
         with:
           python-version: "3.9"
           cache: pip
-          cache-dependency-path: requirements-py3.9.txt
+          cache-dependency-path: ci/requirements-py3.9.txt
 
       - name: Make fake version for Test PyPI
         if: ${{ github.event_name != 'release' }}
@@ -233,8 +233,7 @@ jobs:
 
       - name: Build wheel
         run: |
-          pip install --upgrade pip build wheel setuptools setuptools-scm
-          pip install -r requirements-py3.9.txt
+          pip install --upgrade pip build
           python -m build
 
       - name: Publish to PyPI
