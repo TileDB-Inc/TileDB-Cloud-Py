@@ -361,6 +361,10 @@ def experiment_to_anndata_slice(
     if var_attrs is not None:
         column_names["var"] = var_attrs
 
+    if not column_names:
+        # return all columns by default
+        column_names = tiledbsoma.AxisColumnNames()
+
     adata = query.to_anndata(X_name=X_layer_name, column_names=column_names)
 
     return adata
