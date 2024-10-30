@@ -224,8 +224,6 @@ def build_collection_mapper_workflow_graph(
     assert isinstance(task_graph_name, str)
 
     args_dict = args_dict or {}
-    obs_attrs = obs_attrs or []
-    var_attrs = var_attrs or []
 
     # Create context that enables faster array open
     # cfg_dict = cfg_dict or {}
@@ -356,9 +354,9 @@ def experiment_to_anndata_slice(
     query = exp.axis_query(measurement_name, obs_query=obs_query, var_query=var_query)
 
     column_names = {}
-    if obs_attrs is not None:
+    if obs_attrs:
         column_names["obs"] = obs_attrs
-    if var_attrs is not None:
+    if var_attrs:
         column_names["var"] = var_attrs
 
     adata = query.to_anndata(X_name=X_layer_name, column_names=column_names)
