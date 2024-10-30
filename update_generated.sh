@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+SED=sed
+if [[ "$OSTYPE" =~ "darwin" ]]; then
+	SED=gsed # Use GNU sed on macOS.
+fi
+
 USAGE='
 Usage:
 
@@ -83,7 +88,7 @@ generate_api() {
   find "${TEMP_PATH}" \
     -type f \
     -execdir \
-      sed --in-place \
+      "$SED" --in-place \
         -e "s/${TEMP_PACKAGE_NAME}\./tiledb.cloud.${PACKAGE_NAME}./g" \
         -e "s/\\(from\\|import\\) ${TEMP_PACKAGE_NAME}/\\1 tiledb.cloud.${PACKAGE_NAME}/g" \
         -e "s/${TEMP_PACKAGE_NAME}/${PACKAGE_NAME}/g" \
@@ -92,7 +97,7 @@ generate_api() {
     '+'
 
   # Fix up links in README.
-  sed --in-place -e "s/](${PACKAGE_NAME}\\//](/g" "${TEMP_PATH}/${TEMP_PACKAGE_NAME}_README.md"
+  "$SED" --in-place -e "s/](${PACKAGE_NAME}\\//](/g" "${TEMP_PATH}/${TEMP_PACKAGE_NAME}_README.md"
 
   # Get TARGET_PATH out of the way (if present).
   if [ -e "$TARGET_PATH/$PACKAGE_NAME_SLASHY" ]; then
