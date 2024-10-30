@@ -3,10 +3,10 @@ from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud import dag
-from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
+from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities._common import as_batch
 from tiledb.cloud.utilities._common import run_dag
 
@@ -47,7 +47,6 @@ def export(
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
     :param mode: By default runs Mode.Batch
-    :param run_on: By default runs on server if value is "client" runs client side.
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
     :param access_credentials_name: Access Credentials Name (ACN) registered

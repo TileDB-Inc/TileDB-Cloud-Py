@@ -151,11 +151,13 @@ jobs:
             --store-durations \
             --splitting-algorithm least_duration \
             --clean-durations \
+            -r fExX \
           || .github/scripts/retry 2 \
             pytest -sv \
             --last-failed \
             --tb short \
-            --color yes
+            --color yes \
+            -r fExX
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
@@ -208,7 +210,7 @@ jobs:
     # Artifacts are uploaded to the real PyPI only when a release is published;
     # otherwise, they are sent just to the test instance.
     if: >
-      (github.event_name == 'release' && github.event.action == 'published') ||
+      (github.event_name == 'release' && github.event.action == 'published' && ${{ startsWith(github.event.release.tag_name, 'v') }}) ||
       (github.event_name == 'push')
 
     runs-on: ubuntu-20.04

@@ -1,22 +1,28 @@
 import logging
 import warnings
+from enum import Enum
 from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud import dag
-from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
 from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
+from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities._common import as_batch
 from tiledb.cloud.utilities._common import run_dag
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
-_SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi")
-_SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd")
+_SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi", ".png")
+_SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd", "png")
+
+
+class ReaderType(Enum):
+    PRODUCTION = "production"
+    EXPERIMENTAL = "experimental"
 
 
 def ingest(
@@ -29,6 +35,7 @@ def ingest(
     num_batches: Optional[int] = None,
     threads: Optional[int] = 0,
     resources: Optional[Mapping[str, Any]] = None,
+    ingest_resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
     register: bool = True,
     mode: Optional[Mode] = Mode.BATCH,
@@ -54,6 +61,10 @@ def ingest(
     :param threads: Number of threads for node side multiprocessing, defaults to 0
     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
         defaults to None
+    :param ingest_resources: configuration for node specs e.g.
+        {"cpu": "8", "memory": "4Gi"}. This parameter is intended to be used with the
+        as_batch() wrapper and with the TileDB UI ingest endpoint. It defaults to None
+        and will be superseded by the resources parameter described above.
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
     :param register: When True the ingested images are also being registered under the
@@ -74,6 +85,8 @@ def ingest(
         registered in TileDB Cloud (ARN type) if ``acn`` is not set.
     :param dest_config: dict configuration to pass on tiledb.VFS for the destination's
         resolution
+    :param reader: The selected reader backend implementation either "experimental"
+        or "production". Default["production"]
     """
 
     logger = get_logger_wrapper(verbose)
@@ -203,7 +216,10 @@ def ingest(
         user_converter = {
             "zarr": Converters.OMEZARR,
             "osd": Converters.OSD,
+            "png": Converters.PNG,
         }.get(converter, Converters.OMETIFF)
+
+        experimental_reader = kwargs.pop("experimental_reader", False)
 
         compressor = kwargs.get("compressor", None)
         if compressor:
@@ -229,8 +245,10 @@ def ingest(
                 tile_scale=tile_scale,
                 source_config=config,
                 dest_config=kwargs.get("dest_config", None),
+                experimental_reader=experimental_reader,
                 **kwargs,
             )
+
         return io_uris
 
     def register_dataset_udf(
@@ -350,6 +368,11 @@ def ingest(
 
     # serialize udf arguments
     compressor = kwargs.pop("compressor", None)
+
+    # Get either the new experimental or default reader
+    reader = kwargs.pop("reader", ReaderType.PRODUCTION.value)
+    experimental_reader = reader == ReaderType.EXPERIMENTAL.value
+
     logger.debug("Compressor: %r", compressor)
     compressor_serial = serialize_filter(compressor) if compressor else None
 
@@ -364,10 +387,11 @@ def ingest(
         *args,
         name=f"{dag_name} ingestor ",
         expand_node_output=input_list_node,
-        resources=DEFAULT_RESOURCES if resources is None else resources,
+        resources=resources or ingest_resources or DEFAULT_RESOURCES,
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
+        experimental_reader=experimental_reader,
         access_credentials_name=acn,
         **kwargs,
     )
@@ -382,8 +406,6 @@ def ingest(
             namespace=namespace,
             name=f"{dag_name} registrator ",
             expand_node_output=ingest_list_node,
-            resources=DEFAULT_RESOURCES if resources is None else resources,
-            image_name=DEFAULT_IMG_NAME,
             access_credentials_name=acn,
             **kwargs,
         )

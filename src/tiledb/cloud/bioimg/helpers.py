@@ -1,31 +1,8 @@
-import logging
+import warnings
 from typing import Sequence
 
 import tiledb
-from tiledb.cloud.utilities import get_logger
-
-
-def get_logger_wrapper(
-    verbose: bool = False,
-) -> logging.Logger:
-    """
-    Get a logger instance and log version information.
-
-    :param verbose: verbose logging, defaults to False
-    :return: logger instance
-    """
-
-    level = logging.DEBUG if verbose else logging.INFO
-    logger = get_logger(level)
-
-    logger.debug(
-        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
-        tiledb.cloud.version.version,
-        tiledb.version(),
-        tiledb.libtiledb.version(),
-    )
-
-    return logger
+import tiledb.cloud.utilities.logging
 
 
 def serialize_filter(filter):
@@ -68,3 +45,13 @@ def validate_io_paths(
                 raise ValueError("Invalid combination of source and output paths.")
         else:
             raise ValueError("Invalid combination of source and output paths.")
+
+
+def get_logger_wrapper(*args, **kwargs):
+    warnings.warn(
+        "Bioimg's get_logger_wrapper() is deprecated, "
+        "use tiledb.cloud.utilities.logging.get_logger_wrapper() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return tiledb.cloud.utilities.logging.get_logger_wrapper(*args, **kwargs)
