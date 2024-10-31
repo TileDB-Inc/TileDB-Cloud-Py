@@ -24,6 +24,7 @@ from typing import (
     TypeVar,
     Union,
 )
+from urllib.parse import urlparse
 
 from .. import array
 from .. import client
@@ -731,11 +732,25 @@ class DAG:
         return not (self == other)
 
     @property
-    def status(self):
+    def status(self) -> st.Status:
         """Get DAG status."""
 
         with self._lifecycle_condition:
             return self._status
+
+    @property
+    def region(self) -> Optional[str]:
+        """Get DAG host region.
+
+        Override default region via:
+        tiledb.cloud.client.config.config.host = "https://{region}.aws.api.tiledb.com"
+        """
+
+        cfg = client.Config()
+        parsed = urlparse(cfg["rest.server_address"])
+        match = re.search(r"([a-z]+-[a-z]+-\d+)\.aws\.api\.tiledb\.com", parsed.netloc)
+        # some cases there may be no region
+        return match.group(1) if match else None
 
     def initial_setup(self) -> uuid.UUID:
         """Performs one-time server-side setup tasks.

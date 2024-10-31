@@ -428,6 +428,23 @@ class DAGClassTest(unittest.TestCase):
             small.result()
         self.assertEqual(9007199187632128, large.result(30))
 
+    def test_region(self):
+        graph = dag.DAG()
+        cfg = client.Config()
+        default = cfg["rest.server_address"]
+        for r in ["us-east-1.", "us-west-2.", ""]:
+            # override host region
+            client.config.config.host = f"https://{r}aws.api.tiledb.com"
+            region = graph.region
+            try:
+                self.assertIn(region, r)
+            except TypeError:
+                self.assertFalse(r)
+                self.assertIsNone(region)
+
+        # cleanup
+        client.config.config.host = default
+
 
 class DAGFailureTest(unittest.TestCase):
     def test_dag_failure(self):
