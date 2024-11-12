@@ -123,7 +123,7 @@ def run_ingest_workflow_udf(
                 input_files.append(input_item)
 
     elif vfs.is_file(input_uri):
-        input_files.append(input_item)
+        input_files.append(input_uri)
     else:
         raise ValueError("input_uri %r is neither a file nor a directory", input_uri)
 
