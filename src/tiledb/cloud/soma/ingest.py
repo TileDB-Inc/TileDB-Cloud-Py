@@ -1,4 +1,5 @@
 import logging
+import os.path
 import pathlib
 import re
 import warnings
@@ -138,7 +139,8 @@ def run_ingest_workflow_udf(
     )
 
     for input_file in input_files:
-        output_group_uri = pathlib.Path(output_uri.joinpath(input_file.stem))
+        stem = pathlib.Path(input_file).stem
+        output_group_uri = os.path.join(output_uri, stem)
         logger.info(
             "Building task for h5ad file: input_file=%r, output_group_uri=%r",
             input_file,
@@ -171,7 +173,7 @@ def run_ingest_workflow_udf(
             )
             register_soma.depends_on(collector)
 
-    logger.info("Computing DAG: grf=%r, grf")
+    logger.info("Computing DAG: grf=%r", grf)
     grf.compute()
     return grf.server_graph_uuid
 
