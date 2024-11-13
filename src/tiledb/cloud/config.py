@@ -11,8 +11,18 @@ from tiledb.cloud.rest_api import models
 
 default_host = "https://api.tiledb.com"
 
-config = configuration.Configuration()
+_config = configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
+
+
+def __getattr__(name):
+    global logged_in
+    if name == "config":
+        if not logged_in:
+            logged_in = load_configuration(default_config_file)
+        return _config
+    else:
+        raise AttributeError
 
 
 def parse_bool(s: str) -> bool:
@@ -25,23 +35,21 @@ def save_configuration(config_file):
         os.makedirs(config_path)
 
     with open(config_file, "w") as f:
-        global config
-
-        host = config.host
+        host = _config.host
 
         config_to_save = {
             "host": host,
-            "verify_ssl": config.verify_ssl,
+            "verify_ssl": _config.verify_ssl,
         }
 
-        if config.api_key is not None and config.api_key != "":
-            config_to_save["api_key"] = config.api_key
+        if _config.api_key is not None and _config.api_key != "":
+            config_to_save["api_key"] = _config.api_key
 
-        if config.username is not None and config.username != "":
-            config_to_save["username"] = config.username
+        if _config.username is not None and _config.username != "":
+            config_to_save["username"] = _config.username
 
-        if config.password is not None and config.password != "":
-            config_to_save["password"] = config.password
+        if _config.password is not None and _config.password != "":
+            config_to_save["password"] = _config.password
 
         json.dump(config_to_save, f, indent=4, sort_keys=True)
 
@@ -60,7 +68,6 @@ def load_configuration(config_path):
 
     if os.path.isfile(config_path):
         with open(config_path, "r") as f:
-            global config
             # Parse JSON into an object with attributes corresponding to dict keys.
             config_obj = json.loads(f.read())
             if (
@@ -116,15 +123,14 @@ def load_configuration(config_path):
 def setup_configuration(
     api_key=None, host="", username=None, password=None, verify_ssl=True
 ):
-    global config
     if api_key is None:
         api_key = {}
-    config.api_key = api_key
-    config.host = host
-    config.username = username
-    config.password = password
-    config.verify_ssl = verify_ssl
-    config.retries = Retry(
+    _config.api_key = api_key
+    _config.host = host
+    _config.username = username
+    _config.password = password
+    _config.verify_ssl = verify_ssl
+    _config.retries = Retry(
         total=10,
         backoff_factor=0.25,
         status_forcelist=[503],
@@ -147,8 +153,10 @@ def setup_configuration(
     logged_in = True
 
 
-# Load default config file if it exists
-logged_in = load_configuration(default_config_file)
+# Loading of the default configuration file and determination of
+# whether we are logged in or not is now deferred to the first access
+# of this module's "config" attribute.
+logged_in = None
 user: Optional[models.User] = None
 """The default user to use.
 
