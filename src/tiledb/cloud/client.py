@@ -672,13 +672,15 @@ class Client:
     @property
     def _client_v1(self):
         if not self.__client_v1:
-            self.retry_mode(self._mode)
+            self._retry_mode(self._mode)
+            self._rebuild_clients()
         return self.__client_v1
 
     @property
     def _client_v2(self):
         if not self.__client_v2:
-            self.retry_mode(self._mode)
+            self._retry_mode(self._mode)
+            self._rebuild_clients()
         return self.__client_v2
 
     def build(self, builder: Callable[[rest_api.ApiClient], _T]) -> _T:
