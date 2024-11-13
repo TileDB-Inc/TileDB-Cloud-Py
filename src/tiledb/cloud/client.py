@@ -663,8 +663,23 @@ class Client:
         """
         self._pool_lock = threading.Lock()
         self._set_threads(pool_threads)
-        self._retry_mode(retry_mode)
-        self._rebuild_clients()
+        # Low-level clients begin uninitialized.
+        # They are initialized just before they are needed.
+        self._mode = retry_mode
+        self.__client_v1 = None
+        self.__client_v2 = None
+
+    @property
+    def _client_v1(self):
+        if not self.__client_v1:
+            self.retry_mode(self._mode)
+        return self.__client_v1
+
+    @property
+    def _client_v2(self):
+        if not self.__client_v2:
+            self.retry_mode(self._mode)
+        return self.__client_v2
 
     def build(self, builder: Callable[[rest_api.ApiClient], _T]) -> _T:
         """Builds an API client with the given config."""
@@ -694,10 +709,11 @@ class Client:
     def _retry_mode(self, mode: RetryOrStr) -> None:
         mode = RetryMode.maybe_from(mode)
         config.config.retries = _RETRY_CONFIGS[mode]
+        self._mode = mode
 
     def _rebuild_clients(self) -> None:
-        self._client_v1 = self._rebuild_client(models_v1)
-        self._client_v2 = self._rebuild_client(models_v2)
+        self.__client_v1 = self._rebuild_client(models_v1)
+        self.__client_v2 = self._rebuild_client(models_v2)
 
     def _rebuild_client(self, module: types.ModuleType) -> rest_api.ApiClient:
         """
