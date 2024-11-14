@@ -46,7 +46,7 @@ from . import status as st
 from . import visualization as viz
 from .mode import Mode
 
-Status = st.Status  # Re-export for compabitility.
+Status = st.Status  # Re-export for compatibility.
 _T = TypeVar("_T")
 # Special string included in server errors when there is a problem loading
 # stored parameters.
@@ -981,8 +981,8 @@ class DAG:
         """Submit a function that will be executed in the cloud serverlessly.
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created.
         """
 
@@ -998,8 +998,8 @@ class DAG:
         """Submit a function that will run locally.
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created
         """
 
@@ -1010,8 +1010,8 @@ class DAG:
         """Submit a function that will be executed in the cloud serverlessly.
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created.
         """
 
@@ -1062,10 +1062,10 @@ class DAG:
         ```
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
+        :param args: Positional arguments to pass into Node instantiation.
         :param expand_node_output: Node that we want to expand the output of.
             The output of the node should be a JSON encoded list.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created.
         """
 
@@ -1083,17 +1083,18 @@ class DAG:
             **kwargs,
         )
 
-    def submit_sql(self, *args: Any, **kwargs: Any) -> Node:
+    def submit_sql(self, sql: str, *args: Any, **kwargs: Any) -> Node:
         """Submit a sql query to run serverlessly in the cloud.
 
         :param sql: Query to execute.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created
         """
 
         return self._add_prewrapped_node(
             _sql_exec.exec_base,
+            sql,
             *args,
             _internal_accepts_stored_params=False,
             _fallback_name="SQL query",
@@ -2001,7 +2002,7 @@ class _StoredParamReplacer(visitor.ReplacingVisitor):
 def _topo_sort(
     lst: Sequence[rest_api.TaskGraphNodeMetadata],
 ) -> Sequence[rest_api.TaskGraphNodeMetadata]:
-    """Topologically sorts the list of node metadatas."""
+    """Topologically sorts the list of node metadata."""
     by_uuid: Dict[str, rest_api.TaskGraphNodeMetadata] = {
         node.client_node_uuid: node for node in lst
     }
