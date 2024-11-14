@@ -28,7 +28,6 @@ from typing import (
 from .. import array
 from .. import client
 from .. import rest_api
-from .. import tiledb_cloud_error as tce
 from .. import udf
 from .._common import functions
 from .._common import futures
@@ -214,7 +213,7 @@ class Node(futures.FutureLike[_T]):
         if self.mode == Mode.BATCH:
             if self._resource_class:
                 if resources_set:
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "Only one of `resources` and `resource_class`"
                         " may be set when running a task graph node."
                     )
@@ -225,20 +224,18 @@ class Node(futures.FutureLike[_T]):
             # (written in bytes) was probably a user error.
             if resources_set and "memory" in self._resources:
                 if re.match(r"^[0-9]{1,7}$", self._resources["memory"]):
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "The `memory` key in `resources` is missing a"
                         " unit suffix. Did you forget to append 'Mi' or 'Gi'?"
                     )
         elif resources_set:
-            raise tce.TileDBCloudError(
+            raise ValueError(
                 "Cannot set resources for REALTIME task graphs,"
                 ' please use "resource_class" to set a predefined option'
                 ' for "standard" or "large"'
             )
         elif self.mode is Mode.LOCAL and self._resource_class:
-            raise tce.TileDBCloudError(
-                "Resource class cannot be set for locally-executed nodes."
-            )
+            raise ValueError("Resource class cannot be set for locally-executed nodes.")
 
     def _find_deps(self) -> None:
         """Finds Nodes this depends on and adds them to our dependency list."""
@@ -257,7 +254,7 @@ class Node(futures.FutureLike[_T]):
                 try:
                     dep.future.result(0)
                 except Exception as e:
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "Nodes from a previous DAG may only be used as inputs"
                         " in a subsequent DAG if they are already complete."
                     ) from e
@@ -956,7 +953,7 @@ class DAG:
 
             if self.mode == Mode.BATCH:
                 if kwargs.get("mode") is not None and kwargs.get("mode") != Mode.BATCH:
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "BATCH mode DAG can only execute BATCH mode Nodes."
                     )
                 kwargs["mode"] = Mode.BATCH
@@ -1070,9 +1067,7 @@ class DAG:
         """
 
         if "local_mode" in kwargs or self.mode != Mode.BATCH:
-            raise tce.TileDBCloudError(
-                "Stage nodes are only supported for BATCH mode DAGs."
-            )
+            raise ValueError("Stage nodes are only supported for BATCH mode DAGs.")
 
         return self._add_prewrapped_node(
             udf.exec_base,
@@ -1260,9 +1255,7 @@ class DAG:
             if self.mode == Mode.REALTIME:
                 roots = self._find_root_nodes()
                 if len(roots) == 0:
-                    raise tce.TileDBCloudError(
-                        "DAG is circular, there are no root nodes"
-                    )
+                    raise ValueError("DAG is circular, there are no root nodes")
                 self._status = Status.RUNNING
 
                 for node in roots:
