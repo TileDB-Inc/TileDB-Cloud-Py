@@ -10,9 +10,14 @@ from tiledb.cloud.rest_api import configuration
 from tiledb.cloud.rest_api import models
 
 default_host = "https://api.tiledb.com"
-
-_config = configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
+
+# Starting with version 0.12.30, "config" is a dynamic attribute of
+# this module. The actual state of the attribute is bound to "_config",
+# which begins uninitialized. Looking up "config" from
+# tiledb.cloud.config causes our stored configuration to be loaded
+# just as needed.
+_config = configuration.Configuration()
 
 
 def __getattr__(name):

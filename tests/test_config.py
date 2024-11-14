@@ -13,7 +13,7 @@ def test_login_bare_host(monkeypatch, tmp_path):
     )
     monkeypatch.setattr(
         tiledb.cloud.client.config,
-        "config",
+        "_config",
         tiledb.cloud.config.configuration.Configuration(),
     )
     monkeypatch.setattr(tiledb.cloud.client.config, "logged_in", False)
