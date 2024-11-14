@@ -191,14 +191,14 @@ class DAGClassTest(unittest.TestCase):
 
     def test_resource_checks(self):
         grf = dag.DAG()
-        with self.assertRaises(tce.TileDBCloudError):
+        with self.assertRaises(ValueError):
             grf.submit(repr, None, resources={"x": "y"})
-        with self.assertRaises(tce.TileDBCloudError):
+        with self.assertRaises(ValueError):
             grf.submit_local(repr, None, resources={"x": "y"})
-        with self.assertRaises(tce.TileDBCloudError):
+        with self.assertRaises(ValueError):
             grf.submit_local(repr, None, resource_class="hello")
         grf = dag.DAG(mode=Mode.BATCH)
-        with self.assertRaises(tce.TileDBCloudError):
+        with self.assertRaises(ValueError):
             grf.submit(repr, None, resources={"memory": "100"})
 
     def test_kwargs(self):
@@ -539,7 +539,7 @@ class DAGFailureTest(unittest.TestCase):
         d1 = dag.DAG()
         n1 = d1.submit(repr, "whatever")
         d2 = dag.DAG()
-        with self.assertRaises(tce.TileDBCloudError):
+        with self.assertRaises(ValueError):
             d2.submit(repr, n1)
 
     def test_retry(self):
