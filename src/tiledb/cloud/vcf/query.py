@@ -383,7 +383,9 @@ def build_read_dag(
             )
 
     if len(tables) > 1:
-        table = dag.submit_local(
+        submit = dag.submit if batch_mode else dag.submit_local
+
+        table = submit(
             concat_tables_udf,
             tables,
             config=config,
