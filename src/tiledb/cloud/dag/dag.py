@@ -1655,7 +1655,7 @@ class DAG:
                 if name not in _SKIP_BATCH_UDF_KWARGS
             }
 
-            all_args = types.Arguments(node_args, filtered_node_kwargs)
+            all_args = types.Arguments(tuple(node_args), filtered_node_kwargs)
             encoder = _BatchArgEncoder(input_is_expanded=bool(node._expand_node_output))
             kwargs["arguments"] = encoder.encode_arguments(all_args)
 
