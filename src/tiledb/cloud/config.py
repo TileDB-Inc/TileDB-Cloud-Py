@@ -30,6 +30,16 @@ def __getattr__(name):
         raise AttributeError
 
 
+def __getattr__(name):
+    global logged_in
+    if name == "config":
+        if not logged_in:
+            logged_in = load_configuration(default_config_file)
+        return _config
+    else:
+        raise AttributeError
+
+
 def parse_bool(s: str) -> bool:
     return s.lower() in ["true", "1", "on"]
 

@@ -28,7 +28,6 @@ from typing import (
 from .. import array
 from .. import client
 from .. import rest_api
-from .. import tiledb_cloud_error as tce
 from .. import udf
 from .._common import functions
 from .._common import futures
@@ -46,7 +45,7 @@ from . import status as st
 from . import visualization as viz
 from .mode import Mode
 
-Status = st.Status  # Re-export for compabitility.
+Status = st.Status  # Re-export for compatibility.
 _T = TypeVar("_T")
 # Special string included in server errors when there is a problem loading
 # stored parameters.
@@ -214,7 +213,7 @@ class Node(futures.FutureLike[_T]):
         if self.mode == Mode.BATCH:
             if self._resource_class:
                 if resources_set:
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "Only one of `resources` and `resource_class`"
                         " may be set when running a task graph node."
                     )
@@ -225,20 +224,18 @@ class Node(futures.FutureLike[_T]):
             # (written in bytes) was probably a user error.
             if resources_set and "memory" in self._resources:
                 if re.match(r"^[0-9]{1,7}$", self._resources["memory"]):
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "The `memory` key in `resources` is missing a"
                         " unit suffix. Did you forget to append 'Mi' or 'Gi'?"
                     )
         elif resources_set:
-            raise tce.TileDBCloudError(
+            raise ValueError(
                 "Cannot set resources for REALTIME task graphs,"
                 ' please use "resource_class" to set a predefined option'
                 ' for "standard" or "large"'
             )
         elif self.mode is Mode.LOCAL and self._resource_class:
-            raise tce.TileDBCloudError(
-                "Resource class cannot be set for locally-executed nodes."
-            )
+            raise ValueError("Resource class cannot be set for locally-executed nodes.")
 
     def _find_deps(self) -> None:
         """Finds Nodes this depends on and adds them to our dependency list."""
@@ -257,7 +254,7 @@ class Node(futures.FutureLike[_T]):
                 try:
                     dep.future.result(0)
                 except Exception as e:
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "Nodes from a previous DAG may only be used as inputs"
                         " in a subsequent DAG if they are already complete."
                     ) from e
@@ -956,7 +953,7 @@ class DAG:
 
             if self.mode == Mode.BATCH:
                 if kwargs.get("mode") is not None and kwargs.get("mode") != Mode.BATCH:
-                    raise tce.TileDBCloudError(
+                    raise ValueError(
                         "BATCH mode DAG can only execute BATCH mode Nodes."
                     )
                 kwargs["mode"] = Mode.BATCH
@@ -981,8 +978,8 @@ class DAG:
         """Submit a function that will be executed in the cloud serverlessly.
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created.
         """
 
@@ -998,8 +995,8 @@ class DAG:
         """Submit a function that will run locally.
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created
         """
 
@@ -1010,8 +1007,8 @@ class DAG:
         """Submit a function that will be executed in the cloud serverlessly.
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created.
         """
 
@@ -1062,17 +1059,15 @@ class DAG:
         ```
 
         :param func: Function to execute in UDF task.
-        :param *args: Postional arguments to pass into Node instantation.
+        :param args: Positional arguments to pass into Node instantiation.
         :param expand_node_output: Node that we want to expand the output of.
             The output of the node should be a JSON encoded list.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created.
         """
 
         if "local_mode" in kwargs or self.mode != Mode.BATCH:
-            raise tce.TileDBCloudError(
-                "Stage nodes are only supported for BATCH mode DAGs."
-            )
+            raise ValueError("Stage nodes are only supported for BATCH mode DAGs.")
 
         return self._add_prewrapped_node(
             udf.exec_base,
@@ -1083,17 +1078,18 @@ class DAG:
             **kwargs,
         )
 
-    def submit_sql(self, *args: Any, **kwargs: Any) -> Node:
+    def submit_sql(self, sql: str, *args: Any, **kwargs: Any) -> Node:
         """Submit a sql query to run serverlessly in the cloud.
 
         :param sql: Query to execute.
-        :param *args: Postional arguments to pass into Node instantation.
-        :param **kwargs: Keyword args to pass into Node instantiation.
+        :param args: Positional arguments to pass into Node instantiation.
+        :param kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created
         """
 
         return self._add_prewrapped_node(
             _sql_exec.exec_base,
+            sql,
             *args,
             _internal_accepts_stored_params=False,
             _fallback_name="SQL query",
@@ -1259,9 +1255,7 @@ class DAG:
             if self.mode == Mode.REALTIME:
                 roots = self._find_root_nodes()
                 if len(roots) == 0:
-                    raise tce.TileDBCloudError(
-                        "DAG is circular, there are no root nodes"
-                    )
+                    raise ValueError("DAG is circular, there are no root nodes")
                 self._status = Status.RUNNING
 
                 for node in roots:
@@ -1661,7 +1655,7 @@ class DAG:
                 if name not in _SKIP_BATCH_UDF_KWARGS
             }
 
-            all_args = types.Arguments(node_args, filtered_node_kwargs)
+            all_args = types.Arguments(tuple(node_args), filtered_node_kwargs)
             encoder = _BatchArgEncoder(input_is_expanded=bool(node._expand_node_output))
             kwargs["arguments"] = encoder.encode_arguments(all_args)
 
@@ -2001,7 +1995,7 @@ class _StoredParamReplacer(visitor.ReplacingVisitor):
 def _topo_sort(
     lst: Sequence[rest_api.TaskGraphNodeMetadata],
 ) -> Sequence[rest_api.TaskGraphNodeMetadata]:
-    """Topologically sorts the list of node metadatas."""
+    """Topologically sorts the list of node metadata."""
     by_uuid: Dict[str, rest_api.TaskGraphNodeMetadata] = {
         node.client_node_uuid: node for node in lst
     }
