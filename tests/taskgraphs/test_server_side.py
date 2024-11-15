@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 import tiledb.cloud.taskgraphs as tg
 from tiledb.cloud import dag
 from tiledb.cloud.taskgraphs.server_executor import impl
@@ -19,6 +21,7 @@ class ConnectToExistingTest(unittest.TestCase):
         self.assertEqual(connected.node("one").result(1), 1)
         self.assertEqual(connected.node("two").result(1), 2)
 
+    @pytest.mark.xfail(reason="Server side error, graph not computed in expected time.")
     def test_running_graph(self) -> None:
         to_run = dag.DAG(mode=dag.Mode.BATCH)
         one = to_run.submit(lambda: 1, name="one")
@@ -41,6 +44,7 @@ class ConnectToExistingTest(unittest.TestCase):
         self.assertIs(connected.node("two").status, tg.Status.SUCCEEDED)
         self.assertIs(connected.status, tg.Status.SUCCEEDED)
 
+    @pytest.mark.xfail(reason="Server side error, graph not computed in expected time.")
     def test_failing_graph(self) -> None:
         to_run = dag.DAG(mode=dag.Mode.BATCH)
         to_run.submit(lambda: 1 / 0, name="oops")
