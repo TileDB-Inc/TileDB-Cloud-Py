@@ -45,6 +45,7 @@ def ingest(
     converter: Optional[str] = None,
     output_ext: str = "",
     tile_scale: int = 128,
+    timeout: Optional[int] = 86400,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -87,6 +88,8 @@ def ingest(
         resolution
     :param reader: The selected reader backend implementation either "experimental"
         or "production". Default["production"]
+    :param timeout: Duration (sec) ingestion DAG allowed to execute before timeout.
+        The default is 86400 seconds (24 hours).
     """
 
     logger = get_logger_wrapper(verbose)
@@ -348,6 +351,7 @@ def ingest(
             limit=3,
             retry_policy="Always",
         ),
+        deadline=timeout,
     )
 
     # The lister doesn't need many resources.
