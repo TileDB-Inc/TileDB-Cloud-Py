@@ -1,8 +1,16 @@
+import cloudpickle
 import numpy as np
 import pytest
 
 import tiledb.cloud.vcf as vcf
 import tiledb.cloud.vcf.vcf_toolbox as vtb
+
+# Pickle the vcf module by value, so tests run on the latest code.
+cloudpickle.register_pickle_by_value(vcf)
+
+
+# Run VCF tests with:
+#   pytest -m vcf --run-vcf -n 8
 
 
 @vtb.df_transform
@@ -11,7 +19,8 @@ def filter_vcf(df, *, filter=None):
 
 
 @pytest.mark.vcf
-def test_vcf_transform():
+@pytest.mark.parametrize("batch_mode", [False, True])
+def test_vcf_transform(batch_mode):
     vcf_uri = "tiledb://TileDB-Inc/vcf-1kg-dragen-v376"
 
     regions = [
@@ -39,6 +48,7 @@ def test_vcf_transform():
         regions=regions,
         samples="NA12878",
         transform_result=filter_vcf(filter=filter),
+        batch_mode=batch_mode,
     )
 
     assert vcf_table.num_rows == 336
