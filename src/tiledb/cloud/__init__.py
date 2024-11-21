@@ -8,6 +8,7 @@ from . import files
 from . import groups
 from . import sql
 from . import udf
+from . import workflow
 from ._common import pickle_compat as _pickle_compat
 from .array import array_activity
 from .array import deregister_array
@@ -64,6 +65,7 @@ __all__ = (
     "groups",
     "sql",
     "udf",
+    "workflow",
     "array_activity",
     "deregister_array",
     "info",
