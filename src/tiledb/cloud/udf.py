@@ -4,7 +4,7 @@ import uuid
 import warnings
 from typing import Any, Callable, Iterable, Optional, Tuple, Union
 
-import cloudpickle
+from tiledb.cloud._vendor import cloudpickle
 
 from . import array
 from . import client

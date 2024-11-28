@@ -14,10 +14,11 @@ import importlib
 import sys
 import types
 
-import cloudpickle.cloudpickle as cpcp
 import importlib_metadata
 import numpy
 import packaging.version as pkgver
+
+from tiledb.cloud._vendor import cloudpickle
 
 
 def patch_cloudpickle() -> None:
@@ -57,7 +58,7 @@ def patch_cloudpickle() -> None:
     # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     try:
-        empty_cell_value = cpcp._empty_cell_value
+        empty_cell_value = cloudpickle.cloudpickle._empty_cell_value
     except AttributeError:
         # https://github.com/cloudpipe/cloudpickle/blob/v2.2.1/cloudpickle/cloudpickle.py#L692-L698
         class _empty_cell_value:
@@ -67,12 +68,12 @@ def patch_cloudpickle() -> None:
             def __reduce__(cls):
                 return cls.__name__
 
-        _empty_cell_value.__module__ = cpcp.__name__
+        _empty_cell_value.__module__ = cloudpickle.cloudpickle.__name__
         empty_cell_value = _empty_cell_value()
-        cpcp._empty_cell_value = empty_cell_value
+        cloudpickle.cloudpickle._empty_cell_value = empty_cell_value
 
     try:
-        make_empty_cell = cpcp._make_empty_cell
+        make_empty_cell = cloudpickle.cloudpickle._make_empty_cell
     except AttributeError:
         # https://github.com/cloudpipe/cloudpickle/blob/v2.2.1/cloudpickle/cloudpickle.py#L772-L778
         def make_empty_cell():
@@ -86,16 +87,16 @@ def patch_cloudpickle() -> None:
     if not hasattr(types, "CellType"):
         types.CellType = type(make_empty_cell())
 
-    if not hasattr(cpcp, "_make_cell"):
+    if not hasattr(cloudpickle.cloudpickle, "_make_cell"):
         try:
-            cell_set = cpcp.cell_set
+            cell_set = cloudpickle.cloudpickle.cell_set
         except AttributeError:
             #
             def cell_set(cell, value):
                 # We only support 3.7+.
                 cell.cell_contents = value
 
-            cpcp.cell_set = cell_set
+            cloudpickle.cloudpickle.cell_set = cell_set
 
         # https://github.com/cloudpipe/cloudpickle/blob/v2.2.1/cloudpickle/cloudpickle.py#L392-L450
         def _make_cell(value=empty_cell_value):
@@ -104,16 +105,16 @@ def patch_cloudpickle() -> None:
                 cell_set(cell, value)
             return cell
 
-        cpcp._make_cell = _make_cell
+        cloudpickle.cloudpickle._make_cell = _make_cell
 
-    if not hasattr(cpcp, "_make_function"):
+    if not hasattr(cloudpickle.cloudpickle, "_make_function"):
 
         def _make_function(code, globals, name, argdefs, closure):
             # Setting __builtins__ in globals is needed for nogil CPython.
             globals["__builtins__"] = __builtins__
             return types.FunctionType(code, globals, name, argdefs, closure)
 
-        cpcp._make_function = _make_function
+        cloudpickle.cloudpickle._make_function = _make_function
 
 
 def patch_pandas() -> None:

@@ -7,10 +7,10 @@ import threading
 from enum import Enum
 from typing import Any, Callable, Optional, Tuple, Type, TypeVar, Union
 
-import cloudpickle
 import urllib3
 
 from tiledb.cloud._common import functions
+from tiledb.cloud._vendor import cloudpickle
 
 TILEDB_CLOUD_PROTOCOL = 4
 PYTHON_VERSION = ".".join(map(str, sys.version_info[:3]))

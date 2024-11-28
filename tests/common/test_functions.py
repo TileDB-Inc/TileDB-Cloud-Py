@@ -10,9 +10,8 @@ import tempfile
 import textwrap
 import unittest
 
-import cloudpickle
-
 from tiledb.cloud._common import functions
+from tiledb.cloud._vendor import cloudpickle
 
 
 class SourceLinesTest(unittest.TestCase):
@@ -107,7 +106,7 @@ class ByValueTest(unittest.TestCase):
 
                     import json
 
-                    import cloudpickle
+                    from tiledb.cloud._vendor import cloudpickle
                     import the_module
 
                     from tiledb.cloud._common import functions

@@ -37,6 +37,7 @@ tests = [
     "pytest-explicit",
     "pytest-split",
     "tiledbsoma",
+    "psutil",
 ]
 
 [project.urls]
@@ -47,11 +48,12 @@ repository = "https://github.com/TileDB-Inc/TileDB-Cloud-Py"
 requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 
 [tool.pytest.ini_options]
-explicit-only = ["bigfiles", "geospatial", "vcf"]
+explicit-only = ["bigfiles", "geospatial", "vcf", "cloudpickle"]
 markers = [
     "bigfiles: tests that create and upload really big files",
     "geospatial: tests that require the geospatial libraries",
     "vcf: VCF tests that run on TileDB Cloud",
+    "cloudpickle: tests of vendored cloudpickle",
 ]
 norecursedirs = ["tiledb/cloud"]
 
