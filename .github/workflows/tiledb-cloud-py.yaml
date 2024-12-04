@@ -143,6 +143,8 @@ jobs:
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
         if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
+          pip install psutil
+          pip install src/tiledb/cloud/_vendor/cloudpickle/tests/cloudpickle_testpkg
           pytest -sv src/tiledb/cloud/_vendor/cloudpickle
 
       - name: Run tests
