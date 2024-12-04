@@ -10,9 +10,8 @@ import tempfile
 import textwrap
 import unittest
 
-import cloudpickle
-
 from tiledb.cloud._common import functions
+from tiledb.cloud._vendor import cloudpickle
 
 
 class SourceLinesTest(unittest.TestCase):

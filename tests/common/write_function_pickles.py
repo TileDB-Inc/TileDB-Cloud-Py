@@ -5,7 +5,7 @@ import pathlib
 import sys
 from typing import Callable
 
-import cloudpickle
+from tiledb.cloud._vendor import cloudpickle
 
 
 def outer() -> Callable[[], Callable[[], str]]:

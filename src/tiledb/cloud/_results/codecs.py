@@ -5,10 +5,11 @@ import sys
 from typing import TYPE_CHECKING, Any, Generic, Tuple, Type, TypeVar
 
 import attrs
-import cloudpickle
 import pyarrow
 import urllib3
 from typing_extensions import Self, TypeGuard
+
+from tiledb.cloud._vendor import cloudpickle
 
 # This is a circular dependency since we need to be able to decode `tiledb_json`
 # format data.

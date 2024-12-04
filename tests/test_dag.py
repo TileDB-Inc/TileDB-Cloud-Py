@@ -11,7 +11,6 @@ import uuid
 from concurrent import futures
 from typing import Any
 
-import cloudpickle
 import numpy as np
 import pandas as pd
 import pytest
@@ -26,6 +25,7 @@ from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
+from tiledb.cloud._vendor import cloudpickle
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models

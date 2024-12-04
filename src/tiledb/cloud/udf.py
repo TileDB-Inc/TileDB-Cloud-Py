@@ -4,8 +4,6 @@ import uuid
 import warnings
 from typing import Any, Callable, Iterable, Optional, Tuple, Union
 
-import cloudpickle
-
 from . import array
 from . import client
 from . import rest_api
@@ -20,6 +18,7 @@ from ._results import sender
 from ._results import stored_params
 from ._results import tiledb_json
 from ._results import types
+from ._vendor import cloudpickle
 from .rest_api import ApiException as GenApiException
 from .rest_api import models
 
