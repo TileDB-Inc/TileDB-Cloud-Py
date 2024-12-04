@@ -3,12 +3,15 @@ import datetime
 import pathlib
 import pickle
 import tempfile
+import time
 import unittest
 
 import pytz  # Test-only dependency.
 
+from tiledb.cloud import dag
 from tiledb.cloud._common import utils
 from tiledb.cloud.utilities import find
+from tiledb.cloud.utilities import submit_taskgraph
 
 
 class UtilsTest(unittest.TestCase):
@@ -68,6 +71,24 @@ class UtilsTest(unittest.TestCase):
             self.assertEqual(
                 len(list(find(tmp, include=lambda f: f.endswith(".dat")))), 1
             )
+
+    def test_submit_taskgraph(self):
+        # Submit and wait for completion.
+        tg = dag.DAG()
+
+        result = tg.submit_local(lambda: (time.sleep(3), 42)[1])
+        status = submit_taskgraph(tg, update_sec=1)
+
+        assert status == {"status": "Completed", "graph_id": "None"}
+        assert result.result() == 42
+
+        # Submit and continue.
+        tg = dag.DAG()
+        result = tg.submit_local(lambda: (time.sleep(3), 42)[1])
+        status = submit_taskgraph(tg, wait=False)
+
+        assert status == {"status": "Running", "graph_id": "None"}
+        assert result.result() == 42
 
 
 def _b64_unpickle(x):
