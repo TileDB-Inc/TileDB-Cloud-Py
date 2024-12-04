@@ -30,10 +30,10 @@ website:
             href: reference/array.qmd
           - text: asset
             href: reference/asset.qmd
-          - text: files
-            href: reference/files.qmd
           - text: notebook
             href: reference/notebook.qmd
+          - text: dashboard
+            href: reference/dashboard.qmd
           - text: udf
             href: reference/udf.qmd
 
@@ -52,8 +52,6 @@ website:
         contents:
           - text: bioimg.exportation
             href: reference/bioimg.exportation.qmd
-          - text: bioimg.helpers
-            href: reference/bioimg.helpers.qmd
           - text: bioimg.ingestion
             href: reference/bioimg.ingestion.qmd
           - text: files.indexing
@@ -91,12 +89,18 @@ website:
             href: reference/dag.dag.qmd
           - text: dag.mode
             href: reference/dag.mode.qmd
-          - text: dag.status
-            href: reference/dag.status.qmd
           - text: dag.visualization
             href: reference/dag.visualization.qmd
           - text: tasks
             href: reference/tasks.qmd
+          - text: taskgraphs.builder
+            href: reference/taskgraphs.builder.qmd
+          - text: taskgraphs.executor
+            href: reference/taskgraphs.executor.qmd
+          - text: taskgraphs.registration
+            href: reference/taskgraphs.registration.qmd
+          - text: taskgraphs.types
+            href: reference/taskgraphs.types.qmd
           - text: udf
             href: reference/udf.qmd
           - text: utilities.consolidate
@@ -129,8 +133,8 @@ quartodoc:
         - groups
         - array
         - asset
-        - files
         - notebook
+        - dashboard
         - udf
 
     - title: Collaborate
@@ -147,7 +151,6 @@ quartodoc:
     - subtitle: Bio Imaging
       contents:
         - bioimg.exportation
-        - bioimg.helpers
         - bioimg.ingestion
 
     - subtitle: Files
@@ -181,9 +184,12 @@ quartodoc:
         - compute.delayed
         - dag.dag
         - dag.mode
-        - dag.status
         - dag.visualization
         - tasks
+        - taskgraphs.builder
+        - taskgraphs.executor
+        - taskgraphs.registration
+        - taskgraphs.types
         - udf
         - utilities.consolidate
         - utilities.profiler
