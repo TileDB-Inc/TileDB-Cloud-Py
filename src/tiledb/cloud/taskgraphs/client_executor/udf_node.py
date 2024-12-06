@@ -2,8 +2,9 @@ import base64
 import uuid
 from typing import AbstractSet, Any, Dict, List, Optional, Sequence, TypeVar
 
-import cloudpickle
 import urllib3
+
+from tiledb.cloud._vendor import cloudpickle
 
 from ... import rest_api
 from ..._common import json_safe

@@ -105,3 +105,4 @@ venv.bak/
 
 .idea
 src/tiledb/cloud/version.py
+.DS_Store

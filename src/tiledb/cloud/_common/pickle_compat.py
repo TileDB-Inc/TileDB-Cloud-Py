@@ -14,10 +14,11 @@ import importlib
 import sys
 import types
 
-import cloudpickle.cloudpickle as cpcp
 import importlib_metadata
 import numpy
 import packaging.version as pkgver
+
+import tiledb.cloud._vendor.cloudpickle.cloudpickle as cpcp
 
 
 def patch_cloudpickle() -> None:

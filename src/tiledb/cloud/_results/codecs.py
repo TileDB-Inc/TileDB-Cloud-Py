@@ -5,10 +5,11 @@ import sys
 from typing import TYPE_CHECKING, Any, Generic, Tuple, Type, TypeVar
 
 import attrs
-import cloudpickle
 import pyarrow
 import urllib3
 from typing_extensions import Self, TypeGuard
+
+from tiledb.cloud._vendor import cloudpickle as tdbcp
 
 # This is a circular dependency since we need to be able to decode `tiledb_json`
 # format data.
@@ -148,11 +149,11 @@ class PickleCodec(Codec[object]):
 
     @classmethod
     def encode(cls, obj: object) -> bytes:
-        return cloudpickle.dumps(obj, protocol=_PICKLE_PROTOCOL)
+        return tdbcp.dumps(obj, protocol=_PICKLE_PROTOCOL)
 
     @classmethod
     def decode(cls, data: bytes) -> object:
-        return cloudpickle.loads(data)
+        return tdbcp.loads(data)
 
 
 class TileDBJSONCodec(Codec[object]):

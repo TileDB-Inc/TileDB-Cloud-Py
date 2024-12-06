@@ -1,9 +1,9 @@
-import cloudpickle
 import numpy as np
 import pytest
 
 import tiledb.cloud.vcf as vcf
 import tiledb.cloud.vcf.vcf_toolbox as vtb
+from tiledb.cloud._vendor import cloudpickle
 
 # Pickle the vcf module by value, so tests run on the latest code.
 cloudpickle.register_pickle_by_value(vcf)

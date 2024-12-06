@@ -43,7 +43,7 @@ Documentation uses [Quarto](https://quarto.org/) style documentation.
 This package contains modules and functions that will be run in the TileDB Cloud as UDFs. Local ingestor changes can be tested in the cloud by using a feature of [cloudpickle](https://github.com/cloudpipe/cloudpickle?tab=readme-ov-file#overriding-pickles-serialization-mechanism-for-importable-constructs). Below is a runnable example. `TILEDB_NAMESPACE` is your TileDB namespace ("TileDB-Inc", for example). `TILEDB_ACCESS_CREDENTIAL_NAME` is the name of the stored credentials for accessing `AWS_BUCKET`. `IMAGE_FILE_KEY` is the key for an object in that bucket and `OUTPUT_GROUP_KEY` is the key to be used for the group that the `ingest()` UDF will create in `AWS_BUCKET`.
 
 ```python
-import cloudpickle
+from tiledb.cloud._vendor import cloudpickle
 
 import tiledb.cloud.bioimg
 
@@ -59,7 +59,7 @@ tiledb.cloud.bioimg.ingest(
 )
 ```
 
-In this case `tiledb.cloud.bioimg.ingest()` uses cloudpickle to send a local function to TileDB Cloud, and `cloudpickle.register_pickle_by_value(tiledb.cloud.bioimg)` directs cloudpickle to bring the currently imported `tiledb.cloud.bioimg` module along with the function. Your local version of the module will be used instead of the version currently deployed in TileDB Cloud.
+In this case `tiledb.cloud.bioimg.ingest()` uses cloudpickle to send a local function to TileDB Cloud, and `tdbcp.register_pickle_by_value(tiledb.cloud.bioimg)` directs cloudpickle to bring the currently imported `tiledb.cloud.bioimg` module along with the function. Your local version of the module will be used instead of the version currently deployed in TileDB Cloud.
 
 Note: your local changes to the Cloud-Py package will need to be installed in order for cloudpickle to serialize them, as cloudpickle needs to find them at runtime.
 
