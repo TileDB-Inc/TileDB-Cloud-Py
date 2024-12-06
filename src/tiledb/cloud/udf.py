@@ -18,7 +18,7 @@ from ._results import sender
 from ._results import stored_params
 from ._results import tiledb_json
 from ._results import types
-from ._vendor import cloudpickle
+from ._vendor import cloudpickle as tdbcp
 from .rest_api import ApiException as GenApiException
 from .rest_api import models
 
@@ -234,7 +234,7 @@ def register_udf(
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
 
-        pickledUDF = cloudpickle.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
+        pickledUDF = tdbcp.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
         source_lines = functions.getsourcelines(func) if include_source_lines else None
@@ -389,7 +389,7 @@ def update_udf(
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
 
-        pickledUDF = cloudpickle.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
+        pickledUDF = tdbcp.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
         source_lines = functions.getsourcelines(func) if include_source_lines else None

@@ -10,7 +10,7 @@ from typing import Any, Callable, Optional, Tuple, Type, TypeVar, Union
 import urllib3
 
 from tiledb.cloud._common import functions
-from tiledb.cloud._vendor import cloudpickle
+from tiledb.cloud._vendor import cloudpickle as tdbcp
 
 TILEDB_CLOUD_PROTOCOL = 4
 PYTHON_VERSION = ".".join(map(str, sys.version_info[:3]))
@@ -103,7 +103,7 @@ def split_uri(uri: str) -> Tuple[str, str]:
 
 def b64_pickle(obj: Any) -> str:
     """Pickles the given object, then base64 encodes the pickle."""
-    pickle = cloudpickle.dumps(obj, protocol=TILEDB_CLOUD_PROTOCOL)
+    pickle = tdbcp.dumps(obj, protocol=TILEDB_CLOUD_PROTOCOL)
     return base64.b64encode(pickle).decode("ascii")
 
 
