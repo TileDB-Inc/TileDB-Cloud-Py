@@ -169,6 +169,7 @@ def run_ingest_workflow_udf(
                 register_name=register_name,
                 config=extra_tiledb_config,
                 verbose=logging_level == logging.DEBUG,
+                access_credentials_name=carry_along.get("access_credentials_name", acn),
                 acn=acn,
             )
             register_soma.depends_on(collector)
