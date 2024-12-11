@@ -11,7 +11,6 @@ import uuid
 from concurrent import futures
 from typing import Any
 
-import cloudpickle
 import numpy as np
 import pandas as pd
 import pytest
@@ -26,6 +25,7 @@ from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
+from tiledb.cloud._vendor import cloudpickle as tdbcp
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
@@ -1309,7 +1309,7 @@ class ReplaceNodesTest(unittest.TestCase):
             sp.ParamLoader(
                 {
                     "00000000-0000-0000-0000-000000000001": _b64(b'[true, "two", 3]'),
-                    "00000000-0000-0000-0000-000000000002": _b64(cloudpickle.dumps(())),
+                    "00000000-0000-0000-0000-000000000002": _b64(tdbcp.dumps(())),
                 }
             ),
         )

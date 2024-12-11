@@ -1,6 +1,6 @@
 import sys
 
-import cloudpickle
+from tiledb.cloud._vendor import cloudpickle
 
 from .annotate import annotate
 from .transform import df_transform

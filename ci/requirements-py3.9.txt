@@ -1,6 +1,6 @@
 attrs==23.2.0
 certifi==2024.2.2
-cloudpickle==2.2.1
+cloudpickle
 importlib-metadata==7.0.1
 numpy==1.26.4
 packaging==23.2
