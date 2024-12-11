@@ -70,7 +70,7 @@ website:
             href: reference/soma.mapper.qmd
           - text: vcf.allele_frequency
             href: reference/vcf.allele_frequency.qmd
-          - text: vcf.ingestionq
+          - text: vcf.ingestion
             href: reference/vcf.ingestion.qmd
           - text: vcf.query
             href: reference/vcf.query.qmd
