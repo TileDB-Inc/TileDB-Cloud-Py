@@ -25,6 +25,7 @@ def register_dataset_udf(
     namespace: Optional[str] = None,
     config: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
+    logging_level: int = logging.INFO,
 ) -> None:
     """
     Register the dataset on TileDB Cloud.
@@ -35,7 +36,7 @@ def register_dataset_udf(
     :param config: config dictionary, defaults to None
     :param verbose: verbose logging, defaults to False
     """
-    logger = get_logger_wrapper(verbose)
+    logger = get_logger_wrapper(level=logging_level)
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
     tiledb_uri = f"tiledb://{namespace}/{register_name}"
 
@@ -61,6 +62,7 @@ def register_dataset_udf(
             logger.info("Dataset already registered at %r.", tiledb_uri)
         else:
             logger.info("Registering dataset at %r.", tiledb_uri)
+
             tiledb.cloud.groups.register(
                 dataset_uri,
                 name=register_name,
@@ -101,9 +103,9 @@ def run_ingest_workflow_udf(
     # https://github.com/TileDB-Inc/TileDB-Cloud-Py/pull/512
 
     logger = get_logger_wrapper(level=logging_level)
+    vfs = tiledb.VFS(config=extra_tiledb_config)
 
     input_files = []
-    vfs = tiledb.VFS(config=extra_tiledb_config)
 
     if vfs.is_dir(input_uri):
         for input_item in vfs.ls(input_uri):
@@ -170,7 +172,8 @@ def run_ingest_workflow_udf(
                 config=extra_tiledb_config,
                 verbose=logging_level == logging.DEBUG,
                 access_credentials_name=carry_along.get("access_credentials_name", acn),
-                acn=acn,
+                acn=carry_along.get("access_credentials_name", acn),
+                logging_level=logging_level,
             )
             register_soma.depends_on(collector)
 
@@ -379,7 +382,6 @@ def run_ingest_workflow(
 
     # Step 1: Ingest workflow UDF
     carry_along: Dict[str, str] = {
-        "namespace": namespace,
         "access_credentials_name": acn,
     }
 
