@@ -23,13 +23,13 @@ def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logge
         "[%(asctime)s] [%(module)s] [%(funcName)s] [%(levelname)s] %(message)s"
     )
     sh.setFormatter(formatter)
-
     logger = logging.getLogger(name)
+
     # Only add one handler, in case get_logger is called multiple times
     if not logger.handlers:
         logger.addHandler(sh)
-        logger.setLevel(level)
 
+    logger.setLevel(level)
     return logger
 
 
