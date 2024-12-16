@@ -708,6 +708,9 @@ class DAG:
         self.cancelled_nodes: Dict[uuid.UUID, Node] = {}
         """Cancelled Nodes."""
         self._status = st.Status.NOT_STARTED
+        """Status of DAG."""
+        self.region: Optional[str] = None
+        """DAG host region. Only set once graph started."""
 
         self._done_callbacks = []
         if callable(done_callback):
@@ -735,19 +738,24 @@ class DAG:
         with self._lifecycle_condition:
             return self._status
 
-    @property
-    def region(self) -> Optional[str]:
+    # @property
+    def _pin_region(self) -> str:
         """Get DAG host region.
 
         Override default region via:
         tiledb.cloud.client.config.config.host = "https://{region}.aws.api.tiledb.com"
         """
 
+        # print(self.status)
+
+        # print(self.status == st.Status.NOT_STARTED)
+
         cfg = client.Config()
         parsed = urlparse(cfg["rest.server_address"])
+        print(parsed)
         match = re.search(r"([a-z]+-[a-z]+-\d+)\.aws\.api\.tiledb\.com", parsed.netloc)
         # some cases there may be no region
-        return match.group(1) if match else None
+        return match.group(1) if match else client.user_profile().default_region
 
     def initial_setup(self) -> uuid.UUID:
         """Performs one-time server-side setup tasks.
@@ -1294,6 +1302,9 @@ class DAG:
                     daemon=True,
                 )
                 self._update_batch_status_thread.start()
+
+        # pin dag host region
+        self.region = self._pin_region()
 
     def _maybe_exec(self, node: Node):
         did_start = node._maybe_start(self.namespace)
@@ -2091,3 +2102,52 @@ def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
 
 def task_graph_log_status_to_status(status: models.TaskGraphLogStatus) -> Status:
     return _TASK_GRAPH_LOG_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
+
+
+if __name__ == "__main__":
+    # import tiledb.cloud
+    import os
+
+    from .. import Config
+    from .. import config
+
+    # user = user_profile()
+    # print(user.default_region)
+
+    token = os.environ.get("TILEDB_REST_TOKEN")
+
+    # cfg = Config()
+    region = "us-west-2"
+    # cfg["rest.server_address"] = f"https://{region}.aws.api.tiledb.com"
+    # global config.config.host
+    config.config.host = f"https://{region}.aws.api.tiledb.com"
+
+    # _host = f"https://{region}.aws.api.tiledb.com"
+
+    # config.setup_configuration(host=)
+
+    # login(host=_host, token=token)
+    # login(token=token)
+
+    # print(config.config.host)
+
+    cfg = Config()
+    print(cfg["rest.server_address"])
+
+    # from ..config import config
+
+    # config.host = f"https://{region}.aws.api.tiledb.com"
+
+    # cfg = Config()
+    # print(cfg)
+
+    # graph = DAG(namespace="spencerseale")
+
+    # def hello():
+    #     print("hello")
+
+    # graph.submit(hello)
+
+    # graph.compute()
+
+    # print(graph.region)
