@@ -1,7 +1,7 @@
+import fnmatch
 import logging
 import os.path
 import pathlib
-import re
 import warnings
 from typing import Any, ContextManager, Dict, Mapping, Optional
 from unittest import mock
@@ -117,9 +117,9 @@ def run_ingest_workflow_udf(
             )
 
             # Subdirectories/subfolders can't be ingested.
-            # Use the pattern ".h5ad" to select only .h5ad files.
+            # Use the pattern "*.h5ad" to select only .h5ad files.
             if not vfs.is_dir(input_item) and (
-                not pattern or re.search(pattern, input_item)
+                not pattern or fnmatch.fnmatch(input_item, pattern)
             ):
                 logger.debug("Identified input file: input_item=%r", input_item)
                 input_files.append(input_item)
