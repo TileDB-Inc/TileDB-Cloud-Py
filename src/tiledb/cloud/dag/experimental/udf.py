@@ -77,37 +77,40 @@ def udf(
     Examples:
 
     .. code-block:: python
-    @udf
-    def hello_world(world: str) -> str:
-        msg = f"Hello {world}!"
 
-        return msg
+        @udf
+        def hello_world(world: str) -> str:
+            msg = f"Hello {world}!"
 
-    graph = hello_world(world="earth")
+            return msg
 
-    .. code-block:: python
-    @udf(
-        namespace="foo",
-        name="batch_hello_world",
-        acn="my-role",
-        resources={"cpu": "1", "memory": "1Gi"},
-    )
-    def hello_world(world: str) -> str:
-        msg = f"Hello {world}!"
-
-        return msg
-
-    graph = hello_world(world="earth")
+        graph = hello_world(world="earth")
 
     .. code-block:: python
-    graph = udf(
-        func="TileDB-Inc/ls_uri",
-        uri="s3://bucket/object",
-        name="Registered UDF exec.",
-        acn="my-role",
-        namespace="TileDB-Inc",
-        resources={"cpu": "1", "memory": "1Gi"},
-    )
+
+        @udf(
+            namespace="foo",
+            name="batch_hello_world",
+            acn="my-role",
+            resources={"cpu": "1", "memory": "1Gi"},
+        )
+        def hello_world(world: str) -> str:
+            msg = f"Hello {world}!"
+
+            return msg
+
+        graph = hello_world(world="earth")
+
+    .. code-block:: python
+
+        graph = udf(
+            func="TileDB-Inc/ls_uri",
+            uri="s3://bucket/object",
+            name="Registered UDF exec.",
+            acn="my-role",
+            namespace="TileDB-Inc",
+            resources={"cpu": "1", "memory": "1Gi"},
+        )
 
     :param func: Executable or path to registered UDF to execute.
     :param name: Name of UDF.
