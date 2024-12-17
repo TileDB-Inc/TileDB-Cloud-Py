@@ -158,4 +158,4 @@ def udf(
             **kwargs,
         )
     else:
-        _udf
+        return _udf
