@@ -3,7 +3,7 @@
 
 from functools import wraps
 from logging import INFO
-from typing import Any, Callable, Mapping, Optional, Union
+from typing import Callable, Mapping, Optional, Union
 
 from ..dag import DAG
 from ..dag import Mode
@@ -20,8 +20,6 @@ def _exec_udf(
     *args,
     **kwargs,
 ) -> DAG:
-    """Execute a TileDB UDF."""
-
     di = DIContainer(mode=Mode.REALTIME if isinstance(resources, str) else Mode.BATCH)
 
     logger = di.logger(level=INFO)
@@ -70,8 +68,57 @@ def udf(
     image_name: Optional[str] = None,
     *args,
     **kwargs,
-) -> Any:
-    """Execute a TileDB UDF."""
+) -> DAG:
+    """Execute a TileDB UDF.
+
+    For in-memory executables, use as a decorator.
+    For registered UDFs, pass <namespace>/<udf_name> to `func`.
+
+    Examples:
+
+    .. code-block:: python
+    @udf
+    def hello_world(world: str) -> str:
+        msg = f"Hello {world}!"
+
+        return msg
+
+    graph = hello_world(world="earth")
+
+    .. code-block:: python
+    @udf(
+        namespace="foo",
+        name="batch_hello_world",
+        acn="my-role",
+        resources={"cpu": "1", "memory": "1Gi"},
+    )
+    def hello_world(world: str) -> str:
+        msg = f"Hello {world}!"
+
+        return msg
+
+    graph = hello_world(world="earth")
+
+    .. code-block:: python
+    graph = udf(
+        func="TileDB-Inc/ls_uri",
+        uri="s3://bucket/object",
+        name="Registered UDF exec.",
+        acn="my-role",
+        namespace="TileDB-Inc",
+        resources={"cpu": "1", "memory": "1Gi"},
+    )
+
+    :param func: Executable or path to registered UDF to execute.
+    :param name: Name of UDF.
+    :param namespace: TileDB namespace to execute in.
+    :param acn: TileDB access credential name.
+    :param resources: Resources for UDF.
+    :param image_name: Docker image name.
+    :param *args: Positional args to pass to func.
+    :param **kwargs: Keyword args to pass to func.
+    :return: Running task graph instance.
+    """
 
     def _udf(func: Callable) -> Callable:
         @wraps(func)
@@ -96,7 +143,9 @@ def udf(
         return _udf(func)
     elif isinstance(func, str):
         return _exec_udf(
-            func=func,
+            func=func.replace("tiledb://", "")
+            if func.startswith("tiledb://")
+            else func,
             name=name,
             namespace=namespace,
             acn=acn,
@@ -105,33 +154,5 @@ def udf(
             *args,
             **kwargs,
         )
-
     else:
         _udf
-
-
-if __name__ == "__main__":
-    # testing pathways
-
-    # @udf(
-    #     namespace="spencerseale",
-    #     name="hello_world",
-    #     resources={"cpu": "1", "memory": "1Gi"},
-    # )
-    # def hello_world(world: str) -> str:
-    #     msg = f"Hello {world}!"
-
-    #     print(msg)
-
-    #     return msg
-
-    # graph = hello_world(world="earth")
-
-    udf(
-        func="tiledb://TileDB-Inc/ls_uri",
-        uri="s3://tiledb-spencer/junk",
-        config={"vfs.s3.region": "us-west-2"},
-        namespace="TileDB-Inc",
-        acn="tiledb-cloud-sandbox-role",
-        resources={"cpu": "1", "memory": "1Gi"},
-    )
