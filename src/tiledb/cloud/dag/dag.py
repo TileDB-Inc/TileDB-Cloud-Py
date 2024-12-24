@@ -618,6 +618,61 @@ class Node(futures.FutureLike[_T]):
             ),
         )
 
+    def _registration_name(
+        self, existing: Set[str], fallback_name: Optional[str] = None
+    ) -> str:
+        """Generates the unique name to be used when building the graph.
+
+        If the node has a ``name``, then that is used. If not, then it generates
+        a new unique name that is not contained within the ``existing`` set,
+        and adds that newly-generated name to the set so subsequent Nodes don't
+        reuse that name.
+
+        :param existing: Existing set of names to avoid using.
+        :param fallback_name: A string to use to generate a display name if the
+            node is unnamed.
+        :return: Registration name for node.
+        """
+
+        fallback_name = fallback_name or type(self).__name__
+
+        if self.name is not None:
+            # A Node which already has a Name does not need to have one generated.
+            return self.name
+
+        if fallback_name in existing:
+            return existing.add(fallback_name)
+
+        id_to_use = self.id
+        while True:
+            id_str = str(id_to_use)
+            for chars in range(2, 13, 2):
+                # Try to generate unique names with increasingly large slices
+                # of the node's UUID.
+                end = id_str[-chars:]
+
+                if f"{fallback_name} ({end})" not in existing:
+                    return existing.add(f"{fallback_name} ({end})")
+            # At this point every single alternate generated name we could generate,
+            # from "name (xx)" to "name (xxxxxxxxxxxx)", has been taken.
+            # Just throw in a new ID to start from.
+            id_to_use = uuid.uuid4()
+
+    def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
+        """Converts this node to the form used when registering the graph.
+
+        This is the form of the Node that will be used to represent it in the
+        ``RegisteredTaskGraph`` object, i.e. a ``RegisteredTaskGraphNode``.
+
+        :param existing_names: The set of names that have already been used,
+            so that we don't generate a duplicate node name.
+        """
+
+        return {
+            "client_node_id": str(self.id),
+            "name": self._registration_name(existing_names),
+        }
+
 
 class DAG:
     """Low-level API for creating and managing direct acyclic graphs
@@ -1801,7 +1856,45 @@ class DAG:
                     futures.execute_callbacks(nd, cbs)
                 with self._lifecycle_condition:
                     self._set_status(Status.FAILED)
-                raise  # Bail out and fail loudly.
+                raise  # Bail out and fail loudly
+
+    def _tdb_to_json(self, override_name: Optional[str] = None) -> Dict[str, Any]:
+        """Converts this DAG to a registerable/executable format.
+
+        :param override_name: Name to override DAG conversion.
+        :return: Mapping of DAG tree to json for submission to REST.
+        """
+
+        # mapping of node name to node obj
+        nodes = self.nodes_by_name
+
+        existing_names = set(nodes.keys())
+
+        node_jsons = [nodes[n].to_registration_json(existing_names) for n in nodes]
+
+        for n, n_json in zip(nodes.values(), node_jsons):
+            # TODO, need to relace _deps with how deps are stored in DAG
+            n_json["depends_on"] = [
+                str(parent.id) for parent in self._deps.parents_of(n)
+            ]
+
+        return dict(
+            name=override_name or self.name,
+            nodes=node_jsons,
+        )
+
+        # nodes = self._deps.topo_sorted
+        # # We need to guarantee that the existing node names are maintained.
+        # existing_names = set(self._by_name)
+        # node_jsons = [n.to_registration_json(existing_names) for n in nodes]
+        # for n, n_json in zip(nodes, node_jsons):
+        #     n_json["depends_on"] = [
+        #         str(parent.id) for parent in self._deps.parents_of(n)
+        #     ]
+        # return dict(
+        #     name=override_name or self.name,
+        #     nodes=node_jsons,
+        # )
 
 
 def list_logs(
@@ -2076,3 +2169,16 @@ def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
 
 def task_graph_log_status_to_status(status: models.TaskGraphLogStatus) -> Status:
     return _TASK_GRAPH_LOG_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
+
+
+if __name__ == "__main__":
+    # node = Node(func=lambda x: x)
+
+    # n = node._registration_name(existing=set(["a", "b"]))
+    # print(n)
+
+    graph = DAG()
+
+    graph.submit(func=lambda x: x)
+
+    print(graph.__dict__)
