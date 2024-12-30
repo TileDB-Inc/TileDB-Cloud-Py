@@ -1,3 +1,5 @@
+"""Directed acyclic graphs as TileDB task graphs."""
+
 import collections
 import datetime
 import itertools
@@ -666,6 +668,7 @@ class Node(futures.FutureLike[_T]):
 
         :param existing_names: The set of names that have already been used,
             so that we don't generate a duplicate node name.
+        :return: Mapping of Node for registration.
         """
 
         return {
@@ -1859,42 +1862,25 @@ class DAG:
                 raise  # Bail out and fail loudly
 
     def _tdb_to_json(self, override_name: Optional[str] = None) -> Dict[str, Any]:
-        """Converts this DAG to a registerable/executable format.
+        """Converts this DAG to a registerable format.
 
         :param override_name: Name to override DAG conversion.
         :return: Mapping of DAG tree to json for submission to REST.
         """
 
-        # mapping of node name to node obj
-        nodes = self.nodes_by_name
+        nodes = _topo_sort_nodes(self.nodes)
 
-        existing_names = set(nodes.keys())
+        existing_names = set(self.nodes_by_name.keys())
 
-        node_jsons = [nodes[n].to_registration_json(existing_names) for n in nodes]
+        node_jsons = [n.to_registration_json(existing_names) for n in nodes]
 
-        for n, n_json in zip(nodes.values(), node_jsons):
-            # TODO, need to relace _deps with how deps are stored in DAG
-            n_json["depends_on"] = [
-                str(parent.id) for parent in self._deps.parents_of(n)
-            ]
+        for n, n_json in zip(nodes, node_jsons):
+            n_json["depends_on"] = [str(parent.id) for _, parent in n.parents.items()]
 
-        return dict(
-            name=override_name or self.name,
-            nodes=node_jsons,
-        )
-
-        # nodes = self._deps.topo_sorted
-        # # We need to guarantee that the existing node names are maintained.
-        # existing_names = set(self._by_name)
-        # node_jsons = [n.to_registration_json(existing_names) for n in nodes]
-        # for n, n_json in zip(nodes, node_jsons):
-        #     n_json["depends_on"] = [
-        #         str(parent.id) for parent in self._deps.parents_of(n)
-        #     ]
-        # return dict(
-        #     name=override_name or self.name,
-        #     nodes=node_jsons,
-        # )
+        return {
+            "name": override_name or self.name,
+            "nodes": node_jsons,
+        }
 
 
 def list_logs(
@@ -2169,16 +2155,3 @@ def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
 
 def task_graph_log_status_to_status(status: models.TaskGraphLogStatus) -> Status:
     return _TASK_GRAPH_LOG_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
-
-
-if __name__ == "__main__":
-    # node = Node(func=lambda x: x)
-
-    # n = node._registration_name(existing=set(["a", "b"]))
-    # print(n)
-
-    graph = DAG()
-
-    graph.submit(func=lambda x: x)
-
-    print(graph.__dict__)
