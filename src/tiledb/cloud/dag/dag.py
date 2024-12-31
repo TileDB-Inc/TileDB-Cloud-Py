@@ -43,6 +43,7 @@ from .._results import types
 from ..rest_api import models
 from ..sql import _execution as _sql_exec
 from ..taskgraphs import _results as _tg_results
+from ..taskgraphs import registration
 from . import status as st
 from . import visualization as viz
 from .mode import Mode
@@ -1881,6 +1882,28 @@ class DAG:
             "name": override_name or self.name,
             "nodes": node_jsons,
         }
+
+    def register(
+        self,
+        namespace: Optional[str] = None,
+        override_name: Optional[str] = None,
+    ) -> None:
+        """Register DAG to TileDB.
+
+        :param namespace: Namespace to register. If not set, uses default.
+        :param override_name: Name to register DAG as. Uses self.name as default.
+        """
+
+        if not self.name and not override_name:
+            raise ValueError(
+                "Must specify registration name to DAG.name or override_name."
+            )
+
+        registration.register(
+            graph=self,
+            name=override_name or self.name,
+            namespace=namespace,
+        )
 
 
 def list_logs(
