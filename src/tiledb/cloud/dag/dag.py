@@ -1887,11 +1887,12 @@ class DAG:
         self,
         namespace: Optional[str] = None,
         override_name: Optional[str] = None,
-    ) -> None:
+    ) -> str:
         """Register DAG to TileDB.
 
         :param namespace: Namespace to register. If not set, uses default.
         :param override_name: Name to register DAG as. Uses self.name as default.
+        :return: Registered name of task graph.
         """
 
         if not self.name and not override_name:
@@ -1904,6 +1905,8 @@ class DAG:
             name=override_name or self.name,
             namespace=namespace,
         )
+
+        return override_name or self.name
 
 
 def list_logs(
