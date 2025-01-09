@@ -27,6 +27,8 @@ from typing import (
     Union,
 )
 
+import tiledb
+
 from .. import array
 from .. import client
 from .. import rest_api
@@ -1885,28 +1887,31 @@ class DAG:
 
     def register(
         self,
-        namespace: Optional[str] = None,
         override_name: Optional[str] = None,
     ) -> str:
         """Register DAG to TileDB.
 
-        :param namespace: Namespace to register. If not set, uses default.
         :param override_name: Name to register DAG as. Uses self.name as default.
         :return: Registered name of task graph.
         """
 
-        if not self.name and not override_name:
+        tg_name = override_name or self.name
+
+        if not tg_name:
             raise ValueError(
                 "Must specify registration name to DAG.name or override_name."
             )
 
         registration.register(
             graph=self,
-            name=override_name or self.name,
-            namespace=namespace,
+            name=tg_name,
+            namespace=self.namespace,
         )
 
-        return override_name or self.name
+        with tiledb.open(f"tiledb://{self.namespace}/{tg_name}", "w") as A:
+            A.meta["dataset_type"] = "registered_task_graph"
+
+        return f"{self.namespace}/{tg_name}"
 
 
 def list_logs(
