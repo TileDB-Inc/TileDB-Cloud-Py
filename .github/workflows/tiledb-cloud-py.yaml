@@ -10,7 +10,7 @@ on:
     types: [published]
   schedule:
     # 01:30 UTC = 20:30/21:30 America/New_York = 03:30/04:30 Europe/Athens
-    - cron: "30 1 * * *"
+    - cron: "34 1 * * *"
 
 env:
   PYTEST_SPLIT_GROUPS: 6 # How many parallel groups to create for the tests.
