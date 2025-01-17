@@ -1,10 +1,19 @@
-"""Test for the unified ``tiledb.cloud.taskgraphs`` namespace."""
+"""Tests of tiledb.cloud.taskgraphs.
+
+Almost all of these tests require remote code execution that is time
+consuming and restricted to certain versions of Python. To skip, pass
+-m 'not udf' to pytest.
+"""
 
 import datetime
 import unittest
 
+import pytest
+
 import tiledb.cloud.taskgraphs as tg
 from tiledb.cloud._common import testonly
+
+pytestmark = pytest.mark.udf
 
 
 class TaskGraphsTest(unittest.TestCase):

@@ -121,7 +121,6 @@ def test_asset_list_shared_with_group_dispatch(group_sharing, object_type):
     assert sharing[0].namespace == "bar"
 
 
-@pytest.mark.xfail(reason="Server error 610")
 def test_public_array_sharing():
     """Get a public production array's sharing policies."""
     sharing = asset.list_shared_with(
@@ -218,6 +217,7 @@ def test_asset_deregister_group_recursive_dispatch(deregister_group, object_type
 
 
 class ListingTest(unittest.TestCase):
+    @pytest.mark.udf
     def test_list(self) -> None:
         # Ensure that we have at least one asset registered (a UDF)
         with testonly.register_udf(lambda: 1, func_name="some_lambda"):

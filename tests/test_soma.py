@@ -65,14 +65,17 @@ class TestSOMAMapper(unittest.TestCase):
         super().__init__(foo)
         self.maxDiff = None
 
+    @pytest.mark.udf
     @pytest.mark.skipif(not testonly.is_unittest_user, reason="Requires unittest user.")
     def test_mapper_basic_realtime(self):
         self._test_mapper_basic(False)
 
+    @pytest.mark.udf
     @pytest.mark.skipif(not testonly.is_unittest_user, reason="Requires unittest user.")
     def test_mapper_basic_batch(self):
         self._test_mapper_basic(True)
 
+    @pytest.mark.udf
     def _test_mapper_basic(self, use_batch_mode):
         if sys.version_info < (3, 8, 0):
             # https://github.com/TileDB-Inc/tiledbsoma-feedstock/pull/86

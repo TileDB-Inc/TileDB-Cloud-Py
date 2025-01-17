@@ -1,9 +1,17 @@
+"""Tests of tiledb.cloud.compute.
+
+Almost all of these tests require remote code execution that is time
+consuming and restricted to certain versions of Python. To skip, pass
+-m 'not udf' to pytest.
+"""
+
 import operator
 import threading
 import unittest
 from concurrent import futures
 
 import numpy as np
+import pytest
 
 import tiledb.cloud
 from tiledb.cloud._common import testonly
@@ -14,6 +22,8 @@ from tiledb.cloud.compute import Status
 from tiledb.cloud.compute.delayed import DelayedMultiArrayUDF
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag
+
+pytestmark = pytest.mark.udf
 
 
 class DelayedClassTest(unittest.TestCase):

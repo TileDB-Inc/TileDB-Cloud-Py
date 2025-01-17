@@ -64,6 +64,7 @@ class BasicTests(unittest.TestCase):
     def test_list_public_arrays(self):
         self.assertTrue(len(client.list_public_arrays().arrays) > 0)
 
+    @pytest.mark.udf
     def test_quickstart(self):
         with tiledb.open(
             "tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.Ctx()
@@ -111,6 +112,7 @@ class BasicTests(unittest.TestCase):
                 numpy.sum(orig["a"]),
             )
 
+    @pytest.mark.udf
     def test_quickstart_arbitrary_parameters(self):
         with tiledb.open(
             "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
@@ -126,6 +128,7 @@ class BasicTests(unittest.TestCase):
                 "hello world",
             )
 
+    @pytest.mark.udf
     def test_quickstart_async(self):
         with tiledb.open(
             "tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.Ctx()
@@ -294,6 +297,7 @@ class BasicTests(unittest.TestCase):
             ) as A:
                 A.apply_async(test, [(1, 4), (1, 4)], timeout=1).get()
 
+    @pytest.mark.udf
     def test_empty_arrow(self):
         def test():
             import pyarrow

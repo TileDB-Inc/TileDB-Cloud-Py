@@ -30,6 +30,8 @@ from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
 
+pytestmark = pytest.mark.udf
+
 
 class DAGClassTest(unittest.TestCase):
     maxDiff = None

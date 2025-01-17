@@ -1,7 +1,15 @@
+"""Tests of tiledb.cloud.udf.
+
+Almost all of these tests require remote code execution that is time
+consuming and restricted to certain versions of Python. To skip, pass
+-m 'not udf' to pytest.
+"""
+
 import datetime
 import unittest
 
 import numpy as np
+import pytest
 import urllib3
 
 import tiledb.cloud
@@ -13,6 +21,8 @@ from tiledb.cloud import udf
 from tiledb.cloud._common import testonly
 from tiledb.cloud._common import utils
 from tiledb.cloud.rest_api import models
+
+pytestmark = pytest.mark.udf
 
 
 class GenericUDFTest(unittest.TestCase):
