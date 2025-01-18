@@ -69,7 +69,6 @@ def array_teardown():
     tiledb.Array.delete_array(_FULL_URI, ctx=ctx)
 
 
-# @pytest.mark.xfail(reason="May not perform simultaneous open or close operations.")
 def test_upload_wheel(array_teardown) -> None:
     # first time uploading array
     upload_wheel(
@@ -128,7 +127,6 @@ def pip_install_tdb() -> PipInstall:
     tiledb.Array.delete_array(_FULL_URI, ctx=ctx)
 
 
-# @pytest.mark.xfail(reason="May not perform simultaneous open or close operations.")
 def test_pip_install_wheel_ext(pip_install_tdb):
     assert pip_install_tdb.wheel_ext
 

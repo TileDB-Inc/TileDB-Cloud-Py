@@ -1,3 +1,10 @@
+"""Tests of tiledb.cloud.dag.
+
+Almost all of these tests require remote code execution that is time
+consuming and restricted to certain versions of Python. To skip, pass
+-m 'not udf' to pytest.
+"""
+
 import base64
 import collections
 import collections.abc as cabc
