@@ -248,7 +248,7 @@ class PandasArrowTest(unittest.TestCase):
         encoded = tiledb_json.Encoder().visit(df_with_objs)
 
         # We don't test the exact contents of the base64 data,
-        # because it varies based upon Python/Pandas version.\
+        # because it varies based upon Python/Pandas version.
         self.assertEqual(
             encoded, encoded | {"__tdbudf__": "immediate", "format": "python_pickle"}
         )
