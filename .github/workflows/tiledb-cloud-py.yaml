@@ -107,7 +107,7 @@ jobs:
       - name: Install pinned dependencies
         if: ${{ matrix.dependencies == 'pinned' }}
         run: |
-          pip install -r ci/requirements-py${{ matrix.python-version }}.txt
+          pip install -r ci/requirements.txt
 
       - name: Install TileDB-Cloud-Py
         run: |
