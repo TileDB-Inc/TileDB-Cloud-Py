@@ -45,7 +45,7 @@ jobs:
         os:
           - ubuntu-20.04
           # - macos-12
-        python-version: ["3.9"]
+        python-version: ["3.9", "3.12"]
         dependencies:
           - pinned
           - fresh
@@ -107,7 +107,7 @@ jobs:
       - name: Install pinned dependencies
         if: ${{ matrix.dependencies == 'pinned' }}
         run: |
-          pip install -r ci/requirements-py${{ matrix.python-version }}.txt
+          pip install -r ci/requirements.txt
 
       - name: Install TileDB-Cloud-Py
         run: |
@@ -160,6 +160,7 @@ jobs:
             --splitting-algorithm least_duration \
             --clean-durations \
             -r fExX \
+            ${{ matrix.python-version == '3.12' && '-m "not udf"' || '' }} \
           || .github/scripts/retry 2 \
             pytest -sv \
             --last-failed \

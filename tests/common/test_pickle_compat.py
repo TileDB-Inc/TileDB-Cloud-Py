@@ -58,6 +58,10 @@ def test_pandas_compat(pd_ver: str, name_want: Tuple[str, Callable[[], Any]]) ->
     assert want.equals(got)
 
 
+@pytest.mark.skipif(
+    sys.version_info >= (3, 12, 0),
+    reason="serialization is now controlled by vendored cloudpickle frozen at 2.1.0.",
+)
 # These are the versions of cloudpickle that introduce serialization changes.
 @pytest.mark.parametrize("cp_ver", ["1.4.1", "1.5.0", "2.1.0"])
 def test_cloudpickle_compat(cp_ver: str) -> None:

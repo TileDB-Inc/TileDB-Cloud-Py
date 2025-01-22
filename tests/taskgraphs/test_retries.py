@@ -1,11 +1,22 @@
+"""Tests of tiledb.cloud.taskgraphs.client_executor.
+
+Almost all of these tests require remote code execution that is time
+consuming and restricted to certain versions of Python. To skip, pass
+-m 'not udf' to pytest.
+"""
+
 import operator
 import unittest
 from concurrent import futures
+
+import pytest
 
 import tiledb.cloud.taskgraphs as tg
 from tiledb.cloud import client
 from tiledb.cloud._common import testonly
 from tiledb.cloud.taskgraphs import client_executor
+
+pytestmark = pytest.mark.udf
 
 
 class RetryTest(unittest.TestCase):

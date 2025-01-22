@@ -1,3 +1,10 @@
+"""Tests of tiledb.cloud.dag.
+
+Almost all of these tests require remote code execution that is time
+consuming and restricted to certain versions of Python. To skip, pass
+-m 'not udf' to pytest.
+"""
+
 import base64
 import collections
 import collections.abc as cabc
@@ -32,6 +39,8 @@ from tiledb.cloud.client import default_user
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
+
+pytestmark = pytest.mark.udf
 
 
 class DAGClassTest(unittest.TestCase):

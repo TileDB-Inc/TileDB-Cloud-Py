@@ -218,6 +218,7 @@ def test_asset_deregister_group_recursive_dispatch(deregister_group, object_type
 
 
 class ListingTest(unittest.TestCase):
+    @pytest.mark.udf
     def test_list(self) -> None:
         # Ensure that we have at least one asset registered (a UDF)
         with testonly.register_udf(lambda: 1, func_name="some_lambda"):

@@ -31,11 +31,12 @@ life-sciences = ["tiledbsoma"]
 docs = ["quartodoc"]
 dev = ["black", "pytest", "ruff"]
 tests = [
-    "xarray",
+    "cloudpickle",
     "pytest-cov",
     "pytest-explicit",
     "pytest-split",
     "tiledbsoma",
+    "xarray",
 ]
 
 [project.urls]
@@ -50,6 +51,7 @@ explicit-only = ["bigfiles", "geospatial", "vcf"]
 markers = [
     "bigfiles: tests that create and upload really big files",
     "geospatial: tests that require the geospatial libraries",
+    "udf: tests that require a server UDF container",
     "vcf: VCF tests that run on TileDB Cloud",
 ]
 norecursedirs = ["tiledb/cloud"]
