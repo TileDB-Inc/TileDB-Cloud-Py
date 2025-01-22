@@ -249,9 +249,8 @@ class PandasArrowTest(unittest.TestCase):
 
         # We don't test the exact contents of the base64 data,
         # because it varies based upon Python/Pandas version.
-        self.assertDictContainsSubset(
-            {"__tdbudf__": "immediate", "format": "python_pickle"},
-            encoded,
+        self.assertEqual(
+            encoded, encoded | {"__tdbudf__": "immediate", "format": "python_pickle"}
         )
         # Instead we just make sure the roundtrip works.
         round_trip = tiledb_json.Decoder().visit(encoded)
