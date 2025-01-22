@@ -18,7 +18,7 @@ dependencies = [
     # Not directly used on the client, but some server-side environments have
     # tblib transitively enabled, so this is needed for unpickling.
     "tblib~=1.7",
-    "tiledb>=0.33.3.rc0",
+    "tiledb~=0.25,!=0.33.0,!=0.33.1,!=0.33.2",
     "typing-extensions",
     "urllib3>=1.26",
 ]
