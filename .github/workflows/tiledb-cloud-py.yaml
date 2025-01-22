@@ -52,7 +52,7 @@ jobs:
           - fresh
         exclude:
           - python-version: "3.12"
-          - tiledb-version-spec: "tiledb==0.25"
+            tiledb-version-spec: "tiledb==0.25"
         include:
           - os: ubuntu-20.04
             path: ~/.cache/pip
