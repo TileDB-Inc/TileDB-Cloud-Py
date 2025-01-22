@@ -46,9 +46,13 @@ jobs:
           - ubuntu-20.04
           # - macos-12
         python-version: ["3.9", "3.12"]
+        tiledb-version-spec: ["tiledb==0.25", "tiledb>=0.33.3.rc0"]
         dependencies:
           - pinned
           - fresh
+        exclude:
+          - python-version: "3.12"
+          - tiledb-version-spec: "tiledb==0.25"
         include:
           - os: ubuntu-20.04
             path: ~/.cache/pip
@@ -108,6 +112,7 @@ jobs:
         if: ${{ matrix.dependencies == 'pinned' }}
         run: |
           pip install -r ci/requirements.txt
+          pip install ${{ matrix.tiledb-version-spec}}
 
       - name: Install TileDB-Cloud-Py
         run: |
