@@ -37,7 +37,7 @@ jobs:
         run: pre-commit run -a -v
 
   run-tests:
-    name: "${{ matrix.tiledb-version-spec }}:${{ matrix.python-version }}:${{ matrix.os }}"
+    name: "${{ matrix.tiledb-version-spec }}:${{ matrix.python-version }}:${{ matrix.dependencies }}:${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     if: ${{ github.event_name != 'release' }}
     strategy:
@@ -115,10 +115,10 @@ jobs:
         if: ${{ matrix.dependencies == 'pinned' }}
         run: |
           pip install -r ci/requirements.txt
-          pip install ${{ matrix.tiledb-version-spec}}
 
       - name: Install TileDB-Cloud-Py
         run: |
+          pip install ${{ matrix.tiledb-version-spec}}
           pip install .[tests]
           pip install tiledb-vector-search --no-deps
 
