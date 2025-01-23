@@ -10,7 +10,6 @@ python-dateutil==2.8.2
 pytz==2024.1
 six==1.16.0
 tblib==1.7.0
-tiledb==0.32.5
 typing_extensions==4.9.0
 tzdata==2023.4
 urllib3==2.2.0
