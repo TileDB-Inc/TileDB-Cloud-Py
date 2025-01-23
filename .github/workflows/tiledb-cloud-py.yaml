@@ -37,7 +37,7 @@ jobs:
         run: pre-commit run -a -v
 
   run-tests:
-    name: "${{ matrix.tiledb-version-spec }}:${{ maxtrix.python-version }}:${{ matrix.os }}"
+    name: "${{ matrix.tiledb-version-spec }}:${{ matrix.python-version }}:${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     if: ${{ github.event_name != 'release' }}
     strategy:
