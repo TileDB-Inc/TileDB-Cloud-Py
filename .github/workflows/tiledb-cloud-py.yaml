@@ -50,7 +50,7 @@ jobs:
           [
             "tiledb==0.30",
             "tiledb==0.33.3.rc0",
-            "tiledb @ https://github.com/TileDB-Inc/TileDB-Py.git@main",
+            "tiledb @ git+https://github.com/TileDB-Inc/TileDB-Py.git@main",
           ]
         dependencies:
           - pinned
