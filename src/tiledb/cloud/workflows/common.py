@@ -11,23 +11,32 @@ import tiledb
 
 # NOTE: use contextlib.chdir(...) instead with python 3.11
 @contextmanager
-def cd_tmpdir():
+def cd_tmpdir(keep: bool = False):
     """
     A context manager that creates a tmpdir and changes the current working
     directory to it. When the context is exited, the current working directory
     is restored to the original location.
+
+    :param keep: keep the temporary directory after the context exits, defaults to False
     """
 
     # Save the current working directory.
     cwd = os.getcwd()
 
-    with tempfile.TemporaryDirectory() as tmpdir:
+    if keep:
+        tmpdir = tempfile.mkdtemp()
         os.chdir(tmpdir)
         try:
             yield tmpdir
         finally:
-            # Restore the original working directory
             os.chdir(cwd)
+    else:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            os.chdir(tmpdir)
+            try:
+                yield tmpdir
+            finally:
+                os.chdir(cwd)
 
 
 def default_workflows_uri(namespace: Optional[str] = None) -> str:
