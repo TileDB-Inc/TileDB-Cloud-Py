@@ -48,6 +48,7 @@ def default_workflows_uri(namespace: Optional[str] = None) -> str:
     """
 
     if namespace is None:
+        # TODO: adjust the default location as needed for 3.0.
         # Another option would be the default charged namespace.
         # namespace = tiledb.cloud.client.default_charged_namespace()
         # s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
@@ -58,6 +59,28 @@ def default_workflows_uri(namespace: Optional[str] = None) -> str:
         s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
 
     return f"tiledb://{namespace}/{s3_path}/workflows"
+
+
+def workflow_history_uri(
+    namespace: Optional[str] = None,
+    *,
+    check: bool = True,
+) -> str:
+    """
+    Return the default TileDB URI for storing the workflow history. If `check` is
+    True, raise an error if the URI does not exist.
+
+    :param namespace: TileDB namespace used for storage, defaults to None
+    :param check: check if the URI exists, defaults to True
+    :return: TileDB URI for the workflow history
+    """
+
+    uri = default_workflows_uri(namespace) + "/.nextflow_history"
+
+    if check and not tiledb.object_type(uri):
+        raise FileNotFoundError(f"Workflow history not found at '{uri}'.")
+
+    return uri
 
 
 def download_group_files(

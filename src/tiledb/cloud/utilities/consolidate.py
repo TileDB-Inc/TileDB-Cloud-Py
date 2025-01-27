@@ -105,7 +105,7 @@ def consolidate_and_vacuum(
         # TODO: remove when remote fragment consolidation is supported
         is_remote = array_uri.startswith("tiledb://")
         if not is_remote and vacuum_fragments:
-            logger.info("Vacuuming fragments")
+            logger.debug("Vacuuming fragments")
             tiledb.vacuum(
                 array_uri,
                 config=tiledb.Config({"sm.vacuum.mode": "fragments"}),
@@ -115,20 +115,20 @@ def consolidate_and_vacuum(
         modes = ["commits", "fragment_meta"]
 
         for mode in modes:
-            logger.info("Consolidating %s", mode)
+            logger.debug("Consolidating %s", mode)
             tiledb.consolidate(
                 array_uri,
                 config=tiledb.Config({"sm.consolidation.mode": mode}),
             )
 
         for mode in modes:
-            logger.info("Vacuuming %s", mode)
+            logger.debug("Vacuuming %s", mode)
             tiledb.vacuum(
                 array_uri,
                 config=tiledb.Config({"sm.vacuum.mode": mode}),
             )
 
-    logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+    logger.debug("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
 def consolidate_fragments(

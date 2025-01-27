@@ -6,215 +6,16 @@ import os
 import subprocess
 import tarfile
 from typing import Optional
-from urllib.parse import urlparse
 
 import numpy as np
 
 import tiledb
+import tiledb.cloud
 from tiledb.cloud.utilities import read_file
 
-from .common import cd_tmpdir
-from .common import create_workflow_tarfile
-from .common import default_workflows_uri
-from .common import download_group_files
-from .workflow import create
-
-# Name of the workflow tar file stored in the TileDB workflow asset.
-WORKFLOW_TARFILE = "workflow.tgz"
-
-# Path to the Nextflow parameter schema, if present.
-PARAMETER_SCHEMA = "workflow/nextflow_schema.json"
-
-# Path to the Nextflow input schema, if present.
-INPUT_SCHEMA = "workflow/assets/schema_input.json"
-
-# Name of the script executed when launching the Nextflow workflow.
-MAIN_SCRIPT = "main.nf"
-
-
-def get_description(
-    readme_path: str,
-    workflow: str,
-    version: str,
-) -> str:
-    """
-    Modify the README.md file for use as a TileDB asset description.
-     - Include full URLs in image links.
-     - Add a link to the original workflow.
-
-    :param readme_path: path to the README.md file
-    :param workflow: workflow name
-    :param version: workflow version
-    :return: modified description
-    """
-
-    # Convert a nf-core workflow to a URL for use in links.
-    if not workflow.startswith("https://github.com/"):
-        workflow = f"https://github.com/{workflow}"
-
-    # Read the description into a string.
-    description = read_file(readme_path)
-
-    # Replace relative image paths with full URLs.
-    description = description.replace(
-        "docs/images",
-        f"{workflow}/raw/{version}/docs/images",
-    )
-
-    name = workflow.replace("https://github.com/", "") + f":{version}"
-    url = f"{workflow}/tree/{version}"
-
-    description = (
-        f"### *A snapshot of [{name}]({url}) for execution on TileDB.*\n\n"
-        + description
-    )
-
-    return description
-
-
-def clone_workflow(workflow: str, version: str, dest_path: str) -> None:
-    """
-    Clone a nextflow workflow to a local directory.
-
-    :param workflow: workflow name or URI
-    :param version: version of the workflow: a git branch, tag, or version number
-    :param dest_path: path to the local directory where the workflow will be cloned
-    """
-
-    cmd = [
-        "nextflow",
-        "clone",
-        "-r",
-        version,
-        workflow,
-        dest_path,
-    ]
-    try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
-        raise ValueError(f"Error cloning workflow: {e.stderr}")
-
-
-def convert_nextflow(
-    workflow: str,
-    version: str,
-) -> str:
-    """
-    Create a TileDB workflow asset from a Nextflow workflow.
-
-    :param workflow: name of the project as specified by the `nextflow clone` command
-    :param version: version of the workflow: a git branch, tag, or version number
-    :return: path to the tarfile containing the workflow
-    """
-
-    tarfile_path = f"{os.getcwd()}/{WORKFLOW_TARFILE}"
-
-    with cd_tmpdir():
-        workflow_clone_path = "workflow"
-
-        # Clone the workflow into a local directory.
-        clone_workflow(workflow, version, workflow_clone_path)
-
-        # Modify the README.md for use as a TileDB asset description.
-        readme_path = f"{workflow_clone_path}/README.md"
-        if os.path.exists(readme_path):
-            description = get_description(readme_path, workflow, version)
-            with open(readme_path, "w") as f:
-                f.write(description)
-
-        # Create the workflow tarfile.
-        create_workflow_tarfile(tarfile_path, workflow_clone_path)
-
-    return tarfile_path
-
-
-def register_nextflow(
-    *,
-    workflow: str,
-    version: str,
-    local_path: Optional[str] = None,
-    main_script: str = MAIN_SCRIPT,
-    namespace: Optional[str] = None,
-) -> str:
-    """
-    Register a Nextflow workflow as a TileDB asset.
-
-    If `local_path` is not provided, the workflow is cloned using:
-        ```
-        nextflow clone -r <version> <workflow> ...
-        ```
-    and registered with the name `workflow`:`version`.
-
-    If `local_path` is provided, the workflow is registered from a local directory
-    with the name `workflow`:`version`.
-
-    :param workflow: name or URI of the workflow to register
-    :param version: workflow version (a git branch, tag, or version number)
-    :param local_path: path to a local directory where the workflow is stored,
-        defaults to None
-    :param namespace: TileDB namespace where the workflow will be registered
-    :param main_script: name of the script executed when running a workflow,
-        defaults to "main.nf"
-    :return: URI of the registered workflow
-    """
-
-    # Validate user input.
-    if workflow.startswith("https://") and local_path:
-        raise ValueError("Cannot provide both a URI and a local path for the workflow.")
-
-    # Extract the name of the workflow.
-    if workflow.startswith("https://"):
-        name = urlparse(workflow).path.strip("/")
-    else:
-        name = workflow
-
-    # Create the URI for the workflow.
-    tiledb_uri = default_workflows_uri(namespace) + f"/{name}-{version}"
-
-    # Work in a temp directory
-    with cd_tmpdir():
-        if local_path:
-            tarfile_path = f"{os.getcwd()}/{WORKFLOW_TARFILE}"
-            create_workflow_tarfile(tarfile_path, local_path)
-        else:
-            tarfile_path = convert_nextflow(workflow=workflow, version=version)
-
-        with tarfile.open(tarfile_path) as tar:
-            # Check for the main script in the tarfile.
-            main_script_path = "workflow/" + main_script
-            if main_script_path not in tar.getnames():
-                raise FileNotFoundError(
-                    f"Main script '{main_script}' not found in workflow"
-                )
-
-            # Read the parameter schema and input schema from the tarfile.
-            if PARAMETER_SCHEMA in tar.getnames():
-                member = tar.getmember(PARAMETER_SCHEMA)
-                with tar.extractfile(member) as f:
-                    parameter_schema_dict = json.loads(f.read().decode())
-            else:
-                parameter_schema_dict = {}
-
-            if INPUT_SCHEMA in tar.getnames():
-                member = tar.getmember(INPUT_SCHEMA)
-                with tar.extractfile(member) as f:
-                    input_schema_dict = json.loads(f.read().decode())
-            else:
-                input_schema_dict = {}
-
-        # Create the workflow.
-        create(
-            tiledb_uri=tiledb_uri,
-            name=name,
-            version=version,
-            language="nextflow",
-            main=main_script,
-            tarfile_path=tarfile_path,
-            parameter_schema_dict=parameter_schema_dict,
-            input_schema_dict=input_schema_dict,
-        )
-
-    return tiledb_uri
+from ..common import cd_tmpdir
+from ..common import download_group_files
+from ..common import workflow_history_uri
 
 
 def create_history(history_uri: str) -> None:
@@ -262,7 +63,7 @@ def update_history(
     :return: status, session ID
     """
 
-    history_uri = default_workflows_uri(namespace) + "/.nextflow_history"
+    history_uri = workflow_history_uri(namespace, check=False)
 
     # Create the history array if it does not exist.
     if tiledb.object_type(history_uri) is None:
@@ -420,11 +221,24 @@ def setup_nextflow(
     - Copy the Nextflow TileDB plugin to the required location, if needed.
     - Set Nextflow environment variables.
 
-    :param namespace: TileDB namespace
+    :param namespace: TileDB namespace where the workflow will run
     :param acn: TileDB access credentials name
     :param plugin_id: TileDB plugin ID, defaults to "nf-tiledb@0.1.0"
     :param config_file: name of the config file, defaults to "tiledb.config"
     """
+
+    # Validate user input.
+    if namespace and acn is None:
+        raise ValueError("Access credentials name required with namespace.")
+
+    if acn and namespace is None:
+        raise ValueError("Namespace required with access credentials name.")
+
+    # Get the namespace and access credentials name, if not provided.
+    if namespace is None:
+        namespace = tiledb.cloud.client.default_charged_namespace()
+        org = tiledb.cloud.client.organization(namespace)
+        acn = org.default_s3_path_credentials_name
 
     try:
         config = tiledb.cloud.Ctx().config()
@@ -464,7 +278,7 @@ tiledb {{
     os.environ["NXF_DISABLE_CHECK_LATEST"] = "true"
 
 
-def run_nextflow(
+def run(
     workflow_uri: str,
     *,
     run_params: dict = {},
@@ -488,7 +302,8 @@ def run_nextflow(
     :param workflow_uri: TileDB URI of the workflow asset
     :param run_params: parameters not specific to the workflow, defaults to {}
     :param workflow_params: workflow specific parameters, defaults to {}
-    :param namespace: TileDB namespace, defaults to None, the default charged namespace
+    :param namespace: TileDB namespace where the workflow will run, defaults to None,
+        the default charged namespace
     :param acn: TileDB access credentials name, defaults to None
     :param keep: keep the temporary run directory, defaults to False
     :return: status, session ID
@@ -497,18 +312,6 @@ def run_nextflow(
     # Validate user input.
     if tiledb.object_type(workflow_uri) != "group":
         raise FileNotFoundError(f"'{workflow_uri}' not found.")
-
-    if namespace and acn is None:
-        raise ValueError("Access credentials name required with namespace.")
-
-    if acn and namespace is None:
-        raise ValueError("Namespace required with access credentials name.")
-
-    # Get the namespace and access credentials name, if not provided.
-    if namespace is None:
-        namespace = tiledb.cloud.client.default_charged_namespace()
-        org = tiledb.cloud.client.organization(namespace)
-        acn = org.default_s3_path_credentials_name
 
     # Run the workflow in a temporary directory.
     with cd_tmpdir(keep=keep) as tmpdir:
@@ -536,3 +339,75 @@ def run_nextflow(
             return None, None
 
         return status, session_id
+
+
+def resume(
+    session_id: str,
+    *,
+    namespace: Optional[str] = None,
+    acn: Optional[str] = None,
+    keep: bool = False,
+) -> tuple[str, str]:
+    """
+    Resume a workflow run from the history array.
+
+    :param session_id: session ID from the history array
+    :param namespace: TileDB namespace containing the history array, defaults to None
+    :param acn: TileDB access credentials name, defaults to None
+    :param keep: keep the temporary run directory, defaults to False
+    :return: status, session ID
+    """
+
+    with cd_tmpdir(keep=keep) as tmpdir:
+        if keep:
+            print(f"Running in {tmpdir}")
+
+        # Setup the nextflow environment.
+        setup_nextflow(namespace, acn)
+
+        # Read the history from the array.
+        history_uri = workflow_history_uri(namespace)
+
+        with tiledb.open(history_uri) as A:
+            data = A[session_id]
+
+        # Raise an exception if the session ID is not found.
+        if len(data["workflow_uri"]) == 0:
+            raise ValueError(f"session_id '{session_id}' not found in '{history_uri}'.")
+
+        # Download the workflow files.
+        workflow_uri = data["workflow_uri"][0]
+
+        download_group_files(workflow_uri, "workflow.tgz")
+
+        with tiledb.Group(workflow_uri) as g:
+            workflow_name = g.meta["name"].replace("/", "-")
+
+        # Extract the workflow to a directory with the workflow name
+        # since the directory name is visible in the Nextflow logs.
+        with tarfile.open("workflow.tgz") as tar:
+            tar.extractall()
+        if os.path.exists(workflow_name):
+            raise ValueError(f"Workflow directory '{workflow_name}' already exists.")
+        os.rename("workflow", workflow_name)
+
+        # Extract nextflow_tgz in the current directory.
+        tar_bytes = data["nextflow_tgz"][0]
+        extract_tar_bytes(tar_bytes)
+
+        # Run the command from the history, with `-resume` added.
+        cmd = data["command"][0].decode()
+
+        if " -resume" not in cmd:
+            cmd += " -resume"
+
+        subprocess.run(cmd, shell=True)
+
+        # Update the history.
+        try:
+            status, session_id = update_history(workflow_uri)
+        except Exception as e:
+            print(f"Error updating history: {e}")
+            return None, None
+
+    return status, session_id

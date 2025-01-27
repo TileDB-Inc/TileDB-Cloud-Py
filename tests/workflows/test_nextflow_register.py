@@ -5,12 +5,12 @@ import pytest
 
 import tiledb
 import tiledb.cloud
-from tiledb.cloud.workflows import register_nextflow
 from tiledb.cloud.workflows.common import default_workflows_uri
-from tiledb.cloud.workflows.nextflow import clone_workflow
+from tiledb.cloud.workflows.nextflow import register
+from tiledb.cloud.workflows.nextflow.register import clone_workflow
 
 # Run tests with:
-#   pytest -m workflows --run-workflows
+#   pytest -m workflows --run-workflows -svvv
 
 
 def check_workflow(
@@ -96,14 +96,14 @@ def test_fixture(workflow: str, version: str):
 )
 def test_register_workflow(test_fixture, workflow, version):
     # Register the workflow.
-    uri = register_nextflow(workflow=workflow, version=version)
+    uri = register(workflow=workflow, version=version)
 
     # Check the registered workflow.
     check_workflow(uri)
 
     # Expect an exception when registering the same workflow again.
     with pytest.raises(FileExistsError):
-        register_nextflow(workflow=workflow, version=version)
+        register(workflow=workflow, version=version)
 
 
 @pytest.mark.workflows
@@ -123,7 +123,7 @@ def test_register_local(tmp_path, version, workflow):
     clone_workflow(workflow, version, local_path)
 
     # Register the workflow from the local path.
-    uri = register_nextflow(
+    uri = register(
         workflow=workflow_name,
         version=version,
         local_path=local_path,
@@ -158,7 +158,7 @@ def test_register_missing_files(tmp_path, version, workflow):
     os.remove(os.path.join(local_path, "assets", "schema_input.json"))
 
     # Register the workflow from the local path.
-    uri = register_nextflow(
+    uri = register(
         workflow=workflow_name,
         version=version,
         local_path=local_path,
@@ -175,7 +175,7 @@ def test_register_missing_files(tmp_path, version, workflow):
 def test_register_workflow_errors():
     # Expect an exception when specifying a main script that does not exist.
     with pytest.raises(FileNotFoundError):
-        register_nextflow(
+        register(
             workflow="nf-core/demo",
             version="1.0.1",
             main_script="foo.nf",
@@ -183,21 +183,21 @@ def test_register_workflow_errors():
 
     # Expect an exception when registering with an invalid workflow
     with pytest.raises(ValueError):
-        register_nextflow(
+        register(
             workflow="https://github.com/TileDB-Inc/empty",
             version="1.0.1",
         )
 
     # Expect an exception when registering with an invalid version
     with pytest.raises(ValueError):
-        register_nextflow(
+        register(
             workflow="https://github.com/TileDB-Inc/sarek",
             version="-1",
         )
 
     # Expect an exception when specifying both a URI and a local path.
     with pytest.raises(ValueError):
-        register_nextflow(
+        register(
             workflow="https://github.com/TileDB-Inc/sarek",
             version="1.0.1",
             local_path="foo",
