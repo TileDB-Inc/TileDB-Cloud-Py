@@ -47,6 +47,9 @@ jobs:
           - ubuntu-20.04
           # - macos-12
         python-version: ["3.9", "3.12"]
+        is-scheduled:
+          - ${{ github.event.schedule == "34 1 * * *" }}
+          - ${{ github.event.schedule != "34 1 * * *" }}
         tiledb-version-spec:
           [
             "tiledb==0.30",
@@ -61,6 +64,15 @@ jobs:
             path: ~/.cache/pip
           # - os: macos-12
           # path: ~/Library/Caches/pip
+        exclude:
+          - tiledb-version-spec: "tiledb==0.30"
+            dependencies: fresh
+          - tiledb-version-spec: "tiledb==0.30"
+            is-scheduled: false
+          - tiledb-version-spec: "tiledb@git+https://github.com/TileDB-Inc/TileDB-Py.git@main"
+            dependencies: pinned
+          - tiledb-version-spec: "tiledb@git+https://github.com/TileDB-Inc/TileDB-Py.git@main"
+            is-scheduled: false
         pytest-split-group: [1, 2, 3, 4, 5, 6] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
