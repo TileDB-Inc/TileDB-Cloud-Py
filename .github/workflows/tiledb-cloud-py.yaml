@@ -18,7 +18,7 @@ env:
 
 jobs:
   format-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-24.04
           # - macos-12
         python-version: ["3.9", "3.12"]
         is-pr:
@@ -59,7 +59,7 @@ jobs:
           - pinned
           - fresh
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-24.04
             path: ~/.cache/pip
           # - os: macos-12
           # path: ~/Library/Caches/pip
@@ -195,7 +195,7 @@ jobs:
         uses: actions/upload-artifact@v4
         continue-on-error: true
         # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
-        if: matrix.os == 'ubuntu-20.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        if: matrix.os == 'ubuntu-24.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
           path: .test_durations
@@ -206,7 +206,7 @@ jobs:
   # into a single file and save it to cache for future use.
   save-test-durations-to-cache:
     name: Download, combine and save test_durations to the actions cache
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: run-tests
     continue-on-error: true
     env:
@@ -241,7 +241,7 @@ jobs:
       (github.event_name == 'release' && github.event.action == 'published' && ${{ startsWith(github.event.release.tag_name, 'v') }}) ||
       (github.event_name == 'push')
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
