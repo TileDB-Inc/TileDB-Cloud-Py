@@ -37,6 +37,7 @@ jobs:
         run: pre-commit run -a -v
 
   run-tests:
+    name: "${{ matrix.tiledb-version-spec }}:${{ matrix.python-version }}:${{ matrix.dependencies }}:${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     if: ${{ github.event_name != 'release' }}
     strategy:
@@ -46,7 +47,14 @@ jobs:
           - ubuntu-20.04
           # - macos-12
         python-version: ["3.9", "3.12"]
-        tiledb-version-spec: ["tiledb==0.30", "tiledb>=0.33.3.rc0"]
+        is-pr:
+          - ${{ github.event_name == 'pull_request' }}
+        tiledb-version-spec:
+          [
+            "tiledb==0.30",
+            "tiledb",
+            "tiledb@git+https://github.com/TileDB-Inc/TileDB-Py.git@main",
+          ]
         dependencies:
           - pinned
           - fresh
@@ -55,6 +63,15 @@ jobs:
             path: ~/.cache/pip
           # - os: macos-12
           # path: ~/Library/Caches/pip
+        exclude:
+          - tiledb-version-spec: "tiledb==0.30"
+            dependencies: fresh
+          - tiledb-version-spec: "tiledb==0.30"
+            is-pr: true
+          - tiledb-version-spec: "tiledb@git+https://github.com/TileDB-Inc/TileDB-Py.git@main"
+            dependencies: pinned
+          - tiledb-version-spec: "tiledb@git+https://github.com/TileDB-Inc/TileDB-Py.git@main"
+            is-pr: true
         pytest-split-group: [1, 2, 3, 4, 5, 6] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
@@ -109,10 +126,10 @@ jobs:
         if: ${{ matrix.dependencies == 'pinned' }}
         run: |
           pip install -r ci/requirements.txt
-          pip install ${{ matrix.tiledb-version-spec}}
 
       - name: Install TileDB-Cloud-Py
         run: |
+          pip install ${{ matrix.tiledb-version-spec}}
           pip install .[tests]
           pip install tiledb-vector-search --no-deps
 
