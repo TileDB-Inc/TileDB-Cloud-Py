@@ -247,7 +247,7 @@ def ingest(
                 verbose=verbose,
                 tile_scale=tile_scale,
                 source_config=config,
-                dest_config=kwargs.get("dest_config", None),
+                dest_config=kwargs.pop("dest_config", None),
                 experimental_reader=experimental_reader,
                 **kwargs,
             )
