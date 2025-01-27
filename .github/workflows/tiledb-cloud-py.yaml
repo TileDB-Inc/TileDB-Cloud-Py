@@ -48,8 +48,7 @@ jobs:
           # - macos-12
         python-version: ["3.9", "3.12"]
         is-pr:
-          - ${{ github.event_name == "pull_request" }}
-          - ${{ github.event_name != "pull_request" }}
+          - ${{ github.event_name == 'pull_request' }}
         tiledb-version-spec:
           [
             "tiledb==0.30",
