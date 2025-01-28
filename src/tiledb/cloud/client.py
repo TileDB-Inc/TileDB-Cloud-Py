@@ -106,11 +106,11 @@ def login(
     # scheme, but our SDK strictly requires the http(s) scheme.
     elif not host.startswith(("http://", "https://")):
         if verify_ssl:
-          host = f"https://{host}"
+            host = f"https://{host}"
         else:
-          # Don't use https:// for non-SSL connections
-          # (defaulting to https:// when user sets verify_ssl=False can be very confusing!)
-          host = f"http://{host}"
+            # Don't use https:// for non-SSL connections
+            # (defaulting to https:// when verify_ssl=False is confusing)
+            host = f"http://{host}"
 
     config_args = {
         "username": username,
