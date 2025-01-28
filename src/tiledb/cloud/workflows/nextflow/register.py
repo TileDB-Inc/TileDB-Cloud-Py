@@ -171,6 +171,10 @@ def register(
         if local_path:
             tarfile_path = f"{os.getcwd()}/{WORKFLOW_TARFILE}"
             create_workflow_tarfile(tarfile_path, local_path)
+
+            # Prepend the name with "local/" to indicate it was registered from a local
+            # path and avoid an issue with a colon in the first part of a TileDB URI.
+            name = "local/" + name
         else:
             tarfile_path = convert_nextflow(workflow=workflow, version=version)
 

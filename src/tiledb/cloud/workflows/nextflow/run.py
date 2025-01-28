@@ -14,6 +14,7 @@ import tiledb.cloud
 from tiledb.cloud.utilities import read_file
 
 from ..common import cd_tmpdir
+from ..common import default_workdir
 from ..common import download_group_files
 from ..common import workflow_history_uri
 
@@ -135,9 +136,11 @@ def extract_tar_bytes(tar_bytes: bytes, path: str = ".") -> None:
 
 
 def get_run_command(
+    *,
     workflow_uri: str,
     run_params: dict = {},
     workflow_params: dict = {},
+    namespace: Optional[str] = None,
 ) -> tuple[str, str, list[str]]:
     """
     Prepare to run the Nextflow workflow and return the command to run.
@@ -145,6 +148,7 @@ def get_run_command(
     :param workflow_uri: workflow URI
     :param run_params: run parameters, defaults to {}
     :param workflow_params: workflow parameters, defaults to {}
+    :param namespace: TileDB namespace where the workflow will run, defaults to None
     :return: run ID, run directory, run command
     """
 
@@ -165,7 +169,7 @@ def get_run_command(
     os.rename("workflow", workflow_name)
 
     # Get the parameters used on the command line.
-    workdir = run_params.get("workdir", None)
+    workdir = run_params.get("workdir", default_workdir(namespace))
     profile = run_params.get("profile", None)
     options = run_params.get("options", None)
     outdir = workflow_params.pop("outdir", None)
@@ -314,9 +318,9 @@ def run(
         raise FileNotFoundError(f"'{workflow_uri}' not found.")
 
     # Run the workflow in a temporary directory.
-    with cd_tmpdir(keep=keep) as tmpdir:
+    with cd_tmpdir(keep=keep):
         if keep:
-            print(f"Running in {tmpdir}")
+            print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
         setup_nextflow(namespace, acn)
@@ -326,6 +330,7 @@ def run(
             workflow_uri=workflow_uri,
             run_params=run_params,
             workflow_params=workflow_params,
+            namespace=namespace,
         )
 
         # Run the workflow.

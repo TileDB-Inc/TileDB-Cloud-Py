@@ -39,9 +39,30 @@ def cd_tmpdir(keep: bool = False):
                 os.chdir(cwd)
 
 
+def default_workdir(namespace: Optional[str] = None) -> str:
+    """
+    Return the default path for the workflow work directory.
+
+    :param namespace: TileDB namespace used for storage, defaults to None
+    :return: path for the workflow work directory
+    """
+
+    if namespace is None:
+        # TODO: adjust the default location as needed for 3.0.
+        # Another option would be the default charged namespace.
+        # namespace = tiledb.cloud.client.default_charged_namespace()
+        # s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
+        profile = tiledb.cloud.client.user_profile()
+        s3_path = profile.default_s3_path
+    else:
+        s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
+
+    return s3_path + "/workflows/work"
+
+
 def default_workflows_uri(namespace: Optional[str] = None) -> str:
     """
-    Return the default TileDB URI for storing TileDB workflows.
+    Return the default TileDB URI for workflow related storage.
 
     :param namespace: TileDB namespace used for storage, defaults to None
     :return: TileDB URI for storing TileDB workflows
@@ -86,7 +107,7 @@ def workflow_history_uri(
 def download_group_files(
     group_uri: str,
     members: Union[Sequence[str], str],
-    dest_path: str = ".",
+    dest_path: str = None,
     config: Optional[Mapping[str, Any]] = None,
 ) -> None:
     """
