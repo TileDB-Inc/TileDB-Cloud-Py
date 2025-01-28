@@ -86,13 +86,6 @@ def login(
     :param threads: number of threads to enable for concurrent requests
     :return:
     """
-    if host is None:
-        host = config.default_host
-    # See sc-56351. Usually, a hostname doesn't include a protocol
-    # scheme, but our SDK strictly requires the http(s) scheme.
-    elif not host.startswith(("http://", "https://")):
-        host = f"https://{host}"
-
     if (token is None or token == "") and (
         (username is None or username == "") and (password is None or password == "")
     ):
@@ -106,6 +99,18 @@ def login(
         verify_ssl = not config.parse_bool(
             os.getenv("TILEDB_REST_IGNORE_SSL_VALIDATION", "False")
         )
+
+    if host is None:
+        host = config.default_host
+    # See sc-56351. Usually, a hostname doesn't include a protocol
+    # scheme, but our SDK strictly requires the http(s) scheme.
+    elif not host.startswith(("http://", "https://")):
+        if verify_ssl:
+          host = f"https://{host}"
+        else:
+          # Don't use https:// for non-SSL connections
+          # (defaulting to https:// when user sets verify_ssl=False can be very confusing!)
+          host = f"http://{host}"
 
     config_args = {
         "username": username,
