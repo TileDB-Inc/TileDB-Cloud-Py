@@ -9,6 +9,10 @@ from tiledb.cloud.workflows.nextflow import register
 from tiledb.cloud.workflows.nextflow import resume
 from tiledb.cloud.workflows.nextflow import run
 
+# Run tests with:
+#   pytest -m workflows --run-workflows -svvv
+
+
 PASS_WORKFLOW = '''
 process pass_test {
     container 'quay.io/nextflow/bash'

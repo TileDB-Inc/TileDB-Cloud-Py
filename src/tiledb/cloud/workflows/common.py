@@ -4,7 +4,7 @@ import os
 import tarfile
 import tempfile
 from contextlib import contextmanager
-from typing import Any, Mapping, Optional, Sequence, Union
+from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 
@@ -39,12 +39,13 @@ def cd_tmpdir(keep: bool = False):
                 os.chdir(cwd)
 
 
-def default_workdir(namespace: Optional[str] = None) -> str:
+def namespace_defaults(namespace: Optional[str] = None) -> Tuple[str, str]:
     """
-    Return the default path for the workflow work directory.
+    Return the default S3 path for the given namespace. If the namespace is not
+    provided, the user's default namespace is used.
 
-    :param namespace: TileDB namespace used for storage, defaults to None
-    :return: path for the workflow work directory
+    :param namespace: TileDB namespace, defaults to None
+    :return: default S3 path, namespace
     """
 
     if namespace is None:
@@ -54,8 +55,32 @@ def default_workdir(namespace: Optional[str] = None) -> str:
         # s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
         profile = tiledb.cloud.client.user_profile()
         s3_path = profile.default_s3_path
+        namespace = profile.username
     else:
-        s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
+        # TODO: adjust this logic as needed for 3.0.
+        try:
+            org = tiledb.cloud.client.organization(namespace)
+            s3_path = org.default_s3_path
+        except Exception:
+            # Handle the case where the namespace is the user's username.
+            profile = tiledb.cloud.client.user_profile()
+            if namespace == profile.username:
+                s3_path = profile.default_s3_path
+            else:
+                raise
+
+    return s3_path.rstrip("/"), namespace
+
+
+def default_workdir(namespace: Optional[str] = None) -> str:
+    """
+    Return the default path for the workflow work directory.
+
+    :param namespace: TileDB namespace used for storage, defaults to None
+    :return: path for the workflow work directory
+    """
+
+    s3_path, _ = namespace_defaults(namespace)
 
     return s3_path + "/workflows/work"
 
@@ -68,16 +93,7 @@ def default_workflows_uri(namespace: Optional[str] = None) -> str:
     :return: TileDB URI for storing TileDB workflows
     """
 
-    if namespace is None:
-        # TODO: adjust the default location as needed for 3.0.
-        # Another option would be the default charged namespace.
-        # namespace = tiledb.cloud.client.default_charged_namespace()
-        # s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
-        profile = tiledb.cloud.client.user_profile()
-        namespace = profile.username
-        s3_path = profile.default_s3_path
-    else:
-        s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
+    s3_path, namespace = namespace_defaults(namespace)
 
     return f"tiledb://{namespace}/{s3_path}/workflows"
 
