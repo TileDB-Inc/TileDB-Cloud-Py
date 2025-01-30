@@ -1362,17 +1362,24 @@ def dag_fixture():
     yield graph
 
 
-@patch("tiledb.cloud.dag.dag.registration.register")
-def test_dag_register(mock_register: MagicMock, dag_fixture: dag.DAG) -> None:
+# @patch("tiledb.cloud.dag.dag.registration.register")
+# @patch("tiledb.cloud.dag.dag.DAG.register")
+@patch("tiledb.cloud.dag.dag.tiledb.open")
+@patch("tiledb.cloud.dag.dag.rest_api.RegisteredTaskGraphsApi")
+def test_dag_register(
+    mock_register: MagicMock,
+    mock_open: MagicMock,
+    dag_fixture: dag.DAG,
+) -> None:
     """Test DAG.register"""
 
     # verify DAG.name used to register
     registered_name1 = dag_fixture.register()
-    assert registered_name1 == dag_fixture.name
+    assert registered_name1 == f"{dag_fixture.namespace}/{dag_fixture.name}"
 
     # verify override name
-    registered_name2 = dag_fixture.register(override_name="override-name")
-    assert registered_name2 == "override-name"
+    registered_name2 = dag_fixture.register(name="override-name")
+    assert registered_name2 == f"{dag_fixture.namespace}/override-name"
 
     # verify catch if no name set to DAG.name or override_name
     dag_fixture.name = None

@@ -28,6 +28,7 @@ from typing import (
 )
 
 import tiledb
+from tiledb.cloud._common import json_safe
 
 from .. import array
 from .. import client
@@ -45,7 +46,6 @@ from .._results import types
 from ..rest_api import models
 from ..sql import _execution as _sql_exec
 from ..taskgraphs import _results as _tg_results
-from ..taskgraphs import registration
 from . import status as st
 from . import visualization as viz
 from .mode import Mode
@@ -1887,31 +1887,33 @@ class DAG:
 
     def register(
         self,
-        override_name: Optional[str] = None,
+        name: Optional[str] = None,
     ) -> str:
         """Register DAG to TileDB.
 
-        :param override_name: Name to register DAG as. Uses self.name as default.
+        :param name: Name to register DAG as. Uses self.name as default.
         :return: Registered name of task graph.
         """
 
-        tg_name = override_name or self.name
+        namespace = self.namespace or client.default_user().username
+        tg_name = name or self.name
 
         if not tg_name:
             raise ValueError(
                 "Must specify registration name to DAG.name or override_name."
             )
 
-        registration.register(
-            graph=self,
+        api_client = client.build(rest_api.RegisteredTaskGraphsApi)
+        api_client.register_registered_task_graph(
+            namespace=namespace,
             name=tg_name,
-            namespace=self.namespace,
+            graph=json_safe.Value(self._tdb_to_json(name)),
         )
 
-        with tiledb.open(f"tiledb://{self.namespace}/{tg_name}", "w") as A:
+        with tiledb.open(f"tiledb://{namespace}/{tg_name}", "w") as A:
             A.meta["dataset_type"] = "registered_task_graph"
 
-        return f"{self.namespace}/{tg_name}"
+        return f"{namespace}/{tg_name}"
 
 
 def list_logs(
