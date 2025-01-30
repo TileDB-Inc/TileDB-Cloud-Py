@@ -9,22 +9,30 @@ from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 import tiledb
 
 
-# NOTE: use contextlib.chdir(...) instead with python 3.11
 @contextmanager
-def cd_tmpdir(keep: bool = False):
+def cd_tmpdir(*, keep: bool = False, tmpdir: Optional[str] = None):
     """
     A context manager that creates a tmpdir and changes the current working
     directory to it. When the context is exited, the current working directory
     is restored to the original location.
 
+    If `keep` is True, the temporary directory is not deleted when the context exits.
+
+    If `tmpdir` is provided, the context manager uses the existing directory. The
+    provided `tmpdir` is never deleted, regardless of the value of `keep`.
+
     :param keep: keep the temporary directory after the context exits, defaults to False
+    :param tmpdir: existing temporary directory to use, defaults to None
     """
+
+    if tmpdir and not os.path.exists(tmpdir):
+        raise FileNotFoundError(f"Temporary directory does not exist: '{tmpdir}'.")
 
     # Save the current working directory.
     cwd = os.getcwd()
 
-    if keep:
-        tmpdir = tempfile.mkdtemp()
+    if keep or tmpdir:
+        tmpdir = tmpdir or tempfile.mkdtemp()
         os.chdir(tmpdir)
         try:
             yield tmpdir

@@ -278,8 +278,9 @@ tiledb {{
 
     # TODO: copy the plugin to $HOME/.nextflow/plugins
 
-    # Disable check for latest version.
+    # Set the Nextflow environment variables.
     os.environ["NXF_DISABLE_CHECK_LATEST"] = "true"
+    os.environ["NXF_ANSI_LOG"] = "true"
 
 
 def run(
@@ -290,6 +291,8 @@ def run(
     namespace: Optional[str] = None,
     acn: Optional[str] = None,
     keep: bool = False,
+    tmpdir: Optional[str] = None,
+    run_wrapper: Optional[callable] = None,
 ) -> tuple[str, str]:
     """
     Run a workflow asset on TileDB.
@@ -310,6 +313,8 @@ def run(
         the default charged namespace
     :param acn: TileDB access credentials name, defaults to None
     :param keep: keep the temporary run directory, defaults to False
+    :param tmpdir: temporary run directory, defaults to None
+    :param run_wrapper: function to run the command, defaults to None
     :return: status, session ID
     """
 
@@ -318,7 +323,7 @@ def run(
         raise FileNotFoundError(f"'{workflow_uri}' not found.")
 
     # Run the workflow in a temporary directory.
-    with cd_tmpdir(keep=keep):
+    with cd_tmpdir(keep=keep, tmpdir=tmpdir):
         if keep:
             print(f"Running in {os.getcwd()}")
 
@@ -334,7 +339,10 @@ def run(
         )
 
         # Run the workflow.
-        subprocess.run(cmd)
+        if run_wrapper:
+            run_wrapper(cmd)
+        else:
+            subprocess.run(cmd)
 
         # Update the history.
         try:
@@ -352,6 +360,8 @@ def resume(
     namespace: Optional[str] = None,
     acn: Optional[str] = None,
     keep: bool = False,
+    tmpdir: Optional[str] = None,
+    run_wrapper: Optional[callable] = None,
 ) -> tuple[str, str]:
     """
     Resume a workflow run from the history array.
@@ -360,12 +370,14 @@ def resume(
     :param namespace: TileDB namespace containing the history array, defaults to None
     :param acn: TileDB access credentials name, defaults to None
     :param keep: keep the temporary run directory, defaults to False
+    :param tmpdir: temporary run directory, defaults to None
+    :param run_wrapper: function to run the command, defaults to None
     :return: status, session ID
     """
 
-    with cd_tmpdir(keep=keep) as tmpdir:
+    with cd_tmpdir(keep=keep, tmpdir=tmpdir):
         if keep:
-            print(f"Running in {tmpdir}")
+            print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
         setup_nextflow(namespace, acn)
@@ -406,7 +418,11 @@ def resume(
         if " -resume" not in cmd:
             cmd += " -resume"
 
-        subprocess.run(cmd, shell=True)
+        # Run the workflow.
+        if run_wrapper:
+            run_wrapper(cmd)
+        else:
+            subprocess.run(cmd, shell=True)
 
         # Update the history.
         try:
