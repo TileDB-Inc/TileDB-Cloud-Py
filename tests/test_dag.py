@@ -1362,8 +1362,6 @@ def dag_fixture():
     yield graph
 
 
-# @patch("tiledb.cloud.dag.dag.registration.register")
-# @patch("tiledb.cloud.dag.dag.DAG.register")
 @patch("tiledb.cloud.dag.dag.tiledb.open")
 @patch("tiledb.cloud.dag.dag.rest_api.RegisteredTaskGraphsApi")
 def test_dag_register(
