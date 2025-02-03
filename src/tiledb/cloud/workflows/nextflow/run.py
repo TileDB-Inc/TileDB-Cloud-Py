@@ -3,123 +3,21 @@
 import io
 import json
 import os
+import re
 import subprocess
 import tarfile
+import uuid
 from typing import Optional
-
-import numpy as np
 
 import tiledb
 import tiledb.cloud
-from tiledb.cloud.utilities import read_file
 
 from ..common import cd_tmpdir
+from ..common import default_outdir
 from ..common import default_workdir
 from ..common import download_group_files
 from ..common import workflow_history_uri
-
-
-def create_history(history_uri: str) -> None:
-    """
-    Create a TileDB array to store the workflow run history, needed for resume.
-
-    :param history_uri: URI for the history array
-    """
-
-    d0 = tiledb.Dim(name="session_id", dtype="ascii")
-    domain = tiledb.Domain(d0)
-
-    attrs = [
-        tiledb.Attr(name="timestamp", dtype="ascii"),
-        tiledb.Attr(name="duration", dtype="ascii"),
-        tiledb.Attr(name="run_name", dtype="ascii"),
-        tiledb.Attr(name="status", dtype="ascii"),
-        tiledb.Attr(name="revision_id", dtype="ascii"),
-        tiledb.Attr(name="command", dtype="ascii"),
-        tiledb.Attr(name="workflow_uri", dtype="ascii"),
-        tiledb.Attr(name="nextflow_log", dtype=np.dtype("U")),
-        tiledb.Attr(name="nextflow_tgz", dtype="blob"),
-    ]
-
-    # Do not allow duplicate session IDs, always read the latest session ID.
-    schema = tiledb.ArraySchema(
-        domain=domain,
-        sparse=True,
-        attrs=attrs,
-        allows_duplicates=False,
-    )
-
-    tiledb.Array.create(history_uri, schema)
-
-
-def update_history(
-    workflow_uri: str,
-    namespace: Optional[str] = None,
-) -> tuple[str, str]:
-    """
-    Update the history array with the latest workflow run information.
-
-    :param workflow_uri: URI of the workflow asset
-    :param namespace: TileDB namespace containing the history array, defaults to None
-    :return: status, session ID
-    """
-
-    history_uri = workflow_history_uri(namespace, check=False)
-
-    # Create the history array if it does not exist.
-    if tiledb.object_type(history_uri) is None:
-        create_history(history_uri)
-
-    # Read the history with `nextflow log`
-    try:
-        res = subprocess.run(
-            ["nextflow", "log"], capture_output=True, text=True, check=True
-        )
-    except subprocess.CalledProcessError as e:
-        print(e.stderr)
-        return None, None
-
-    # Convert the log output to a dictionary.
-    lines = res.stdout.strip().split("\n")
-    keys = lines[0].split("\t")
-    values = lines[-1].split("\t")
-    data = {
-        k.strip().replace(" ", "_").lower(): v.strip() for k, v in zip(keys, values)
-    }
-
-    # Add the workflow URI to the data.
-    data["workflow_uri"] = workflow_uri
-
-    # Read the nextflow log file.
-    data["nextflow_log"] = read_file(".nextflow.log")
-
-    # Create the tar bytes for .nextflow/cache and .nextflow/history.
-    data["nextflow_tgz"] = create_tar_bytes([".nextflow/cache", ".nextflow/history"])
-
-    # Write the history to the array
-    with tiledb.open(history_uri, "w") as A:
-        session_id = data.pop("session_id")
-        A[session_id] = data
-
-    return data["status"], session_id
-
-
-def create_tar_bytes(paths: list[str]) -> bytes:
-    """
-    Create a tarfile in memory from a list of paths.
-
-    :param paths: list of paths to include in the tarfile
-    :return: tarfile stored in memory as bytes
-    """
-
-    with io.BytesIO() as buffer:
-        with tarfile.open(fileobj=buffer, mode="w:gz") as tar:
-            for path in paths:
-                tar.add(path)
-
-        tar_bytes = buffer.getvalue()
-
-    return tar_bytes
+from .history import update_history
 
 
 def extract_tar_bytes(tar_bytes: bytes, path: str = ".") -> None:
@@ -141,7 +39,8 @@ def get_run_command(
     run_params: dict = {},
     workflow_params: dict = {},
     namespace: Optional[str] = None,
-) -> tuple[str, str, list[str]]:
+    run_uuid: Optional[str] = None,
+) -> tuple[list[str], str]:
     """
     Prepare to run the Nextflow workflow and return the command to run.
 
@@ -149,8 +48,13 @@ def get_run_command(
     :param run_params: run parameters, defaults to {}
     :param workflow_params: workflow parameters, defaults to {}
     :param namespace: TileDB namespace where the workflow will run, defaults to None
-    :return: run ID, run directory, run command
+    :param run_uuid: unique identifier for the run, defaults to None, which generates
+        a new UUID
+    :return: run_command, workdir
     """
+
+    if run_uuid is None:
+        run_uuid = str(uuid.uuid4())
 
     # Read from the workflow metadata.
     with tiledb.Group(workflow_uri) as g:
@@ -169,10 +73,12 @@ def get_run_command(
     os.rename("workflow", workflow_name)
 
     # Get the parameters used on the command line.
-    workdir = run_params.get("workdir", default_workdir(namespace))
     profile = run_params.get("profile", None)
     options = run_params.get("options", None)
-    outdir = workflow_params.pop("outdir", None)
+
+    # Set unique workdir and outdir for the run.
+    workdir = default_workdir(namespace) + "/" + run_uuid
+    outdir = default_outdir(namespace) + "/" + run_uuid
 
     # If provided, save the sample sheet to a file and override the input parameter.
     sample_sheet = run_params.get("sample_sheet", None)
@@ -208,7 +114,7 @@ def get_run_command(
     if options:
         cmd += options.split()
 
-    return cmd
+    return cmd, workdir
 
 
 def setup_nextflow(
@@ -290,9 +196,10 @@ def run(
     workflow_params: dict = {},
     namespace: Optional[str] = None,
     acn: Optional[str] = None,
-    keep: bool = False,
+    run_uuid: Optional[str] = None,
     tmpdir: Optional[str] = None,
     run_wrapper: Optional[callable] = None,
+    keep: bool = False,
 ) -> tuple[str, str]:
     """
     Run a workflow asset on TileDB.
@@ -312,9 +219,11 @@ def run(
     :param namespace: TileDB namespace where the workflow will run, defaults to None,
         the default charged namespace
     :param acn: TileDB access credentials name, defaults to None
-    :param keep: keep the temporary run directory, defaults to False
+    :param run_uuid: unique identifier for the run, defaults to None, which generates
+        a new UUID
     :param tmpdir: temporary run directory, defaults to None
     :param run_wrapper: function to run the command, defaults to None
+    :param keep: keep the temporary run directory, defaults to False
     :return: status, session ID
     """
 
@@ -331,11 +240,12 @@ def run(
         setup_nextflow(namespace, acn)
 
         # Setup the command to run the workflow.
-        cmd = get_run_command(
+        cmd, workdir = get_run_command(
             workflow_uri=workflow_uri,
             run_params=run_params,
             workflow_params=workflow_params,
             namespace=namespace,
+            run_uuid=run_uuid,
         )
 
         # Run the workflow.
@@ -345,13 +255,14 @@ def run(
             subprocess.run(cmd)
 
         # Update the history.
-        try:
-            status, session_id = update_history(workflow_uri)
-        except Exception as e:
-            print(f"Error updating history: {e}")
-            return None, None
+        status, session_id = update_history(workflow_uri)
 
-        return status, session_id
+        # Remove the workdir if the workflow was successful.
+        if status == "OK":
+            vfs = tiledb.VFS()
+            vfs.remove_dir(workdir)
+
+    return status, session_id
 
 
 def resume(
@@ -425,10 +336,14 @@ def resume(
             subprocess.run(cmd, shell=True)
 
         # Update the history.
-        try:
-            status, session_id = update_history(workflow_uri)
-        except Exception as e:
-            print(f"Error updating history: {e}")
-            return None, None
+        status, session_id = update_history(workflow_uri)
+
+        # Remove the workdir if the workflow was successful.
+        if status == "OK":
+            match = re.search(r"-work-dir (\S+)", cmd)
+            if match:
+                workdir = match.group(1).strip("'")
+                vfs = tiledb.VFS()
+                vfs.remove_dir(workdir)
 
     return status, session_id

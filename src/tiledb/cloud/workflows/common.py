@@ -80,6 +80,19 @@ def namespace_defaults(namespace: Optional[str] = None) -> Tuple[str, str]:
     return s3_path.rstrip("/"), namespace
 
 
+def default_outdir(namespace: Optional[str] = None) -> str:
+    """
+    Return the default path for the workflow output directory.
+
+    :param namespace: TileDB namespace used for storage, defaults to None
+    :return: path for the workflow output directory
+    """
+
+    s3_path, _ = namespace_defaults(namespace)
+
+    return s3_path + "/workflows/output"
+
+
 def default_workdir(namespace: Optional[str] = None) -> str:
     """
     Return the default path for the workflow work directory.

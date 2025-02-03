@@ -60,7 +60,7 @@ def workflow_uri(workflow: str, version: str) -> str:
     if workflow.startswith("https://"):
         workflow = urlparse(workflow).path.strip("/")
 
-    uri = default_workflows_uri() + f"/{workflow}-{version}"
+    uri = default_workflows_uri() + f"templates/{workflow}-{version}"
     return uri
 
 

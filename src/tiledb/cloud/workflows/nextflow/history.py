@@ -1,32 +1,144 @@
 """Functions for working with Nextflow workflows."""
 
+import io
+import subprocess
+import tarfile
 from typing import Optional
 
+import numpy as np
 import pandas as pd
 
 import tiledb
 import tiledb.cloud
 from tiledb.cloud.utilities import consolidate_and_vacuum
+from tiledb.cloud.utilities import read_file
 
 from ..common import workflow_history_uri
 
 
-def list_history(namespace: Optional[str] = None) -> pd.DataFrame:
+def create_tar_bytes(paths: list[str]) -> bytes:
+    """
+    Create a tarfile in memory from a list of paths.
+
+    :param paths: list of paths to include in the tarfile
+    :return: tarfile stored in memory as bytes
+    """
+
+    with io.BytesIO() as buffer:
+        with tarfile.open(fileobj=buffer, mode="w:gz") as tar:
+            for path in paths:
+                tar.add(path)
+
+        tar_bytes = buffer.getvalue()
+
+    return tar_bytes
+
+
+def create_history(history_uri: str) -> None:
+    """
+    Create a TileDB array to store the workflow run history, needed for resume.
+
+    :param history_uri: URI for the history array
+    """
+
+    d0 = tiledb.Dim(name="session_id", dtype="ascii")
+    domain = tiledb.Domain(d0)
+
+    attrs = [
+        tiledb.Attr(name="timestamp", dtype="ascii"),
+        tiledb.Attr(name="duration", dtype="ascii"),
+        tiledb.Attr(name="run_name", dtype="ascii"),
+        tiledb.Attr(name="status", dtype="ascii"),
+        tiledb.Attr(name="revision_id", dtype="ascii"),
+        tiledb.Attr(name="command", dtype="ascii"),
+        tiledb.Attr(name="workflow_uri", dtype="ascii"),
+        tiledb.Attr(name="nextflow_log", dtype=np.dtype("U")),
+        tiledb.Attr(name="nextflow_tgz", dtype="blob"),
+    ]
+
+    # Do not allow duplicate session IDs, always read the latest session ID.
+    schema = tiledb.ArraySchema(
+        domain=domain,
+        sparse=True,
+        attrs=attrs,
+        allows_duplicates=False,
+    )
+
+    tiledb.Array.create(history_uri, schema)
+
+
+def update_history(
+    workflow_uri: str,
+    namespace: Optional[str] = None,
+) -> tuple[str, str]:
+    """
+    Update the history array with the latest workflow run information.
+
+    :param workflow_uri: URI of the workflow asset
+    :param namespace: TileDB namespace containing the history array, defaults to None
+    :return: status, session ID
+    """
+
+    history_uri = workflow_history_uri(namespace, check=False)
+
+    # Create the history array if it does not exist.
+    if tiledb.object_type(history_uri) is None:
+        create_history(history_uri)
+
+    # Read the history with `nextflow log`
+    try:
+        res = subprocess.run(
+            ["nextflow", "log"], capture_output=True, text=True, check=True
+        )
+    except subprocess.CalledProcessError:
+        return None, None
+
+    # Convert the log output to a dictionary.
+    lines = res.stdout.strip().split("\n")
+    keys = lines[0].split("\t")
+    values = lines[-1].split("\t")
+    data = {
+        k.strip().replace(" ", "_").lower(): v.strip() for k, v in zip(keys, values)
+    }
+
+    # Add the workflow URI to the data.
+    data["workflow_uri"] = workflow_uri
+
+    # Read the nextflow log file.
+    data["nextflow_log"] = read_file(".nextflow.log")
+
+    # Create the tar bytes for .nextflow/cache and .nextflow/history.
+    data["nextflow_tgz"] = create_tar_bytes([".nextflow/cache", ".nextflow/history"])
+
+    # Write the history to the array
+    with tiledb.open(history_uri, "w") as A:
+        session_id = data.pop("session_id")
+        A[session_id] = data
+
+    return data["status"], session_id
+
+
+def get_history(namespace: Optional[str] = None) -> Optional[pd.DataFrame]:
     """
     Return the history array as a dataframe.
 
     :param namespace: TileDB namespace containing the history array, defaults to None
-    :return: history array as a dataframe
+    :return: history array as a dataframe, or None if the array does not exist
     """
 
-    with tiledb.open(workflow_history_uri(namespace)) as A:
-        df = A.query(
-            attrs=["timestamp", "duration", "run_name", "status", "command"]
-        ).df[:]
+    try:
+        with tiledb.open(workflow_history_uri(namespace)) as A:
+            df = A.query(
+                attrs=["timestamp", "duration", "run_name", "status", "command"]
+            ).df[:]
 
-    df.sort_values(by="timestamp", ascending=True, inplace=True)
+        df.sort_values(by="timestamp", ascending=False, inplace=True)
 
-    df = df[["timestamp", "duration", "run_name", "status", "session_id", "command"]]
+        df = df[
+            ["timestamp", "duration", "run_name", "status", "session_id", "command"]
+        ]
+    except Exception:
+        return None
 
     return df
 
