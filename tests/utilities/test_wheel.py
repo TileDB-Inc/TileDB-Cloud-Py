@@ -14,7 +14,7 @@ from tiledb.cloud.utilities.wheel import PipInstall
 
 logger = get_logger()
 
-_TAG = str(uuid.uuid4())[-8:]
+_TAG = str(int(uuid.uuid4()))
 _LOCAL_WHEEL_ORIG = "tests/utilities/data/fake_unittest_wheel-0.1.0-py3-none-any.whl"
 # Add random tag to avoid collisions between concurrent tests
 _LOCAL_WHEEL = f"tests/utilities/data/fake_unittest_wheel-0.1.0-{_TAG}-py3-none-any.whl"
