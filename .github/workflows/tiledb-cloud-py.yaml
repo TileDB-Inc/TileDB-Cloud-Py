@@ -72,6 +72,8 @@ jobs:
             dependencies: pinned
           - tiledb-version-spec: "tiledb@git+https://github.com/TileDB-Inc/TileDB-Py.git@main"
             is-pr: true
+          # - dependencies: fresh
+          #   is-pr: true
         pytest-split-group: [1, 2, 3, 4, 5, 6] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
@@ -159,16 +161,12 @@ jobs:
           fi
 
       - name: Run tests for vendored cloudpickle
-        # Test pinned dependencies on commit / tag and fresh installs on nightlies
-        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           pip install psutil
           pip install src/tiledb/cloud/_vendor/cloudpickle/tests/cloudpickle_testpkg
           pytest -sv src/tiledb/cloud/_vendor/cloudpickle
 
       - name: Run tests
-        # Test pinned dependencies on commit / tag and fresh installs on nightlies
-        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           pytest -sv \
             --tb short \

@@ -918,6 +918,9 @@ class DAGCloudApplyTest(unittest.TestCase):
 
         self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
 
+    @pytest.mark.xfail(
+        np.__version__.startswith("2"), reason="Numpy 2 is not allowed in UDFs"
+    )
     def test_dag_apply_exec_multiple(self):
         uri_sparse = "tiledb://TileDB-Inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-Inc/quickstart_dense"
@@ -975,6 +978,9 @@ class DAGCloudApplyTest(unittest.TestCase):
         )
         self.assertEqual(d.status, dag.Status.COMPLETED)
 
+    @pytest.mark.xfail(
+        np.__version__.startswith("2"), reason="Numpy 2 is not allowed in UDFs"
+    )
     def test_dag_apply_exec_multiple_2(self):
         uri_sparse = "tiledb://TileDB-Inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-Inc/quickstart_dense"

@@ -312,6 +312,9 @@ class DelayedCloudApplyTest(unittest.TestCase):
             node.result(), numpy.sum(orig_sparse["a"]) + numpy.sum(orig_dense["a"])
         )
 
+    @pytest.mark.xfail(
+        np.__version__.startswith("2"), reason="Numpy 2 is not allowed in UDFs"
+    )
     def test_array_apply_by_name(self):
         uri = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
@@ -359,6 +362,9 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
 
+    @pytest.mark.xfail(
+        np.__version__.startswith("2"), reason="Numpy 2 is not allowed in UDFs"
+    )
     def test_apply_exec_multiple(self):
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
@@ -403,6 +409,9 @@ class DelayedCloudApplyTest(unittest.TestCase):
         )
         self.assertEqual(node_exec.dag.status, Status.COMPLETED)
 
+    @pytest.mark.xfail(
+        np.__version__.startswith("2"), reason="Numpy 2 is not allowed in UDFs"
+    )
     def test_apply_exec_multiple_2(self):
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
