@@ -466,6 +466,9 @@ class DelayedCloudApplyTest(unittest.TestCase):
         )
         self.assertEqual(node_exec.status, Status.COMPLETED)
 
+    @pytest.mark.xfail(
+        np.__version__.startswith("2"), reason="Numpy 2 is not allowed in UDFs"
+    )
     def test_name_to_task_name(self):
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
