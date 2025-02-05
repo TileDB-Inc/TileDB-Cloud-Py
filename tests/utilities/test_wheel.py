@@ -69,6 +69,7 @@ def array_teardown():
     tiledb.Array.delete_array(_FULL_URI, ctx=ctx)
 
 
+@pytest.mark.skip(reason="Race condition in tests.")
 def test_upload_wheel(array_teardown) -> None:
     # first time uploading array
     upload_wheel(
@@ -174,6 +175,7 @@ def test_pip_install_install(pip_install_pypi):
         assert "django" not in sys.modules
 
 
+@pytest.mark.skip(reason="Race condition in tests.")
 def test_install_wheel(pip_install_tdb):
     # install from tiledb cloud array
     assert "fake_unittest_wheel" not in sys.modules

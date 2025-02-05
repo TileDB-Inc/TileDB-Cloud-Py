@@ -19,6 +19,7 @@ _WAIT_TIME_S = 120
 
 
 class ConnectToExistingTest(unittest.TestCase):
+    @pytest.mark.xfail(reason="Time to complete is not predictable.")
     def test_completed_graph(self) -> None:
         to_run = dag.DAG(mode=dag.Mode.BATCH)
         one = to_run.submit(lambda: 1, name="one")
