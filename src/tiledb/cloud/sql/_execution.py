@@ -112,7 +112,7 @@ def exec_base(
             array_api = client.build(rest_api.ArrayApi)
             array_api.update_array_metadata(
                 namespace=namespace,
-                output_uri=output_uri,
+                array=output_uri,
                 array_metadata=rest_api.models.ArrayInfoUpdate(name=output_array_name),
             )
 
