@@ -9,6 +9,8 @@ import tarfile
 import uuid
 from typing import Optional
 
+import jsonschema
+
 import tiledb
 import tiledb.cloud
 
@@ -18,6 +20,84 @@ from ..common import default_workdir
 from ..common import download_group_files
 from ..common import workflow_history_uri
 from .history import update_history
+
+MANIFEST_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "workflow": {
+            "description": "Properties of the workflow template on TileDB.",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "Name of the workflow.",
+                    "type": "string",
+                },
+                "version": {
+                    "description": "Version of the workflow.",
+                    "type": "string",
+                },
+                "teamspace": {
+                    "description": "Teamspace where the workflow is registered.",
+                    "type": "string",
+                },
+                "tiledb_uri": {
+                    "description": "TileDB URI of the workflow.",
+                    "type": "string",
+                },
+            },
+            "required": ["name", "version", "teamspace", "tiledb_uri"],
+            "additionalProperties": False,
+        },
+        "metadata": {
+            "description": "Metadata for the run manifest.",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Unique ID for the run manifest.",
+                    "type": "string",
+                },
+                "outdir": {
+                    "description": "Path to the workflow output directory.",
+                    "type": "string",
+                },
+                "workdir": {
+                    "description": "Path to the workflow working work directory.",
+                    "type": "string",
+                },
+            },
+            "required": ["id", "outdir", "workdir"],
+            "additionalProperties": False,
+        },
+        "options": {
+            "description": "Workflow run options.",
+            "type": "object",
+            "properties": {
+                "profile": {
+                    "description": "Configuration profile used.",
+                    "type": "string",
+                },
+                "options": {
+                    "description": "Additional options passed to `nextflow run`.",
+                    "type": "string",
+                },
+                "sample_sheet": {
+                    "description": "An input sample sheet in CSV or TSV format.",
+                    "type": "string",
+                },
+            },
+            "required": [],
+            "additionalProperties": False,
+        },
+        "params": {
+            "description": "Workflow parameter values.",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": True,
+        },
+    },
+    "required": ["workflow", "metadata"],
+    "additionalProperties": False,
+}
 
 
 def extract_tar_bytes(tar_bytes: bytes, path: str = ".") -> None:
@@ -36,8 +116,7 @@ def extract_tar_bytes(tar_bytes: bytes, path: str = ".") -> None:
 def get_run_command(
     *,
     workflow_uri: str,
-    run_params: dict = {},
-    workflow_params: dict = {},
+    manifest: dict = {},
     namespace: Optional[str] = None,
     run_uuid: Optional[str] = None,
 ) -> tuple[list[str], str]:
@@ -45,8 +124,7 @@ def get_run_command(
     Prepare to run the Nextflow workflow and return the command to run.
 
     :param workflow_uri: workflow URI
-    :param run_params: run parameters, defaults to {}
-    :param workflow_params: workflow parameters, defaults to {}
+    :param manifest: run manifest used to launch the workflow, defaults to {}
     :param namespace: TileDB namespace where the workflow will run, defaults to None
     :param run_uuid: unique identifier for the run, defaults to None, which generates
         a new UUID
@@ -73,24 +151,27 @@ def get_run_command(
     os.rename("workflow", workflow_name)
 
     # Get the parameters used on the command line.
-    profile = run_params.get("profile", None)
-    options = run_params.get("options", None)
+    profile = manifest.get("options", {}).get("profile", None)
+    options = manifest.get("options", {}).get("options", None)
 
     # Set unique workdir and outdir for the run.
     workdir = default_workdir(namespace) + "/" + run_uuid
     outdir = default_outdir(namespace) + "/" + run_uuid
 
+    # Set the workflow parameters.
+    params = manifest.get("options", {})
+
     # If provided, save the sample sheet to a file and override the input parameter.
-    sample_sheet = run_params.get("sample_sheet", None)
+    sample_sheet = manifest.get("options", {}).get("sample_sheet", None)
     if sample_sheet:
         sample_sheet_file = "sample_sheet.csv"
         with open(sample_sheet_file, "w") as fp:
             fp.write(sample_sheet)
-        workflow_params["input"] = sample_sheet_file
+        params["input"] = sample_sheet_file
 
     # Dump the parameters to a file.
-    if workflow_params:
-        nf_json = json.dumps(workflow_params, indent=4)
+    if params:
+        nf_json = json.dumps(params, indent=4)
         with open("nf-params.json", "w") as fp:
             fp.write(nf_json)
 
@@ -103,7 +184,7 @@ def get_run_command(
         "tiledb.config",
     ]
 
-    if workflow_params:
+    if params:
         cmd += ["-params-file", "nf-params.json"]
     if workdir:
         cmd += ["-work-dir", workdir]
@@ -182,7 +263,7 @@ tiledb {{
     with open(config_file, "w") as fp:
         fp.write(tiledb_config_str)
 
-    # TODO: copy the plugin to $HOME/.nextflow/plugins
+    # TODO: copy the plugin to $HOME/.nextflow/plugins and unzip with `jar xf`.
 
     # Set the Nextflow environment variables.
     os.environ["NXF_DISABLE_CHECK_LATEST"] = "true"
@@ -192,8 +273,7 @@ tiledb {{
 def run(
     workflow_uri: str,
     *,
-    run_params: dict = {},
-    workflow_params: dict = {},
+    manifest: dict = {},
     namespace: Optional[str] = None,
     acn: Optional[str] = None,
     run_uuid: Optional[str] = None,
@@ -204,18 +284,8 @@ def run(
     """
     Run a workflow asset on TileDB.
 
-    The run_params dict contains options for the `nextflow run` command:
-      - "workdir" : directory where intermediate results are stored
-      - "profile" : the workflow configuration profile
-      - "options" : additional `nextflow run` command options
-      - "sample_sheet" : a string containing CSV data to be written to a file and
-            passed to the `--input` parameter
-
-    The workflow_params dict contains values for parameters specified by the workflow.
-
     :param workflow_uri: TileDB URI of the workflow asset
-    :param run_params: parameters not specific to the workflow, defaults to {}
-    :param workflow_params: workflow specific parameters, defaults to {}
+    :param manifest: run manifest used to launch the workflow, defaults to {}
     :param namespace: TileDB namespace where the workflow will run, defaults to None,
         the default charged namespace
     :param acn: TileDB access credentials name, defaults to None
@@ -231,6 +301,8 @@ def run(
     if tiledb.object_type(workflow_uri) != "group":
         raise FileNotFoundError(f"'{workflow_uri}' not found.")
 
+    jsonschema.validate(manifest, MANIFEST_SCHEMA)
+
     # Run the workflow in a temporary directory.
     with cd_tmpdir(keep=keep, tmpdir=tmpdir):
         if keep:
@@ -242,8 +314,7 @@ def run(
         # Setup the command to run the workflow.
         cmd, workdir = get_run_command(
             workflow_uri=workflow_uri,
-            run_params=run_params,
-            workflow_params=workflow_params,
+            manifest=manifest,
             namespace=namespace,
             run_uuid=run_uuid,
         )
