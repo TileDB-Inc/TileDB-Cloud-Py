@@ -104,6 +104,59 @@ def info(uri: str) -> object:
     return groups_client.get_group(group_namespace=namespace, group_name=group_name)
 
 
+def contents(
+    uri: str,
+    async_req: bool = None,
+    page: int = None,
+    per_page: int = None,
+    namespace: str = None,
+    search: str = None,
+    orderby: str = None,
+    tag: list[str] = None,
+    exclude_tag: list[str] = None,
+    member_type: list[str] = None,
+    exclude_member_type: list[str] = None,
+) -> rest_api.GroupContents:
+    """Get a group's contents.
+
+    :param async_req bool: execute request asynchronously
+    :param int page: pagination offset for assets
+    :param int per_page: pagination limit for assets
+    :param str namespace: namespace to search for
+    :param str search: search string that will look at name, namespace
+        or description fields
+    :param str orderby: sort by which field valid values include
+        last_accessed, size, name
+    :param list[str] tag: tag to search for, more than one can be
+        included
+    :param list[str] exclude_tag: tags to exclude matching array in
+        results, more than one can be included
+    :param list[str] member_type: member type to search for, more than
+        one can be included
+    :param list[str] exclude_member_type: member type to exclude
+        matching groups in results, more than one can be included
+    :return: GroupContents
+        If the method is called asynchronously, returns the request
+        thread.
+    """
+    namespace, group_name = utils.split_uri(uri)
+    groups_client = client.build(rest_api.GroupsApi)
+    return groups_client.get_group_contents(
+        group_namespace=namespace,
+        group_name=group_name,
+        async_req=async_req,
+        page=page,
+        per_page=per_page,
+        namespace=namespace,
+        search=search,
+        orderby=orderby,
+        tag=tag,
+        exclude_tag=exclude_tag,
+        member_type=member_type,
+        exclude_member_type=exclude_member_type,
+    )
+
+
 def update_info(
     uri: str,
     *,
