@@ -1,3 +1,7 @@
+"""Register, search, and manage arrays with TileDB."""
+
+import posixpath
+import urllib.parse
 import uuid
 import warnings
 from typing import Any, Callable, Iterable, List, Optional, Sequence, Union
@@ -237,12 +241,16 @@ def register_array(
 ):
     """
     Register this array with the tiledb cloud service
-    :param str namespace: The user or organization to register the array under.
-        If unset will default to the user
-    :param str array_name: name of array
+
+    :param str uri: storage URI of array.
+    :param str namespace: The user or organization to register the array
+        under. If unset will default to the user
+    :param str array_name: name of array, optional. Defaults to stem of
+        the storage URI.
     :param str description: optional description
-    :param str access_credentials_name: optional name of access credentials to use,
-        if left blank default for namespace will be used
+    :param str access_credentials_name: optional name of access
+        credentials to use. If left blank default for namespace will be
+        used.
     :param async_req: return future instead of results for async support
     :param dest_uri: If set, the ``tiledb://`` URI of the destination.
     """
@@ -253,6 +261,11 @@ def register_array(
     )
 
     namespace = namespace or client.default_user().username
+
+    if not array_name:
+        # Extract the basename from the storage URI and use it for the name.
+        parsed_uri = urllib.parse.urlparse(uri)
+        array_name = posixpath.basename(parsed_uri.path)
 
     try:
         return api_instance.register_array(
