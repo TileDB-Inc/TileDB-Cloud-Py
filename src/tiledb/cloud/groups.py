@@ -80,6 +80,7 @@ def register(
         # Extract the basename from the storage URI and use it for the name.
         parsed_uri = urllib.parse.urlparse(storage_uri)
         name = posixpath.basename(parsed_uri.path)
+
     groups_client = client.build(api_v2.GroupsApi)
     groups_client.register_group(
         group_namespace=namespace,
