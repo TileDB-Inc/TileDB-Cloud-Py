@@ -106,3 +106,19 @@ class GroupsTest(unittest.TestCase):
         self.assertEqual(len(sharing), 0)
 
         groups.delete(group_uri)
+
+
+def test_group_contents():
+    """Get a public group's complete contents."""
+    contents = groups.contents(
+        "tiledb://TileDB-Inc/52febfb7-79ec-48cf-9f0c-f35e2adb4a1b"
+    )
+    assert contents.pagination_metadata.total_items == 2
+
+
+def test_group_contents_search():
+    """Search a public group's contents."""
+    contents = groups.contents(
+        "tiledb://TileDB-Inc/52febfb7-79ec-48cf-9f0c-f35e2adb4a1b", search="obs"
+    )
+    assert contents.pagination_metadata.total_items == 1
