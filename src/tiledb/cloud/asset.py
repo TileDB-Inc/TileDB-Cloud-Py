@@ -209,8 +209,10 @@ def info(uri: str) -> Union[models.ArrayInfo, models.GroupInfo]:
     """
     # Note: the URI can be either of the two forms, yes?
     # tiledb://namespace/name or tiledb://namespace/UUID.
-    info_map: Mapping[str, Callable] = {"array": array.info, "group": groups.info}
     asset_type: str = tiledb.object_type(uri, ctx=tiledb.cloud.Ctx())
+    if not asset_type:
+        raise ValueError("Given URI resolves to no asset and is invalid.")
+    info_map: Mapping[str, Callable] = {"array": array.info, "group": groups.info}
     func = info_map[asset_type]
     return func(uri)
 
