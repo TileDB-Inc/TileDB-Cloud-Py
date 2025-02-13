@@ -298,3 +298,9 @@ class RegistrationTest(unittest.TestCase):
                 time.sleep(2)
         self.assert_group_not_exists(outer_name)
         self.assert_group_not_exists(inner_name)
+
+
+def test_failure_bogus_uri():
+    """Raise ValueError."""
+    with pytest.raises(ValueError):
+        asset.info("bogus")
