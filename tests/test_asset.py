@@ -221,7 +221,9 @@ class ListingTest(unittest.TestCase):
     @pytest.mark.udf
     def test_list(self) -> None:
         # Ensure that we have at least one asset registered (a UDF)
-        with testonly.register_udf(lambda: 1, func_name="some_lambda"):
+        with testonly.register_udf(
+            lambda: 1, func_name=testonly.random_name("some_lambda")
+        ):
             result = asset.list(page=1, per_page=2)
         self.assertGreater(result.pagination_metadata.total_items, 0)
 
