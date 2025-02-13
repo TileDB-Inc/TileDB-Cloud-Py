@@ -5,6 +5,7 @@ import pytest
 
 import tiledb
 from tiledb.cloud.workflows.common import default_workflows_uri
+from tiledb.cloud.workflows.nextflow import create_manifest
 from tiledb.cloud.workflows.nextflow import register
 from tiledb.cloud.workflows.nextflow import resume
 from tiledb.cloud.workflows.nextflow import run
@@ -102,7 +103,8 @@ def test_run_workflow(tmp_path):
     )
 
     # Run the workflow.
-    status, _ = run(uri, keep=True)
+    manifest = create_manifest(uri)
+    status, _ = run(manifest)
     assert status == "OK"
 
     # Cleanup.
@@ -131,7 +133,8 @@ def test_resume_workflow(tmp_path):
     )
 
     # Run the workflow.
-    status, session_id = run(uri)
+    manifest = create_manifest(uri)
+    status, session_id = run(manifest)
     assert status == "ERR"
 
     # Resume the workflow.
