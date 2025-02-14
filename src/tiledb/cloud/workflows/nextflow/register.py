@@ -164,7 +164,7 @@ def register(
         name = workflow
 
     # Create the URI for the workflow.
-    tiledb_uri = default_workflows_uri(namespace) + f"templates/{name}-{version}"
+    tiledb_uri = default_workflows_uri(namespace) + f"/templates/{name}-{version}"
 
     # Work in a temp directory
     with cd_tmpdir():

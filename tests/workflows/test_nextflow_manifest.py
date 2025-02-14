@@ -2,6 +2,7 @@ import pytest
 from jsonschema import ValidationError
 
 from tiledb.cloud.workflows.nextflow import create_manifest
+from tiledb.cloud.workflows.nextflow import register
 from tiledb.cloud.workflows.nextflow import validate_manifest
 
 # Run tests with:
@@ -11,9 +12,11 @@ from tiledb.cloud.workflows.nextflow import validate_manifest
 @pytest.mark.workflows
 def test_validate_manifest():
     manifest = {
-        "uri": "tiledb://tiledb-inc/test:0.0.1",
+        "workflow": {
+            "uri": "tiledb://tiledb-inc/test:0.0.1",
+        },
         "metadata": {
-            "id": "123",
+            "name": "123",
             "outdir": "/tiledb/teamspace/workflows/output/123",
             "workdir": "/tiledb/teamspace/workflows/work/123",
         },
@@ -26,11 +29,20 @@ def test_validate_manifest():
     validate_manifest(manifest)
 
     # Remove a required field and expect a ValidationError.
-    manifest.pop("uri")
+    manifest.pop("workflow")
     with pytest.raises(ValidationError):
         validate_manifest(manifest)
 
-    # Check the create_manifest function.
-    uri = "tiledb://tiledb-inc/test:0.0.1"
+
+@pytest.mark.workflows
+@pytest.mark.parametrize(
+    "workflow,version",
+    [("https://github.com/TileDB-Inc/sarek", "tiledb")],
+)
+def test_create_manifest(test_fixture, workflow, version):
+    # Register the workflow.
+    uri = register(workflow=workflow, version=version)
+
+    # Create a manifest and validate it.
     manifest = create_manifest(uri)
     validate_manifest(manifest)
