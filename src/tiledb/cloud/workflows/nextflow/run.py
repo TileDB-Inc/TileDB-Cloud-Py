@@ -52,7 +52,7 @@ def get_run_command(
     # Make a copy of the manifest so the original is not modified.
     manifest = manifest.copy()
 
-    workflow_uri = manifest["uri"]
+    workflow_uri = manifest["workflow"]["uri"]
 
     if run_uuid is None:
         run_uuid = str(uuid.uuid4())
@@ -222,7 +222,7 @@ def run(
     :return: status, session ID
     """
 
-    workflow_uri = manifest["uri"]
+    workflow_uri = manifest["workflow"]["uri"]
     if tiledb.object_type(workflow_uri) != "group":
         raise FileNotFoundError(f"'{workflow_uri}' not found.")
 
