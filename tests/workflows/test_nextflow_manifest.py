@@ -11,12 +11,7 @@ from tiledb.cloud.workflows.nextflow import validate_manifest
 @pytest.mark.workflows
 def test_validate_manifest():
     manifest = {
-        "workflow": {
-            "name": "test",
-            "version": "0.0.1",
-            "teamspace": "tiledb-inc",
-            "uri": "tiledb://tiledb-inc/test:0.0.1",
-        },
+        "uri": "tiledb://tiledb-inc/test:0.0.1",
         "metadata": {
             "id": "123",
             "outdir": "/tiledb/teamspace/workflows/output/123",
@@ -31,7 +26,7 @@ def test_validate_manifest():
     validate_manifest(manifest)
 
     # Remove a required field and expect a ValidationError.
-    manifest.pop("workflow")
+    manifest.pop("uri")
     with pytest.raises(ValidationError):
         validate_manifest(manifest)
 

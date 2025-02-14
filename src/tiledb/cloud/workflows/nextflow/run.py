@@ -34,22 +34,25 @@ def extract_tar_bytes(tar_bytes: bytes, path: str = ".") -> None:
 
 
 def get_run_command(
+    manifest: dict,
     *,
-    manifest: dict = {},
     namespace: Optional[str] = None,
     run_uuid: Optional[str] = None,
-) -> tuple[list[str], str]:
+) -> tuple[list[str], dict]:
     """
     Prepare to run the Nextflow workflow and return the command to run.
 
-    :param manifest: run manifest used to launch the workflow, defaults to {}
+    :param manifest: run manifest used to launch the workflow
     :param namespace: TileDB namespace where the workflow will run, defaults to None
     :param run_uuid: unique identifier for the run, defaults to None, which generates
         a new UUID
-    :return: run_command, workdir
+    :return: run_command, manifest
     """
 
-    workflow_uri = manifest["workflow"]["uri"]
+    # Make a copy of the manifest so the original is not modified.
+    manifest = manifest.copy()
+
+    workflow_uri = manifest["uri"]
 
     if run_uuid is None:
         run_uuid = str(uuid.uuid4())
@@ -77,6 +80,10 @@ def get_run_command(
     # Set unique workdir and outdir for the run.
     workdir = default_workdir(namespace) + "/" + run_uuid
     outdir = default_outdir(namespace) + "/" + run_uuid
+
+    # Update the manifest with the unique workdir and outdir.
+    manifest["metadata"]["workdir"] = workdir
+    manifest["metadata"]["outdir"] = outdir
 
     # Set the workflow parameters.
     params = manifest.get("params", {})
@@ -115,7 +122,7 @@ def get_run_command(
     if options:
         cmd += options.split()
 
-    return cmd, workdir
+    return cmd, manifest
 
 
 def setup_nextflow(
@@ -215,7 +222,7 @@ def run(
     :return: status, session ID
     """
 
-    workflow_uri = manifest["workflow"]["uri"]
+    workflow_uri = manifest["uri"]
     if tiledb.object_type(workflow_uri) != "group":
         raise FileNotFoundError(f"'{workflow_uri}' not found.")
 
@@ -228,7 +235,7 @@ def run(
         setup_nextflow(namespace, acn)
 
         # Setup the command to run the workflow.
-        cmd, workdir = get_run_command(
+        cmd, manifest = get_run_command(
             manifest=manifest,
             namespace=namespace,
             run_uuid=run_uuid,
@@ -246,6 +253,7 @@ def run(
         # Remove the workdir if the workflow was successful.
         if status == "OK":
             vfs = tiledb.VFS()
+            workdir = manifest["metadata"]["workdir"]
             vfs.remove_dir(workdir)
 
     return status, session_id

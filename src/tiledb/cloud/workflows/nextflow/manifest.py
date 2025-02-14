@@ -1,33 +1,11 @@
-from threading import Lock
-
 import jsonschema
 
 MANIFEST_SCHEMA = {
     "type": "object",
     "properties": {
-        "workflow": {
-            "description": "Properties of the workflow template on TileDB.",
-            "type": "object",
-            "properties": {
-                "uri": {
-                    "description": "TileDB URI of the workflow.",
-                    "type": "string",
-                },
-                "name": {
-                    "description": "Name of the workflow.",
-                    "type": "string",
-                },
-                "version": {
-                    "description": "Version of the workflow.",
-                    "type": "string",
-                },
-                "teamspace": {
-                    "description": "Teamspace where the workflow is registered.",
-                    "type": "string",
-                },
-            },
-            "required": ["uri"],
-            "additionalProperties": False,
+        "uri": {
+            "description": "TileDB URI of the workflow.",
+            "type": "string",
         },
         "metadata": {
             "description": "Metadata for the run manifest.",
@@ -76,12 +54,9 @@ MANIFEST_SCHEMA = {
             "additionalProperties": True,
         },
     },
-    "required": ["workflow"],
+    "required": ["uri"],
     "additionalProperties": False,
 }
-
-validator = jsonschema.Draft7Validator(MANIFEST_SCHEMA)
-lock = Lock()
 
 
 def create_manifest(workflow_uri: str) -> dict:
@@ -93,9 +68,10 @@ def create_manifest(workflow_uri: str) -> dict:
     """
 
     manifest = {
-        "workflow": {
-            "uri": workflow_uri,
-        }
+        "uri": workflow_uri,
+        "metadata": {},
+        "options": {},
+        "params": {},
     }
 
     validate_manifest(manifest)
@@ -109,8 +85,4 @@ def validate_manifest(manifest: dict) -> None:
     :param manifest: run manifest
     """
 
-    print("Validating manifest")
-    with lock:
-        print("Validating manifest with lock")
-        validator.validate(manifest)
-        print("Validated manifest")
+    jsonschema.validate(manifest, MANIFEST_SCHEMA)
