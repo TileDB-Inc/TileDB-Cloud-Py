@@ -3,6 +3,7 @@ from jsonschema import ValidationError
 
 from tiledb.cloud.workflows.nextflow import create_manifest
 from tiledb.cloud.workflows.nextflow import register
+from tiledb.cloud.workflows.nextflow import save_manifest
 from tiledb.cloud.workflows.nextflow import validate_manifest
 
 # Run tests with:
@@ -39,10 +40,13 @@ def test_validate_manifest():
     "workflow,version",
     [("https://github.com/TileDB-Inc/sarek", "tiledb")],
 )
-def test_create_manifest(test_fixture, workflow, version):
+def test_save_manifest(test_fixture, workflow, version):
     # Register the workflow.
     uri = register(workflow=workflow, version=version)
 
     # Create a manifest and validate it.
     manifest = create_manifest(uri)
     validate_manifest(manifest)
+
+    # Save the manifest
+    save_manifest(manifest)

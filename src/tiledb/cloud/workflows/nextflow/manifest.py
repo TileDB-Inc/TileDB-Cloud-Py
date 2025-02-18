@@ -1,9 +1,12 @@
+import json
 import uuid
 from typing import Optional
 
 import jsonschema
 
 import tiledb
+
+from ..common import get_manifest_array_uri
 
 MANIFEST_SCHEMA = {
     "type": "object",
@@ -131,3 +134,67 @@ def validate_manifest(manifest: dict) -> None:
     """
 
     jsonschema.validate(manifest, MANIFEST_SCHEMA)
+
+
+def create_manifest_array(uri: str) -> None:
+    """
+    Create a TileDB array to store run manifests.
+
+    :param uri: URI of the manifest array
+    """
+
+    d0 = tiledb.Dim(name="name", dtype="ascii")
+    domain = tiledb.Domain(d0)
+
+    attrs = [
+        tiledb.Attr(name="timestamp", dtype="ascii"),
+        tiledb.Attr(name="manifest", dtype="ascii"),
+    ]
+
+    # Do not allow duplicate manifest names.
+    schema = tiledb.ArraySchema(
+        domain=domain,
+        sparse=True,
+        attrs=attrs,
+        allows_duplicates=False,
+    )
+
+    tiledb.Array.create(uri, schema)
+
+
+def save_manifest(
+    manifest: dict,
+    *,
+    manifest_array_uri: Optional[str] = None,
+    namespace: Optional[str] = None,
+) -> None:
+    """
+    Save a run manifest to a manifest array. The manifest name must be unique.
+
+    :param manifest: run manifest
+    :param manifest_array_uri: URI of the manifest array, defaults to None
+        which uses the default manifest array URI
+    :param namespace: TileDB namespace, defaults to None
+    """
+
+    # Get the default manifest array URI if not provided.
+    if manifest_array_uri is None:
+        manifest_array_uri = get_manifest_array_uri(namespace)
+
+    # Create the manifest array if it does not exist.
+    if tiledb.object_type(manifest_array_uri) is None:
+        create_manifest_array(manifest_array_uri)
+
+    # Verify the manifest name is unique.
+    manifest_name = manifest["metadata"]["name"]
+    with tiledb.open(manifest_array_uri) as A:
+        df = A.df[manifest_name]
+        if len(df):
+            raise ValueError(f"Manifest name '{manifest_name}' already exists.")
+
+    # Write the manifest to the manifest array.
+    with tiledb.open(manifest_array_uri, mode="w") as A:
+        A[manifest_name] = {
+            "timestamp": "TODO",
+            "manifest": json.dumps(manifest),
+        }

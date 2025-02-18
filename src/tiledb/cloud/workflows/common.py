@@ -141,6 +141,28 @@ def workflow_history_uri(
     return uri
 
 
+def get_manifest_array_uri(
+    namespace: Optional[str] = None,
+    *,
+    check: bool = False,
+) -> str:
+    """
+    Return the default TileDB URI for storing run manifests. If `check` is
+    True, raise an error if the URI does not exist.
+
+    :param namespace: TileDB namespace used for storage, defaults to None
+    :param check: check if the URI exists, defaults to True
+    :return: TileDB URI for the workflow manifests
+    """
+
+    uri = default_workflows_uri(namespace) + "/manifests"
+
+    if check and not tiledb.object_type(uri):
+        raise FileNotFoundError(f"Manifest array not found at '{uri}'.")
+
+    return uri
+
+
 def download_group_files(
     group_uri: str,
     members: Union[Sequence[str], str],
