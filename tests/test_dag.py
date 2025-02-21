@@ -1372,7 +1372,10 @@ def _b64(x: bytes) -> str:
 def dag_fixture():
     """DAG fixture for pytests."""
 
-    graph = dag.DAG(name="dag-test-fixture", namespace=default_user().username)
+    graph = dag.DAG(
+        name=f"dag-test-fixture-{uuid.uuid4()}",
+        namespace=default_user().username,
+    )
 
     yield graph
 
@@ -1391,8 +1394,9 @@ def test_dag_register(
     assert registered_name1 == f"{dag_fixture.namespace}/{dag_fixture.name}"
 
     # verify override name
-    registered_name2 = dag_fixture.register(name="override-name")
-    assert registered_name2 == f"{dag_fixture.namespace}/override-name"
+    override_name = f"override-name-{uuid.uuid4()}"
+    registered_name2 = dag_fixture.register(name=override_name)
+    assert registered_name2 == f"{dag_fixture.namespace}/{override_name}"
 
     # verify catch if no name set to DAG.name or override_name
     dag_fixture.name = None
