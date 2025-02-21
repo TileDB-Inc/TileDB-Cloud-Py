@@ -6,7 +6,7 @@ import jsonschema
 
 import tiledb
 
-from ..common import get_manifest_array_uri
+from ..common import get_manifest_uri
 
 MANIFEST_SCHEMA = {
     "type": "object",
@@ -166,7 +166,7 @@ def save_manifest(
     manifest: dict,
     *,
     manifest_array_uri: Optional[str] = None,
-    namespace: Optional[str] = None,
+    teamspace: Optional[str] = None,
 ) -> None:
     """
     Save a run manifest to a manifest array. The manifest name must be unique.
@@ -174,12 +174,12 @@ def save_manifest(
     :param manifest: run manifest
     :param manifest_array_uri: URI of the manifest array, defaults to None
         which uses the default manifest array URI
-    :param namespace: TileDB namespace, defaults to None
+    :param teamspace: TileDB teamspace, defaults to None
     """
 
     # Get the default manifest array URI if not provided.
     if manifest_array_uri is None:
-        manifest_array_uri = get_manifest_array_uri(namespace)
+        manifest_array_uri = get_manifest_uri(teamspace)
 
     # Create the manifest array if it does not exist.
     if tiledb.object_type(manifest_array_uri) is None:

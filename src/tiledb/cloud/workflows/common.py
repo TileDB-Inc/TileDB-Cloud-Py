@@ -4,7 +4,7 @@ import os
 import tarfile
 import tempfile
 from contextlib import contextmanager
-from typing import Any, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Mapping, Optional, Sequence, Union
 
 import tiledb
 
@@ -47,80 +47,62 @@ def cd_tmpdir(*, keep: bool = False, tmpdir: Optional[str] = None):
                 os.chdir(cwd)
 
 
-def namespace_defaults(namespace: Optional[str] = None) -> Tuple[str, str]:
+def get_workflows_uri(
+    teamspace: Optional[str] = None,
+    *,
+    s3_uri: bool = False,
+) -> str:
     """
-    Return the default S3 path for the given namespace. If the namespace is not
-    provided, the user's default namespace is used.
+    Return the URI for storing workflow related data.
+     - If the teamspace is not provided, the default workspace is used.
+     - If `s3_uri` is True, an S3 URI is returned. Otherwise, a TileDB URI is returned.
 
-    :param namespace: TileDB namespace, defaults to None
-    :return: default S3 path, namespace
+    ## Example
+
+    ```python
+        workflows_storage_uri("teamspace")
+        # Returns: "tiledb://teamspace/s3://workspace/teamspace/__workflows"
+
+        workflows_storage_uri("teamspace", s3_uri=True)
+        # Returns: "s3://workspace/teamspace/__workflows"
+    ```
+
+    :param teamspace: TileDB teamspace used for storage, defaults to None
+    :param s3_uri: if True, returns an S3 URI instead of a TileDB URI, defaults to False
+    :return: root path for storing workflow related data
     """
 
-    if namespace is None:
+    if teamspace is None:
         # TODO: adjust the default location as needed for 3.0.
-        # Another option would be the default charged namespace.
-        # namespace = tiledb.cloud.client.default_charged_namespace()
-        # s3_path = tiledb.cloud.client.organization(namespace).default_s3_path
+        # Another option would be the default charged teamspace.
+        # teamspace = tiledb.cloud.client.default_charged_namespace()
+        # s3_path = tiledb.cloud.client.organization(teamspace).default_s3_path
         profile = tiledb.cloud.client.user_profile()
         s3_path = profile.default_s3_path
-        namespace = profile.username
+        teamspace = profile.username
     else:
         # TODO: adjust this logic as needed for 3.0.
         try:
-            org = tiledb.cloud.client.organization(namespace)
+            org = tiledb.cloud.client.organization(teamspace)
             s3_path = org.default_s3_path
         except Exception:
-            # Handle the case where the namespace is the user's username.
+            # Handle the case where the teamspace is the user's username.
             profile = tiledb.cloud.client.user_profile()
-            if namespace == profile.username:
+            if teamspace == profile.username:
                 s3_path = profile.default_s3_path
             else:
                 raise
 
-    return s3_path.rstrip("/"), namespace
+    uri = s3_path.rstrip("/") + "/__workflows"
+
+    if s3_uri:
+        return uri
+
+    return f"tiledb://{teamspace}/{uri}"
 
 
-def default_outdir(namespace: Optional[str] = None) -> str:
-    """
-    Return the default path for the workflow output directory.
-
-    :param namespace: TileDB namespace used for storage, defaults to None
-    :return: path for the workflow output directory
-    """
-
-    s3_path, _ = namespace_defaults(namespace)
-
-    return s3_path + "/workflows/output"
-
-
-def default_workdir(namespace: Optional[str] = None) -> str:
-    """
-    Return the default path for the workflow work directory.
-
-    :param namespace: TileDB namespace used for storage, defaults to None
-    :return: path for the workflow work directory
-    """
-
-    s3_path, _ = namespace_defaults(namespace)
-
-    return s3_path + "/workflows/work"
-
-
-def default_workflows_uri(namespace: Optional[str] = None) -> str:
-    """
-    Return the default TileDB URI for workflow related storage.
-
-    :param namespace: TileDB namespace used for storage, defaults to None
-    :return: TileDB URI for storing TileDB workflows
-    """
-
-    s3_path, namespace = namespace_defaults(namespace)
-
-    return f"tiledb://{namespace}/{s3_path}/workflows"
-
-
-def workflow_history_uri(
-    namespace: Optional[str] = None,
+def get_history_uri(
+    teamspace: Optional[str] = None,
     *,
     check: bool = True,
 ) -> str:
@@ -128,12 +110,12 @@ def workflow_history_uri(
     Return the default TileDB URI for storing the workflow history. If `check` is
     True, raise an error if the URI does not exist.
 
-    :param namespace: TileDB namespace used for storage, defaults to None
+    :param teamspace: TileDB teamspace used for storage, defaults to None
     :param check: check if the URI exists, defaults to True
     :return: TileDB URI for the workflow history
     """
 
-    uri = default_workflows_uri(namespace) + "/.nextflow_history"
+    uri = get_workflows_uri(teamspace) + "/history"
 
     if check and not tiledb.object_type(uri):
         raise FileNotFoundError(f"Workflow history not found at '{uri}'.")
@@ -141,8 +123,8 @@ def workflow_history_uri(
     return uri
 
 
-def get_manifest_array_uri(
-    namespace: Optional[str] = None,
+def get_manifest_uri(
+    teamspace: Optional[str] = None,
     *,
     check: bool = False,
 ) -> str:
@@ -150,12 +132,12 @@ def get_manifest_array_uri(
     Return the default TileDB URI for storing run manifests. If `check` is
     True, raise an error if the URI does not exist.
 
-    :param namespace: TileDB namespace used for storage, defaults to None
+    :param teamspace: TileDB teamspace used for storage, defaults to None
     :param check: check if the URI exists, defaults to True
     :return: TileDB URI for the workflow manifests
     """
 
-    uri = default_workflows_uri(namespace) + "/manifests"
+    uri = get_workflows_uri(teamspace) + "/manifests"
 
     if check and not tiledb.object_type(uri):
         raise FileNotFoundError(f"Manifest array not found at '{uri}'.")

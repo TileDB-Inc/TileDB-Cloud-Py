@@ -4,7 +4,7 @@ import pytest
 
 import tiledb
 import tiledb.cloud
-from tiledb.cloud.workflows.common import default_workflows_uri
+from tiledb.cloud.workflows.common import get_workflows_uri
 
 
 def workflow_uri(workflow: str, version: str) -> str:
@@ -13,7 +13,7 @@ def workflow_uri(workflow: str, version: str) -> str:
     if workflow.startswith("https://"):
         workflow = urlparse(workflow).path.strip("/")
 
-    uri = default_workflows_uri() + f"/templates/{workflow}-{version}"
+    uri = get_workflows_uri() + f"/templates/{workflow}-{version}"
     return uri
 
 

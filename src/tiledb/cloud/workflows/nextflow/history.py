@@ -13,7 +13,7 @@ import tiledb.cloud
 from tiledb.cloud.utilities import consolidate_and_vacuum
 from tiledb.cloud.utilities import read_file
 
-from ..common import workflow_history_uri
+from ..common import get_history_uri
 
 
 def create_tar_bytes(paths: list[str]) -> bytes:
@@ -69,17 +69,17 @@ def create_history(history_uri: str) -> None:
 
 def update_history(
     workflow_uri: str,
-    namespace: Optional[str] = None,
+    teamspace: Optional[str] = None,
 ) -> tuple[str, str]:
     """
     Update the history array with the latest workflow run information.
 
     :param workflow_uri: URI of the workflow asset
-    :param namespace: TileDB namespace containing the history array, defaults to None
+    :param teamspace: TileDB teamspace containing the history array, defaults to None
     :return: status, session ID
     """
 
-    history_uri = workflow_history_uri(namespace, check=False)
+    history_uri = get_history_uri(teamspace, check=False)
 
     # Create the history array if it does not exist.
     if tiledb.object_type(history_uri) is None:
@@ -118,16 +118,16 @@ def update_history(
     return data["status"], session_id
 
 
-def get_history(namespace: Optional[str] = None) -> Optional[pd.DataFrame]:
+def get_history(teamspace: Optional[str] = None) -> Optional[pd.DataFrame]:
     """
     Return the history array as a dataframe.
 
-    :param namespace: TileDB namespace containing the history array, defaults to None
+    :param teamspace: TileDB teamspace containing the history array, defaults to None
     :return: history array as a dataframe, or None if the array does not exist
     """
 
     try:
-        with tiledb.open(workflow_history_uri(namespace)) as A:
+        with tiledb.open(get_history_uri(teamspace)) as A:
             df = A.query(
                 attrs=["timestamp", "duration", "run_name", "status", "command"]
             ).df[:]
@@ -146,39 +146,39 @@ def get_history(namespace: Optional[str] = None) -> Optional[pd.DataFrame]:
 def get_log(
     session_id: str,
     *,
-    namespace: Optional[str] = None,
+    teamspace: Optional[str] = None,
 ) -> str:
     """
     Return the Nextflow log for a session ID.
 
     :param session_id: session ID from the history array
-    :param namespace: TileDB namespace containing the history array, defaults to None
+    :param teamspace: TileDB teamspace containing the history array, defaults to None
     :return: nextflow log as a string
     """
 
-    with tiledb.open(workflow_history_uri(namespace)) as A:
+    with tiledb.open(get_history_uri(teamspace)) as A:
         data = A[session_id]
 
     return data["nextflow_log"][0]
 
 
-def consolidate_history(namespace: Optional[str] = None) -> None:
+def consolidate_history(teamspace: Optional[str] = None) -> None:
     """
     Consolidate the history array.
 
-    :param namespace: TileDB namespace containing the history array, defaults to None
+    :param teamspace: TileDB teamspace containing the history array, defaults to None
     """
 
-    history_uri = workflow_history_uri(namespace)
+    history_uri = get_history_uri(teamspace)
     consolidate_and_vacuum(history_uri)
 
 
-def delete_history(namespace: Optional[str] = None) -> None:
+def delete_history(teamspace: Optional[str] = None) -> None:
     """
     Delete the history array.
 
-    :param namespace: TileDB namespace containing the history array, defaults to None
+    :param teamspace: TileDB teamspace containing the history array, defaults to None
     """
 
-    history_uri = workflow_history_uri(namespace)
+    history_uri = get_history_uri(teamspace)
     tiledb.cloud.asset.delete(history_uri)

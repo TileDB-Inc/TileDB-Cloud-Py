@@ -11,7 +11,7 @@ from tiledb.cloud.utilities import read_file
 
 from ..common import cd_tmpdir
 from ..common import create_workflow_tarfile
-from ..common import default_workflows_uri
+from ..common import get_workflows_uri
 from ..workflow import create
 
 # Name of the workflow tar file stored in the TileDB workflow asset.
@@ -129,7 +129,7 @@ def register(
     version: str,
     local_path: Optional[str] = None,
     main_script: str = MAIN_SCRIPT,
-    namespace: Optional[str] = None,
+    teamspace: Optional[str] = None,
 ) -> str:
     """
     Register a Nextflow workflow as a TileDB asset.
@@ -147,7 +147,7 @@ def register(
     :param version: workflow version (a git branch, tag, or version number)
     :param local_path: path to a local directory where the workflow is stored,
         defaults to None
-    :param namespace: TileDB namespace where the workflow will be registered
+    :param teamspace: TileDB teamspace where the workflow will be registered
     :param main_script: name of the script executed when running a workflow,
         defaults to "main.nf"
     :return: URI of the registered workflow
@@ -163,8 +163,8 @@ def register(
     else:
         name = workflow
 
-    # Create the URI for the workflow.
-    tiledb_uri = default_workflows_uri(namespace) + f"/templates/{name}-{version}"
+    # Create the TileDB URI for the workflow.
+    tiledb_uri = get_workflows_uri(teamspace) + f"/templates/{name}-{version}"
 
     # Work in a temp directory
     with cd_tmpdir():

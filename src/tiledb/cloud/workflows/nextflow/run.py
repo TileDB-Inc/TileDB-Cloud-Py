@@ -13,10 +13,9 @@ import tiledb
 import tiledb.cloud
 
 from ..common import cd_tmpdir
-from ..common import default_outdir
-from ..common import default_workdir
 from ..common import download_group_files
-from ..common import workflow_history_uri
+from ..common import get_history_uri
+from ..common import get_workflows_uri
 from .history import update_history
 
 
@@ -36,14 +35,14 @@ def extract_tar_bytes(tar_bytes: bytes, path: str = ".") -> None:
 def get_run_command(
     manifest: dict,
     *,
-    namespace: Optional[str] = None,
+    teamspace: Optional[str] = None,
     run_uuid: Optional[str] = None,
 ) -> tuple[list[str], dict]:
     """
     Prepare to run the Nextflow workflow and return the command to run.
 
     :param manifest: run manifest used to launch the workflow
-    :param namespace: TileDB namespace where the workflow will run, defaults to None
+    :param teamspace: TileDB teamspace where the workflow will run, defaults to None
     :param run_uuid: unique identifier for the run, defaults to None, which generates
         a new UUID
     :return: run_command, manifest
@@ -78,8 +77,9 @@ def get_run_command(
     options = manifest.get("options", {}).get("options", None)
 
     # Set unique workdir and outdir for the run.
-    workdir = default_workdir(namespace) + "/" + run_uuid
-    outdir = default_outdir(namespace) + "/" + run_uuid
+    s3_uri = get_workflows_uri(teamspace, s3_uri=True)
+    workdir = f"{s3_uri}/nextflow/work/{run_uuid}"
+    outdir = f"{s3_uri}/nextflow/output/{run_uuid}"
 
     # Update the manifest with the unique workdir and outdir.
     manifest["metadata"]["workdir"] = workdir
@@ -126,7 +126,7 @@ def get_run_command(
 
 
 def setup_nextflow(
-    namespace: str,
+    teamspace: str,
     acn: str,
     *,
     plugin_id: str = "nf-tiledb@0.1.0",
@@ -139,23 +139,23 @@ def setup_nextflow(
     - Copy the Nextflow TileDB plugin to the required location, if needed.
     - Set Nextflow environment variables.
 
-    :param namespace: TileDB namespace where the workflow will run
+    :param teamspace: TileDB teamspace where the workflow will run
     :param acn: TileDB access credentials name
     :param plugin_id: TileDB plugin ID, defaults to "nf-tiledb@0.1.0"
     :param config_file: name of the config file, defaults to "tiledb.config"
     """
 
     # Validate user input.
-    if namespace and acn is None:
-        raise ValueError("Access credentials name required with namespace.")
+    if teamspace and acn is None:
+        raise ValueError("Access credentials name required with teamspace.")
 
-    if acn and namespace is None:
-        raise ValueError("Namespace required with access credentials name.")
+    if acn and teamspace is None:
+        raise ValueError("teamspace required with access credentials name.")
 
-    # Get the namespace and access credentials name, if not provided.
-    if namespace is None:
-        namespace = tiledb.cloud.client.default_charged_namespace()
-        org = tiledb.cloud.client.organization(namespace)
+    # Get the teamspace and access credentials name, if not provided.
+    if teamspace is None:
+        teamspace = tiledb.cloud.client.default_charged_namespace()
+        org = tiledb.cloud.client.organization(teamspace)
         acn = org.default_s3_path_credentials_name
 
     try:
@@ -178,7 +178,7 @@ plugins {{
     id '{plugin_id}'
 }}
 tiledb {{
-  namespace = '{namespace}'
+  namespace = '{teamspace}'
   accessCredentialsName = '{acn}'
   login {{
     host = '{host}'
@@ -200,7 +200,7 @@ tiledb {{
 def run(
     manifest: dict,
     *,
-    namespace: Optional[str] = None,
+    teamspace: Optional[str] = None,
     acn: Optional[str] = None,
     run_uuid: Optional[str] = None,
     tmpdir: Optional[str] = None,
@@ -211,8 +211,8 @@ def run(
     Run a workflow asset on TileDB.
 
     :param manifest: run manifest used to launch the workflow, defaults to {}
-    :param namespace: TileDB namespace where the workflow will run, defaults to None,
-        the default charged namespace
+    :param teamspace: TileDB teamspace where the workflow will run, defaults to None,
+        the default charged teamspace
     :param acn: TileDB access credentials name, defaults to None
     :param run_uuid: unique identifier for the run, defaults to None, which generates
         a new UUID
@@ -232,12 +232,12 @@ def run(
             print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
-        setup_nextflow(namespace, acn)
+        setup_nextflow(teamspace, acn)
 
         # Setup the command to run the workflow.
         cmd, manifest = get_run_command(
             manifest=manifest,
-            namespace=namespace,
+            teamspace=teamspace,
             run_uuid=run_uuid,
         )
 
@@ -262,7 +262,7 @@ def run(
 def resume(
     session_id: str,
     *,
-    namespace: Optional[str] = None,
+    teamspace: Optional[str] = None,
     acn: Optional[str] = None,
     keep: bool = False,
     tmpdir: Optional[str] = None,
@@ -272,7 +272,7 @@ def resume(
     Resume a workflow run from the history array.
 
     :param session_id: session ID from the history array
-    :param namespace: TileDB namespace containing the history array, defaults to None
+    :param teamspace: TileDB teamspace containing the history array, defaults to None
     :param acn: TileDB access credentials name, defaults to None
     :param keep: keep the temporary run directory, defaults to False
     :param tmpdir: temporary run directory, defaults to None
@@ -285,10 +285,10 @@ def resume(
             print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
-        setup_nextflow(namespace, acn)
+        setup_nextflow(teamspace, acn)
 
         # Read the history from the array.
-        history_uri = workflow_history_uri(namespace)
+        history_uri = get_history_uri(teamspace)
 
         with tiledb.open(history_uri) as A:
             data = A[session_id]
