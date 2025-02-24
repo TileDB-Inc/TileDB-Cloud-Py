@@ -17,6 +17,8 @@ import unittest
 import uuid
 from concurrent import futures
 from typing import Any
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -33,6 +35,7 @@ from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud._vendor import cloudpickle as tdbcp
+from tiledb.cloud.client import default_user
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
@@ -1363,6 +1366,42 @@ def _uid(num: int) -> uuid.UUID:
 
 def _b64(x: bytes) -> str:
     return str(base64.b64encode(x), encoding="ascii")
+
+
+@pytest.fixture
+def dag_fixture():
+    """DAG fixture for pytests."""
+
+    graph = dag.DAG(
+        name=f"dag-test-fixture-{uuid.uuid4()}",
+        namespace=default_user().username,
+    )
+
+    yield graph
+
+
+@patch("tiledb.cloud.dag.dag.tiledb.open")
+@patch("tiledb.cloud.dag.dag.rest_api.RegisteredTaskGraphsApi")
+def test_dag_register(
+    mock_register: MagicMock,
+    mock_open: MagicMock,
+    dag_fixture: dag.DAG,
+) -> None:
+    """Test DAG.register"""
+
+    # verify DAG.name used to register
+    registered_name1 = dag_fixture.register()
+    assert registered_name1 == f"{dag_fixture.namespace}/{dag_fixture.name}"
+
+    # verify override name
+    override_name = f"override-name-{uuid.uuid4()}"
+    registered_name2 = dag_fixture.register(name=override_name)
+    assert registered_name2 == f"{dag_fixture.namespace}/{override_name}"
+
+    # verify catch if no name set to DAG.name or override_name
+    dag_fixture.name = None
+    with pytest.raises(ValueError):
+        dag_fixture.register()
 
 
 # This is the base64 of the Arrow data returned by this query:

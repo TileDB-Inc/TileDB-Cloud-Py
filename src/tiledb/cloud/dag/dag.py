@@ -1,3 +1,5 @@
+"""Directed acyclic graphs as TileDB task graphs."""
+
 import collections
 import datetime
 import itertools
@@ -24,6 +26,9 @@ from typing import (
     TypeVar,
     Union,
 )
+
+import tiledb
+from tiledb.cloud._common import json_safe
 
 from .. import array
 from .. import client
@@ -617,6 +622,62 @@ class Node(futures.FutureLike[_T]):
                 else rest_api.TaskGraphLogRunLocation.SERVER
             ),
         )
+
+    def _registration_name(
+        self, existing: Set[str], fallback_name: Optional[str] = None
+    ) -> str:
+        """Generates the unique name to be used when building the graph.
+
+        If the node has a ``name``, then that is used. If not, then it generates
+        a new unique name that is not contained within the ``existing`` set,
+        and adds that newly-generated name to the set so subsequent Nodes don't
+        reuse that name.
+
+        :param existing: Existing set of names to avoid using.
+        :param fallback_name: A string to use to generate a display name if the
+            node is unnamed.
+        :return: Registration name for node.
+        """
+
+        fallback_name = fallback_name or type(self).__name__
+
+        if self.name is not None:
+            # A Node which already has a Name does not need to have one generated.
+            return self.name
+
+        if fallback_name in existing:
+            return existing.add(fallback_name)
+
+        id_to_use = self.id
+        while True:
+            id_str = str(id_to_use)
+            for chars in range(2, 13, 2):
+                # Try to generate unique names with increasingly large slices
+                # of the node's UUID.
+                end = id_str[-chars:]
+
+                if f"{fallback_name} ({end})" not in existing:
+                    return existing.add(f"{fallback_name} ({end})")
+            # At this point every single alternate generated name we could generate,
+            # from "name (xx)" to "name (xxxxxxxxxxxx)", has been taken.
+            # Just throw in a new ID to start from.
+            id_to_use = uuid.uuid4()
+
+    def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
+        """Converts this node to the form used when registering the graph.
+
+        This is the form of the Node that will be used to represent it in the
+        ``RegisteredTaskGraph`` object, i.e. a ``RegisteredTaskGraphNode``.
+
+        :param existing_names: The set of names that have already been used,
+            so that we don't generate a duplicate node name.
+        :return: Mapping of Node for registration.
+        """
+
+        return {
+            "client_node_id": str(self.id),
+            "name": self._registration_name(existing_names),
+        }
 
 
 class DAG:
@@ -1801,7 +1862,58 @@ class DAG:
                     futures.execute_callbacks(nd, cbs)
                 with self._lifecycle_condition:
                     self._set_status(Status.FAILED)
-                raise  # Bail out and fail loudly.
+                raise  # Bail out and fail loudly
+
+    def _tdb_to_json(self, override_name: Optional[str] = None) -> Dict[str, Any]:
+        """Converts this DAG to a registerable format.
+
+        :param override_name: Name to override DAG conversion.
+        :return: Mapping of DAG tree to json for submission to REST.
+        """
+
+        nodes = _topo_sort_nodes(self.nodes)
+
+        existing_names = set(self.nodes_by_name.keys())
+
+        node_jsons = [n.to_registration_json(existing_names) for n in nodes]
+
+        for n, n_json in zip(nodes, node_jsons):
+            n_json["depends_on"] = [str(parent.id) for _, parent in n.parents.items()]
+
+        return {
+            "name": override_name or self.name,
+            "nodes": node_jsons,
+        }
+
+    def register(
+        self,
+        name: Optional[str] = None,
+    ) -> str:
+        """Register DAG to TileDB.
+
+        :param name: Name to register DAG as. Uses self.name as default.
+        :return: Registered name of task graph.
+        """
+
+        namespace = self.namespace or client.default_user().username
+        tg_name = name or self.name
+
+        if not tg_name:
+            raise ValueError(
+                "Must specify registration name to DAG.name or override_name."
+            )
+
+        api_client = client.build(rest_api.RegisteredTaskGraphsApi)
+        api_client.register_registered_task_graph(
+            namespace=namespace,
+            name=tg_name,
+            graph=json_safe.Value(self._tdb_to_json(name)),
+        )
+
+        with tiledb.open(f"tiledb://{namespace}/{tg_name}", "w") as A:
+            A.meta["dataset_type"] = "registered_task_graph"
+
+        return f"{namespace}/{tg_name}"
 
 
 def list_logs(
