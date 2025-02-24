@@ -6,6 +6,7 @@ from math import ceil
 from typing import Any, Callable, List, Mapping, Optional, Sequence, Tuple, Union
 
 import pandas as pd
+import pyarrow
 import pyarrow as pa
 
 import tiledb.cloud
