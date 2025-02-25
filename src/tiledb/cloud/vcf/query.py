@@ -3,7 +3,7 @@
 import functools
 import logging
 from math import ceil
-from typing import Any, Callable, List, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 import pandas as pd
 import pyarrow as pa
@@ -63,6 +63,29 @@ def setup(
     )
 
     return logger
+
+
+def _concat_tables_kwargs(
+    tables: Sequence[pa.Table],
+    promote_null: bool = False,
+) -> Dict[str, Union[List[pa.Table], bool, str]]:
+    """Dump concat_tables kwargs.
+
+    :param tables: Tables to concat
+    :param promote_null: For all cols with null dtype, cast each as dtype of joining col
+        when dtypes are different
+    :return: Concat tables kwargs
+    """
+
+    kwargs = {"tables": tables}
+
+    if promote_null:
+        if pa.__version__ >= "14.0.0":
+            kwargs["promote_options"] = "default"
+        else:
+            kwargs["promote"] = True
+
+    return kwargs
 
 
 # --------------------------------------------------------------------
@@ -174,7 +197,7 @@ def vcf_query_udf(
             tables.append(ds.continue_read_arrow())
 
         # Combine any incomplete queries into a single arrow table
-        table = pa.concat_tables(tables, promote=promote_null)
+        table = pa.concat_tables(**_concat_tables_kwargs(tables, promote_null))
 
         prof.write("result", table.num_rows, table.nbytes)
 
@@ -221,7 +244,7 @@ def concat_tables_udf(
         if len(tables) == 0:
             return pa.Table.from_arrays([], [])
 
-        table = pa.concat_tables(tables, promote=promote_null)
+        table = pa.concat_tables(**_concat_tables_kwargs(tables, promote_null))
         prof.write("result", table.num_rows, table.nbytes)
 
     memory_usage_gb = max_memory_usage() / (1 << 30)
