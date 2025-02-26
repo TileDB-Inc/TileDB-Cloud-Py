@@ -1,4 +1,5 @@
 import numpy as np
+import pyarrow as pa
 import pytest
 
 import tiledb.cloud.vcf as vcf
@@ -207,3 +208,19 @@ def test_vcf_zygosity_value():
     assert zygosity(np.array([2, 2])) == "HOM_ALT"
     assert zygosity(np.array([-1, -1])) == "MISSING"
     assert zygosity(np.array([1, 2, 3])) == "HET"
+
+
+def test_concat_tables():
+    ids = pa.array([1, 2, 3, 4, 5], type=pa.int32())
+    names = pa.array(["Alice", "Bob", "Charlie", "David", "Eve"], type=pa.string())
+    nullnames = pa.array([None, None, None, None, None], type=pa.null())
+
+    # 2 tables, one with only null in 'name' col
+    # requires promote_null for concat
+    table_a = pa.Table.from_arrays([ids, names], names=["id", "name"])
+    table_b = pa.Table.from_arrays([ids, nullnames], names=["id", "name"])
+
+    with pytest.raises(pa.ArrowInvalid):
+        vcf.query._concat_tables([table_a, table_b], promote_null=False)
+
+    assert vcf.query._concat_tables([table_a, table_b], promote_null=True)
