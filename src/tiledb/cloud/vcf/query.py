@@ -65,6 +65,32 @@ def setup(
     return logger
 
 
+def _concat_tables(
+    tables: Sequence[pa.Table],
+    promote_null: bool = False,
+) -> pa.Table:
+    """Concatenate a list of Arrow tables.
+
+    Provides option to specify null promotion based on
+    pyarrow version.
+
+    :param tables: Tables to concat
+    :param promote_null: For all cols with null dtype, cast each as dtype of joining col
+        when dtypes are different
+    :return: Concatenated table
+    """
+
+    kwargs = {"tables": tables}
+
+    if promote_null:
+        if pa.__version__ >= "14.0.0":
+            kwargs["promote_options"] = "default"
+        else:
+            kwargs["promote"] = True
+
+    return pa.concat_tables(**kwargs)
+
+
 # --------------------------------------------------------------------
 # UDFs
 # --------------------------------------------------------------------
@@ -83,6 +109,7 @@ def vcf_query_udf(
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
+    promote_null: bool = False,
     log_uri: Optional[str] = None,
     log_id: str = "query",
     verbose: bool = False,
@@ -105,6 +132,8 @@ def vcf_query_udf(
     :param af_filter: allele frequency filter, defaults to None
     :param transform_result: function to apply to the result table;
         by default, does not transform the result
+    :param promote_null: For all cols with null dtype, cast each as dtype of joining col
+        when dtypes are different
     :param log_uri: log array URI for profiling, defaults to None
     :param log_id: profiler event ID, defaults to "query"
     :param verbose: verbose logging, defaults to False
@@ -171,7 +200,7 @@ def vcf_query_udf(
             tables.append(ds.continue_read_arrow())
 
         # Combine any incomplete queries into a single arrow table
-        table = pa.concat_tables(tables)
+        table = _concat_tables(tables, promote_null)
 
         prof.write("result", table.num_rows, table.nbytes)
 
@@ -194,6 +223,7 @@ def concat_tables_udf(
     tables: List[pa.Table],
     *,
     config: Optional[Mapping[str, Any]] = None,
+    promote_null: bool = False,
     log_uri: Optional[str] = None,
     verbose: bool = False,
 ) -> pa.table:
@@ -202,6 +232,8 @@ def concat_tables_udf(
 
     :param tables: Arrow tables
     :param config: config dictionary, defaults to None
+    :param promote_null: For all cols with null dtype, cast each as dtype of joining col
+        when dtypes are different
     :param log_uri: log URI for profiling, defaults to None
     :param verbose: verbose logging, defaults to False
     :return: concatenated Arrow table
@@ -215,7 +247,7 @@ def concat_tables_udf(
         if len(tables) == 0:
             return pa.Table.from_arrays([], [])
 
-        table = pa.concat_tables(tables)
+        table = _concat_tables(tables, promote_null)
         prof.write("result", table.num_rows, table.nbytes)
 
     memory_usage_gb = max_memory_usage() / (1 << 30)
@@ -262,6 +294,7 @@ def build_read_dag(
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
+    promote_null: bool = False,
     max_sample_batch_size: int = MAX_SAMPLE_BATCH_SIZE,
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
@@ -279,11 +312,14 @@ def build_read_dag(
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
+    :param max_workers: maximum number of workers, defaults to 40
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
     :param transform_result: function to apply to each partition;
         by default, does not transform the result
+    :param promote_null: For all cols with null dtype, cast each as dtype of joining col
+        when dtypes are different
     :param max_sample_batch_size: maximum number of samples to read in a single node,
         defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
@@ -378,6 +414,7 @@ def build_read_dag(
                     memory_budget_mb=memory_budget_mb,
                     af_filter=af_filter,
                     transform_result=transform_result,
+                    promote_null=promote_null,
                     verbose=verbose,
                     log_uri=log_uri,
                     log_id=f"query-reg{region}-sam{sample}",
@@ -396,6 +433,8 @@ def build_read_dag(
             tables,
             config=config,
             log_uri=log_uri,
+            promote_null=promote_null,
+            verbose=verbose,
             name="Combine Results",
         )
     else:
@@ -437,6 +476,7 @@ def read(
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
+    promote_null: bool = False,
     max_sample_batch_size: int = MAX_SAMPLE_BATCH_SIZE,
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
@@ -454,11 +494,14 @@ def read(
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
+    :param max_workers: maximum number of workers, defaults to 40
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
     :param transform_result: function to apply to each partition;
         by default, does not transform the result
+    :param promote_null: For all cols with null dtype, cast each as dtype of joining col
+        when dtypes are different
     :param max_sample_batch_size: maximum number of samples to read in a single node,
         defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
@@ -481,6 +524,7 @@ def read(
         memory_budget_mb=memory_budget_mb,
         af_filter=af_filter,
         transform_result=transform_result,
+        promote_null=promote_null,
         max_sample_batch_size=max_sample_batch_size,
         log_uri=log_uri,
         namespace=namespace,
