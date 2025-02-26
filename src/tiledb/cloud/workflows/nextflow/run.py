@@ -17,6 +17,7 @@ from ..common import download_group_files
 from ..common import get_history_uri
 from ..common import get_workflows_uri
 from .history import update_history
+from .manifest import save_manifest
 
 
 def extract_tar_bytes(tar_bytes: bytes, path: str = ".") -> None:
@@ -225,6 +226,9 @@ def run(
     workflow_uri = manifest["workflow"]["uri"]
     if tiledb.object_type(workflow_uri) != "group":
         raise FileNotFoundError(f"'{workflow_uri}' not found.")
+
+    # Save the manifest to the manifest array.
+    save_manifest(manifest, teamspace=teamspace)
 
     # Run the workflow in a temporary directory.
     with cd_tmpdir(keep=keep, tmpdir=tmpdir):

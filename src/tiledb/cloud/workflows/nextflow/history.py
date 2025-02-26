@@ -66,6 +66,9 @@ def create_history(history_uri: str) -> None:
 
     tiledb.Array.create(history_uri, schema)
 
+    # Update the asset name.
+    tiledb.cloud.asset.update_info(history_uri, name="nextflow/history")
+
 
 def update_history(
     workflow_uri: str,

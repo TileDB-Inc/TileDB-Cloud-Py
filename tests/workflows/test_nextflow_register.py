@@ -8,6 +8,7 @@ from tiledb.cloud.workflows.nextflow import register
 from tiledb.cloud.workflows.nextflow.register import clone_workflow
 
 from .common import delete_workgroup_asset
+from .common import test_fixture  # noqa: F401
 from .common import workflow_uri
 
 # Run tests with:
@@ -47,7 +48,8 @@ def check_workflow(
         ("https://github.com/TileDB-Inc/sarek", "tiledb"),
     ],
 )
-def test_register_workflow(test_fixture, workflow, version):
+@pytest.mark.usefixtures("test_fixture")
+def test_register_workflow(workflow, version):
     # Register the workflow.
     uri = register(workflow=workflow, version=version)
 

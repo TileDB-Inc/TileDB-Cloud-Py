@@ -6,6 +6,8 @@ from tiledb.cloud.workflows.nextflow import register
 from tiledb.cloud.workflows.nextflow import save_manifest
 from tiledb.cloud.workflows.nextflow import validate_manifest
 
+from .common import test_fixture  # noqa: F401
+
 # Run tests with:
 #   pytest -m workflows --run-workflows -svvv
 
@@ -40,7 +42,8 @@ def test_validate_manifest():
     "workflow,version",
     [("https://github.com/TileDB-Inc/sarek", "tiledb")],
 )
-def test_save_manifest(test_fixture, workflow, version):
+@pytest.mark.usefixtures("test_fixture")
+def test_save_manifest(workflow, version):
     # Register the workflow.
     uri = register(workflow=workflow, version=version)
 

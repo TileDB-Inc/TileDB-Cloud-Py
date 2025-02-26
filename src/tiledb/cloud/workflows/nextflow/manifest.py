@@ -1,8 +1,11 @@
 import json
 import uuid
+from datetime import datetime
+from datetime import timezone
 from typing import Optional
 
 import jsonschema
+import pandas as pd
 
 import tiledb
 
@@ -161,25 +164,23 @@ def create_manifest_array(uri: str) -> None:
 
     tiledb.Array.create(uri, schema)
 
+    # Update the asset name.
+    tiledb.cloud.asset.update_info(uri, name="nextflow/manifest")
+
 
 def save_manifest(
     manifest: dict,
     *,
-    manifest_array_uri: Optional[str] = None,
     teamspace: Optional[str] = None,
 ) -> None:
     """
     Save a run manifest to a manifest array. The manifest name must be unique.
 
     :param manifest: run manifest
-    :param manifest_array_uri: URI of the manifest array, defaults to None
-        which uses the default manifest array URI
     :param teamspace: TileDB teamspace, defaults to None
     """
 
-    # Get the default manifest array URI if not provided.
-    if manifest_array_uri is None:
-        manifest_array_uri = get_manifest_uri(teamspace)
+    manifest_array_uri = get_manifest_uri(teamspace)
 
     # Create the manifest array if it does not exist.
     if tiledb.object_type(manifest_array_uri) is None:
@@ -195,6 +196,28 @@ def save_manifest(
     # Write the manifest to the manifest array.
     with tiledb.open(manifest_array_uri, mode="w") as A:
         A[manifest_name] = {
-            "timestamp": "TODO",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "manifest": json.dumps(manifest),
         }
+
+
+def get_manifests(teamspace: Optional[str] = None) -> Optional[pd.DataFrame]:
+    try:
+        with tiledb.open(get_manifest_uri(teamspace)) as A:
+            df = A.df[:]
+
+        df.sort_values(by="timestamp", ascending=False, inplace=True)
+
+        def get_workflow_name(x):
+            manifest = json.loads(x)
+            return f"{manifest['workflow']['name']}:{manifest['workflow']['version']}"
+
+        # Append the name column
+        df["workflow"] = df["manifest"].apply(get_workflow_name)
+
+        df = df[["timestamp", "workflow", "name"]]
+
+    except Exception:
+        return None
+
+    return df

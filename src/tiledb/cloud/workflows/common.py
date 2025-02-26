@@ -115,7 +115,7 @@ def get_history_uri(
     :return: TileDB URI for the workflow history
     """
 
-    uri = get_workflows_uri(teamspace) + "/history"
+    uri = get_workflows_uri(teamspace) + "/nextflow/history"
 
     if check and not tiledb.object_type(uri):
         raise FileNotFoundError(f"Workflow history not found at '{uri}'.")
@@ -137,7 +137,7 @@ def get_manifest_uri(
     :return: TileDB URI for the workflow manifests
     """
 
-    uri = get_workflows_uri(teamspace) + "/manifests"
+    uri = get_workflows_uri(teamspace) + "/nextflow/manifests"
 
     if check and not tiledb.object_type(uri):
         raise FileNotFoundError(f"Manifest array not found at '{uri}'.")
