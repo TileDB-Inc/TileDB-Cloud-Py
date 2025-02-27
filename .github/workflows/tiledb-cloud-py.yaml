@@ -168,7 +168,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -sv \
+          { pytest -sv \
             --tb short \
             --color yes \
             --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
@@ -183,50 +183,45 @@ jobs:
             --last-failed \
             --tb short \
             --color yes \
-            -r fExX
+            -r fExX } \
+          | tee test.log
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
+
+      - name: "Upload partial test output"
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: partial-test-output-${{ matrix.pytest-split-group }}
+          path: test.log
+          retention-days: 1
+          overwrite: true
 
       # Uploads the partial durations from one of the run (specifically from the ubuntu run but it would be the same with macos).
       # These partial duration files will be combined into a single .test_durations file and used to update the test cache for the next runs
       - name: "Upload partial durations"
         uses: actions/upload-artifact@v4
         continue-on-error: true
-        # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
-        if: matrix.os == 'ubuntu-24.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
           path: .test_durations
           retention-days: 1
           overwrite: true
 
-  # Download and combine the partial test durations uploaded by the run-tests job,
-  # into a single file and save it to cache for future use.
-  save-test-durations-to-cache:
-    name: Download, combine and save test_durations to the actions cache
+  summarize-test-output:
+    name: Summarize test output
     runs-on: ubuntu-24.04
     needs: run-tests
     continue-on-error: true
-    env:
-      FolderPrefix: partial-test-durations
     steps:
-      - name: Download partial durations
+      - name: Download partial test outputs
         uses: actions/download-artifact@v4
         with:
-          # Download partial test duration artifacts in the same folder
-          path: partial-test-durations
-          pattern: partial-test-durations-*
-
-      - name: "Combine test duration cache files in .test_durations"
+          path: partial-test-outputs
+          pattern: partial-test-output-*
+      - name: "Concatenate partial test outputs"
         run: |
-          jq -s add $(find partial-test-durations -type f -name .test_durations) > .test_durations
-          cat .test_durations
-
-      - name: "Save combined test durations to cache"
-        uses: actions/cache/save@v4
-        with:
-          path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
+          cat partial-test-outputs/*
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
