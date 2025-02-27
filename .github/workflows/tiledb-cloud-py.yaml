@@ -222,7 +222,7 @@ jobs:
           pattern: partial-test-output-*
       - name: "Concatenate partial test outputs"
         run: |
-          cd partial-test-output
+          cd partial-test-outputs
           grep -H "XPASS " *.log
 
   upload-to-pypi:
