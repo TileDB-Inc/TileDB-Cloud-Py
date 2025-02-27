@@ -193,7 +193,7 @@ jobs:
         uses: actions/upload-artifact@v4
         continue-on-error: true
         with:
-          name: partial-test-output-${{ matrix.tiledb-version-spec }}-${{ matrix.python-version }}-${{ matrix.dependencies }}-${{ matrix.os }}-${{ matrix.pytest-split-group }}.log
+          name: partial-test-output-${{ matrix.tiledb-version-spec }}-${{ matrix.python-version }}-${{ matrix.dependencies }}-${{ matrix.os }}-${{ matrix.pytest-split-group }}
           path: test.log
           retention-days: 1
           overwrite: true
@@ -223,7 +223,7 @@ jobs:
       - name: "Concatenate partial test outputs"
         run: |
           cd partial-test-outputs
-          grep -H "XPASS " *.log
+          grep -R -H "XPASS " .
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
