@@ -1,7 +1,7 @@
 import logging
 import warnings
 from enum import Enum
-from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Callable, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud import dag
@@ -41,7 +41,7 @@ def ingest(
     mode: Optional[Mode] = Mode.BATCH,
     namespace: Optional[str],
     verbose: bool = False,
-    exclude_metadata: bool = False,
+    exclude_metadata: Optional[Union[bool, Callable[[str], str]]] = None,
     converter: Optional[str] = None,
     output_ext: str = "",
     tile_scale: int = 128,
@@ -74,8 +74,15 @@ def ingest(
     :param mode: By default runs Mode.Batch
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
-    :param exclude_metadata: a boolean for excluding all the metadata from the
-        ingested image
+    :param exclude_metadata: An optional argument that specifies how to transform
+        the original metadata. It can be one of the following:
+        *   A callable (function, method, etc.) that takes an OME-XML string and returns
+            it as a string, while removing some of the original metadata and excluding
+            them from being ingested.
+        *   A boolean value:
+            *   ``True``: Indicates a specific built-in transformation should be applied
+            *   ``False``: Indicates no transformation should be applied
+        *   ``None``: Indicates no transformation should be applied (same as ``False``).
     :param converter: The converter to be used for the image ingestion,
         when None the default TIFF converter is used. Available converters
         are one of the ("tiff", "zarr", "osd").
