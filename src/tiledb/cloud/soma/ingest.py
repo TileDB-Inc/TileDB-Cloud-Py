@@ -159,6 +159,7 @@ def run_ingest_workflow_udf(
             resources=ingest_resources,  # Apply propagated resources here.
             access_credentials_name=carry_along.get("access_credentials_name", acn),
             logging_level=logging_level,
+            name=f"H5ad ingestion: {stem}",
             dry_run=dry_run,
         )
         collector.depends_on(node)
@@ -168,12 +169,15 @@ def run_ingest_workflow_udf(
                 register_dataset_udf,
                 output_group_uri,
                 namespace=namespace,
-                register_name=register_name,
+                register_name=register_name
+                if len(input_files) == 1
+                else f"{register_name} - {stem}",
                 config=extra_tiledb_config,
                 verbose=logging_level == logging.DEBUG,
                 access_credentials_name=carry_along.get("access_credentials_name", acn),
                 acn=carry_along.get("access_credentials_name", acn),
                 logging_level=logging_level,
+                name=f"H5ad registration: {stem}",
             )
             register_soma.depends_on(collector)
 
