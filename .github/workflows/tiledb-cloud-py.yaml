@@ -223,6 +223,9 @@ jobs:
       - name: "Concatenate partial test outputs"
         run: |
           cd partial-test-outputs
+          ls
+          cat */*.log
+          grep --recursive --with-filename xpass .
           grep --recursive --with-filename 'XPASS ' .
 
   upload-to-pypi:
