@@ -223,8 +223,7 @@ jobs:
       - name: "Concatenate partial test outputs"
         run: |
           cd partial-test-outputs
-          ls -lR
-          grep -R -H "XPASS " .
+          grep --recursive --with-filename 'XPASS ' .
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
