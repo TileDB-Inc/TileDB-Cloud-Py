@@ -218,11 +218,13 @@ jobs:
       - name: Download partial test outputs
         uses: actions/download-artifact@v4
         with:
-          path: partial-test-outputs
+          path: test-outputs
           pattern: partial-test-output-*
       - name: "Concatenate partial test outputs"
         run: |
-          grep --recursive --with-filename --extended-regexp '^XPASS' partial-test-outputs || echo "No tests XPASSed."
+          ls -lR test-outputs
+          cat test-outputs/*/test.log
+          grep --recursive --with-filename --extended-regexp '^XPASS' test-outputs || echo "No tests XPASSed."
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
