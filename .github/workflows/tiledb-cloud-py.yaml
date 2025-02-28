@@ -169,7 +169,7 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          ( pytest -sv \
+          pytest -sv \
             --tb short \
             --color yes \
             --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
@@ -179,13 +179,14 @@ jobs:
             --clean-durations \
             -r fExX \
             ${{ matrix.python-version == '3.12' && '-m "not udf"' || '' }} \
+            | tee -a test.log \
           || .github/scripts/retry 2 \
             pytest -sv \
             --last-failed \
             --tb short \
             --color yes \
-            -r fExX ) \
-          | tee test.log
+            -r fExX \
+            | tee -a test.log
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
@@ -222,9 +223,7 @@ jobs:
           pattern: partial-test-output-*
       - name: "Concatenate partial test outputs"
         run: |
-          cd partial-test-outputs
-          grep --recursive --with-filename --extended-regexp '^XPASS' partial*
-          echo "Done"
+          grep --recursive --with-filename --extended-regexp '^XPASS' partial-test-outputs || echo "No tests XPASSed."
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
