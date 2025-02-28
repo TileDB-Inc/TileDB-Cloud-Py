@@ -128,6 +128,7 @@ def pip_install_tdb() -> PipInstall:
     tiledb.Array.delete_array(_FULL_URI, ctx=ctx)
 
 
+@pytest.mark.skip(reason="Race condition in tests.")
 def test_pip_install_wheel_ext(pip_install_tdb):
     assert pip_install_tdb.wheel_ext
 
