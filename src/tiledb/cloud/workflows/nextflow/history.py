@@ -174,14 +174,3 @@ def consolidate_history(teamspace: Optional[str] = None) -> None:
 
     history_uri = get_history_uri(teamspace)
     consolidate_and_vacuum(history_uri)
-
-
-def delete_history(teamspace: Optional[str] = None) -> None:
-    """
-    Delete the history array.
-
-    :param teamspace: TileDB teamspace containing the history array, defaults to None
-    """
-
-    history_uri = get_history_uri(teamspace)
-    tiledb.cloud.asset.delete(history_uri)

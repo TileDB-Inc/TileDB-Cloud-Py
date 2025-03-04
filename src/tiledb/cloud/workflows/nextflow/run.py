@@ -247,6 +247,8 @@ def run(
 
         # Run the workflow.
         if run_wrapper:
+            # A run_wrapper is used by the Workflow dashboard to capture and display
+            # the output of the Nextflow command.
             run_wrapper(cmd)
         else:
             subprocess.run(cmd)

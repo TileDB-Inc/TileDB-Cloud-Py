@@ -8,8 +8,9 @@ import jsonschema
 import pandas as pd
 
 import tiledb
+from tiledb.cloud.utilities import consolidate_and_vacuum
 
-from ..common import get_manifest_uri
+from ..common import get_manifests_uri
 
 MANIFEST_SCHEMA = {
     "type": "object",
@@ -180,21 +181,21 @@ def save_manifest(
     :param teamspace: TileDB teamspace, defaults to None
     """
 
-    manifest_array_uri = get_manifest_uri(teamspace)
+    manifests_uri = get_manifests_uri(teamspace)
 
     # Create the manifest array if it does not exist.
-    if tiledb.object_type(manifest_array_uri) is None:
-        create_manifest_array(manifest_array_uri)
+    if tiledb.object_type(manifests_uri) is None:
+        create_manifest_array(manifests_uri)
 
     # Verify the manifest name is unique.
     manifest_name = manifest["metadata"]["name"]
-    with tiledb.open(manifest_array_uri) as A:
+    with tiledb.open(manifests_uri) as A:
         df = A.df[manifest_name]
         if len(df):
             raise ValueError(f"Manifest name '{manifest_name}' already exists.")
 
     # Write the manifest to the manifest array.
-    with tiledb.open(manifest_array_uri, mode="w") as A:
+    with tiledb.open(manifests_uri, mode="w") as A:
         A[manifest_name] = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "manifest": json.dumps(manifest),
@@ -202,8 +203,15 @@ def save_manifest(
 
 
 def get_manifests(teamspace: Optional[str] = None) -> Optional[pd.DataFrame]:
+    """
+    Return the manifests array as a dataframe.
+
+    :param teamspace: TileDB teamspace containing the manifests array, defaults to None
+    :return: manifests array as a dataframe, or None if the array does not exist
+    """
+
     try:
-        with tiledb.open(get_manifest_uri(teamspace)) as A:
+        with tiledb.open(get_manifests_uri(teamspace)) as A:
             df = A.df[:]
 
         df.sort_values(by="timestamp", ascending=False, inplace=True)
@@ -221,3 +229,14 @@ def get_manifests(teamspace: Optional[str] = None) -> Optional[pd.DataFrame]:
         return None
 
     return df
+
+
+def consolidate_manifests(teamspace: Optional[str] = None) -> None:
+    """
+    Consolidate the manifests array.
+
+    :param teamspace: TileDB teamspace containing the manifest array, defaults to None
+    """
+
+    manifests_uri = get_manifests_uri(teamspace)
+    consolidate_and_vacuum(manifests_uri)

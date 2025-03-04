@@ -123,7 +123,7 @@ def get_history_uri(
     return uri
 
 
-def get_manifest_uri(
+def get_manifests_uri(
     teamspace: Optional[str] = None,
     *,
     check: bool = False,
