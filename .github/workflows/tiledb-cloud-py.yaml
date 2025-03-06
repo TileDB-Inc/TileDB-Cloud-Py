@@ -222,7 +222,7 @@ jobs:
           pattern: partial-test-output-*
       - name: "Concatenate partial test outputs"
         run: |
-          grep --recursive --with-filename "XPASS|XFAIL" test-outputs || echo "No tests XPASSed or XFAILed." >> $GITHUB_STEP_SUMMARY
+          (grep --recursive --with-filename "XPASS|XFAIL" test-outputs || echo "No tests XPASSed or XFAILed.") >> $GITHUB_STEP_SUMMARY
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
