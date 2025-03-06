@@ -224,8 +224,8 @@ jobs:
         run: |
           ls -lR test-outputs
           cat test-outputs/*/test.log
-          grep --recursive --with-filename --extended-regexp 'test session starts' test-outputs || echo "No tests started."
-          grep --recursive --with-filename --extended-regexp '^XPASS' test-outputs || echo "No tests XPASSed."
+          grep --recursive --with-filename --extended-regexp "test session starts" test-outputs || echo "No tests started."
+          grep --recursive --with-filename --extended-regexp "XPASS|XFAIL" test-outputs || echo "No tests XPASSed."
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
