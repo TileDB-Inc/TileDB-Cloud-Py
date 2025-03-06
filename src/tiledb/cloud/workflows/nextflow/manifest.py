@@ -173,12 +173,14 @@ def save_manifest(
     manifest: dict,
     *,
     teamspace: Optional[str] = None,
+    consolidate: bool = True,
 ) -> None:
     """
     Save a run manifest to a manifest array. The manifest name must be unique.
 
     :param manifest: run manifest
     :param teamspace: TileDB teamspace, defaults to None
+    :param consolidate: consolidate the manifest array, defaults to True
     """
 
     manifests_uri = get_manifests_uri(teamspace)
@@ -201,6 +203,10 @@ def save_manifest(
             "manifest": json.dumps(manifest),
         }
 
+    # Consolidate the manifest array.
+    if consolidate:
+        consolidate_and_vacuum(manifests_uri)
+
 
 def get_manifests(teamspace: Optional[str] = None) -> Optional[pd.DataFrame]:
     """
@@ -222,8 +228,6 @@ def get_manifests(teamspace: Optional[str] = None) -> Optional[pd.DataFrame]:
 
         # Append the name column
         df["workflow"] = df["manifest"].apply(get_workflow_name)
-
-        df = df[["timestamp", "workflow", "name"]]
 
     except Exception:
         return None

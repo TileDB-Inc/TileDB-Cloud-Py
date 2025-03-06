@@ -2,6 +2,7 @@ from .history import consolidate_history
 from .history import get_history
 from .history import get_log
 from .history import update_history
+from .manifest import consolidate_manifests
 from .manifest import create_manifest
 from .manifest import get_manifests
 from .manifest import save_manifest
@@ -15,6 +16,7 @@ __all__ = [
     "get_history",
     "get_log",
     "update_history",
+    "consolidate_manifests",
     "create_manifest",
     "get_manifests",
     "save_manifest",

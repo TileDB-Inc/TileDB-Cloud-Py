@@ -72,13 +72,16 @@ def create_history(history_uri: str) -> None:
 
 def update_history(
     workflow_uri: str,
+    *,
     teamspace: Optional[str] = None,
+    consolidate: bool = True,
 ) -> tuple[str, str]:
     """
     Update the history array with the latest workflow run information.
 
     :param workflow_uri: URI of the workflow asset
     :param teamspace: TileDB teamspace containing the history array, defaults to None
+    :param consolidate: consolidate the history array, defaults to True
     :return: status, session ID
     """
 
@@ -117,6 +120,10 @@ def update_history(
     with tiledb.open(history_uri, "w") as A:
         session_id = data.pop("session_id")
         A[session_id] = data
+
+    # Consolidate the history array.
+    if consolidate:
+        consolidate_and_vacuum(history_uri)
 
     return data["status"], session_id
 
