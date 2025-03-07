@@ -37,7 +37,7 @@ jobs:
         run: pre-commit run -a -v
 
   run-tests:
-    name: "${{ matrix.tiledb-version-spec }}:${{ matrix.python-version }}:${{ matrix.dependencies }}:${{ matrix.os }}"
+    name: "${{ matrix.tiledb-version-spec }}:${{ matrix.python-version }}:${{ matrix.dependencies }}:${{ matrix.pytest-split-group }}"
     runs-on: ${{ matrix.os }}
     if: ${{ github.event_name != 'release' }}
     strategy:
@@ -167,8 +167,9 @@ jobs:
           pytest -sv src/tiledb/cloud/_vendor/cloudpickle
 
       - name: Run tests
+        shell: bash
         run: |
-          pytest -sv \
+          ( pytest -sv \
             --tb short \
             --color yes \
             --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
@@ -178,6 +179,7 @@ jobs:
             --clean-durations \
             -r fExX \
             ${{ matrix.python-version == '3.12' && '-m "not udf"' || '' }} \
+            | tee test.log ) \
           || .github/scripts/retry 2 \
             pytest -sv \
             --last-failed \
@@ -186,6 +188,15 @@ jobs:
             -r fExX
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
+
+      - name: "Upload partial test output"
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: partial-test-output-${{ matrix.tiledb-version-spec }}-${{ matrix.python-version }}-${{ matrix.dependencies }}-${{ matrix.pytest-split-group }}
+          path: test.log
+          retention-days: 1
+          overwrite: true
 
       # Uploads the partial durations from one of the run (specifically from the ubuntu run but it would be the same with macos).
       # These partial duration files will be combined into a single .test_durations file and used to update the test cache for the next runs
@@ -201,33 +212,21 @@ jobs:
           retention-days: 1
           overwrite: true
 
-  # Download and combine the partial test durations uploaded by the run-tests job,
-  # into a single file and save it to cache for future use.
-  save-test-durations-to-cache:
-    name: Download, combine and save test_durations to the actions cache
+  summarize-test-output:
+    name: Summarize test output
     runs-on: ubuntu-24.04
     needs: run-tests
     continue-on-error: true
-    env:
-      FolderPrefix: partial-test-durations
     steps:
-      - name: Download partial durations
+      - name: Download partial test outputs
         uses: actions/download-artifact@v4
         with:
-          # Download partial test duration artifacts in the same folder
-          path: partial-test-durations
-          pattern: partial-test-durations-*
-
-      - name: "Combine test duration cache files in .test_durations"
+          path: test-outputs
+          pattern: partial-test-output-*
+      - name: "Concatenate partial test outputs"
         run: |
-          jq -s add $(find partial-test-durations -type f -name .test_durations) > .test_durations
-          cat .test_durations
-
-      - name: "Save combined test durations to cache"
-        uses: actions/cache/save@v4
-        with:
-          path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
+          echo "XPASSes:" >> $GITHUB_STEP_SUMMARY
+          grep --recursive --with-filename "XPASS" test-outputs >> $GITHUB_STEP_SUMMARY
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
