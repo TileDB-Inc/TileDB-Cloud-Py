@@ -193,7 +193,7 @@ jobs:
         uses: actions/upload-artifact@v4
         continue-on-error: true
         # We save only Python 3.9 durations because 3.12 tests are limited.
-        if: ${{ matrix.python-version }} == "3.9" }}
+        if: ${{ matrix.python-version }} == "3.9" }} && ${{ matrix.is-pr == false }}
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
           include-hidden-files: true
