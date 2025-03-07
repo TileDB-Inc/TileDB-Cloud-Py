@@ -142,7 +142,9 @@ jobs:
         continue-on-error: true
         with:
           path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
+          restore-keys: |
+            ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-
 
       - name: "Check .test_durations file"
         run: |
@@ -225,7 +227,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
