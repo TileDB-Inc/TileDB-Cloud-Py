@@ -193,7 +193,7 @@ jobs:
         uses: actions/upload-artifact@v4
         continue-on-error: true
         # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
-        if: matrix.os == 'ubuntu-24.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        # if: ${{ matrix.is-pr == false }}
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
           path: .test_durations
