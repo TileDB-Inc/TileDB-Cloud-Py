@@ -203,8 +203,11 @@ jobs:
       - name: "Upload partial durations"
         uses: actions/upload-artifact@v4
         continue-on-error: true
+        # We save only Python 3.9 durations because 3.12 tests are limited.
+        if: ${{ matrix.python-version }} == "3.9" }} && ${{ matrix.is-pr == false }}
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
+          include-hidden-files: true
           path: .test_durations
           retention-days: 1
           overwrite: true
@@ -269,6 +272,7 @@ jobs:
       - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          attestations: false
           repository-url: https://test.pypi.org/legacy/
           user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
