@@ -182,8 +182,6 @@ jobs:
             --tb short \
             --color yes \
             -r fExX
-          ls -l .test_durations
-          cat .test_durations
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
@@ -273,6 +271,7 @@ jobs:
       - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          attestations: false
           repository-url: https://test.pypi.org/legacy/
           user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
