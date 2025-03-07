@@ -142,9 +142,7 @@ jobs:
         continue-on-error: true
         with:
           path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
-          restore-keys: |
-            ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
 
       - name: "Check .test_durations file"
         run: |
@@ -194,8 +192,8 @@ jobs:
       - name: "Upload partial durations"
         uses: actions/upload-artifact@v4
         continue-on-error: true
-        # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
-        # if: ${{ matrix.is-pr == false }}
+        # We save only Python 3.9 durations because 3.12 tests are limited.
+        if: ${{ matrix.python-version }} == "3.9" }}
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
           include-hidden-files: true
@@ -229,7 +227,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
