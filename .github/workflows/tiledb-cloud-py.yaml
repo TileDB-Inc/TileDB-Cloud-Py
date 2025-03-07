@@ -198,6 +198,7 @@ jobs:
         # if: ${{ matrix.is-pr == false }}
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
+          include-hidden-files: true
           path: .test_durations
           retention-days: 1
           overwrite: true
