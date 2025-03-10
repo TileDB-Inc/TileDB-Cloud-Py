@@ -47,12 +47,13 @@ repository = "https://github.com/TileDB-Inc/TileDB-Cloud-Py"
 requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 
 [tool.pytest.ini_options]
-explicit-only = ["bigfiles", "geospatial", "vcf"]
+explicit-only = ["bigfiles", "server", "geospatial", "vcf"]
 markers = [
     "bigfiles: tests that create and upload really big files",
     "geospatial: tests that require the geospatial libraries",
     "udf: tests that require a server UDF container",
     "vcf: VCF tests that run on TileDB Cloud",
+    "server: tests that require Carrara server",
 ]
 norecursedirs = ["tiledb/cloud"]
 
@@ -77,9 +78,11 @@ single-line-exclusions = ["typing", "typing_extensions"]
 [tool.ruff.per-file-ignores]
 # Generated files have long line lengths.
 "src/tiledb/cloud/_common/api_v2/*" = ["E501"]
+"src/tiledb/cloud/_common/api_v4/*" = ["E501"]
 "src/tiledb/cloud/rest_api/*" = ["E501"]
-# This file includes generated Python 2 code with `long`.
+# These files includes generated Python 2 code with `long`.
 "src/tiledb/cloud/rest_api/rest.py" = ["F821"]
+"src/tiledb/cloud/_common/api_v4/rest.py" = ["F821"]
 
 # Certain tests have long JSON strings and deep structures.
 "tests/taskgraphs/test_builder.py" = ["E501"]
