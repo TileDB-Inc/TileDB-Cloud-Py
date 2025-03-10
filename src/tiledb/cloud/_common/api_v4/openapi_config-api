@@ -1,0 +1,7 @@
+
+{
+  "projectName": "tiledb-cloud",
+  "packageName": "_common.api_v4",
+  "documentationPage": false,
+  "generateSourceCodeOnly": true
+}
