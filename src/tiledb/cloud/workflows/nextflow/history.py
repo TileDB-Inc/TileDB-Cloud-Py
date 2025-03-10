@@ -52,6 +52,7 @@ def create_history(history_uri: str) -> None:
         tiledb.Attr(name="revision_id", dtype="ascii"),
         tiledb.Attr(name="command", dtype="ascii"),
         tiledb.Attr(name="workflow_uri", dtype="ascii"),
+        tiledb.Attr(name="workflow_name", dtype="ascii"),
         tiledb.Attr(name="nextflow_log", dtype=np.dtype("U")),
         tiledb.Attr(name="nextflow_tgz", dtype="blob"),
     ]
@@ -87,8 +88,14 @@ def update_history(
 
     history_uri = get_history_uri(teamspace, check=False)
 
+    try:
+        object_type = tiledb.object_type(history_uri)
+    except Exception:
+        # Handle tiledb:// URIs that do not exist.
+        object_type = None
+
     # Create the history array if it does not exist.
-    if tiledb.object_type(history_uri) is None:
+    if object_type is None:
         create_history(history_uri)
 
     # Read the history with `nextflow log`
@@ -109,6 +116,11 @@ def update_history(
 
     # Add the workflow URI to the data.
     data["workflow_uri"] = workflow_uri
+
+    # Add the workflow name to the data.
+    with tiledb.Group(workflow_uri) as g:
+        workflow_name = g.meta["name"] + ":" + g.meta["version"]
+    data["workflow_name"] = workflow_name
 
     # Read the nextflow log file.
     data["nextflow_log"] = read_file(".nextflow.log")
@@ -139,14 +151,18 @@ def get_history(teamspace: Optional[str] = None) -> Optional[pd.DataFrame]:
     try:
         with tiledb.open(get_history_uri(teamspace)) as A:
             df = A.query(
-                attrs=["timestamp", "duration", "run_name", "status", "command"]
+                attrs=[
+                    "timestamp",
+                    "duration",
+                    "run_name",
+                    "status",
+                    "command",
+                    "workflow_name",
+                ]
             ).df[:]
 
         df.sort_values(by="timestamp", ascending=False, inplace=True)
 
-        df = df[
-            ["timestamp", "duration", "run_name", "status", "session_id", "command"]
-        ]
     except Exception:
         return None
 

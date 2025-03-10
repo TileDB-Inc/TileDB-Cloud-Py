@@ -185,8 +185,14 @@ def save_manifest(
 
     manifests_uri = get_manifests_uri(teamspace)
 
+    try:
+        object_type = tiledb.object_type(manifests_uri)
+    except Exception:
+        # Handle tiledb:// URIs that do not exist.
+        object_type = None
+
     # Create the manifest array if it does not exist.
-    if tiledb.object_type(manifests_uri) is None:
+    if object_type is None:
         create_manifest_array(manifests_uri)
 
     # Verify the manifest name is unique.
