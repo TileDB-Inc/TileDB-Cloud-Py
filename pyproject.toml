@@ -47,12 +47,13 @@ repository = "https://github.com/TileDB-Inc/TileDB-Cloud-Py"
 requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 
 [tool.pytest.ini_options]
-explicit-only = ["bigfiles", "geospatial", "vcf"]
+explicit-only = ["bigfiles", "server", "geospatial", "vcf"]
 markers = [
     "bigfiles: tests that create and upload really big files",
     "geospatial: tests that require the geospatial libraries",
     "udf: tests that require a server UDF container",
     "vcf: VCF tests that run on TileDB Cloud",
+    "server: tests that require Carrara server",
 ]
 norecursedirs = ["tiledb/cloud"]
 
