@@ -43,12 +43,8 @@ MANIFEST_SCHEMA = {
                     "description": "Unique name for the run manifest.",
                     "type": "string",
                 },
-                "outdir": {
-                    "description": "Path to the workflow output directory.",
-                    "type": "string",
-                },
-                "workdir": {
-                    "description": "Path to the workflow working work directory.",
+                "description": {
+                    "description": "Description of the run manifest.",
                     "type": "string",
                 },
             },
@@ -90,16 +86,17 @@ MANIFEST_SCHEMA = {
 def create_manifest(
     workflow_uri: str,
     *,
-    name: Optional[str] = None,
+    description: str = "Workflow provenance",
     options: Optional[dict] = None,
     params: Optional[dict] = None,
 ) -> dict:
     """
-    Create a manifest for a workflow run.
+    Create a manifest for a workflow run. If a description is not provided, a provenance
+    manifest is created.
 
     :param workflow_uri: URI of the workflow template on TileDB
-    :param name: unique name for the manifest, defaults to None which
-        creates a name based on the workflow name and version.
+    :param description: description of the manifest,
+        defaults to "Workflow provenance"
     :param options: run options, defaults to None
     :param params: run parameters, defaults to None
     :return: the manifest
@@ -112,16 +109,13 @@ def create_manifest(
         workflow_name = group.meta.get("name")
         workflow_version = group.meta.get("version")
 
-    if name is None:
-        name = f"{workflow_name}:{workflow_version}_{uuid.uuid4().hex[:8]}"
-
     manifest = {
         "workflow": {
             "uri": workflow_uri,
             "name": workflow_name,
             "version": workflow_version,
         },
-        "metadata": {"name": name},
+        "metadata": {"description": description},
         "options": options.copy() if options is not None else {},
         "params": params.copy() if params is not None else {},
     }
@@ -151,6 +145,7 @@ def create_manifest_array(uri: str) -> None:
     domain = tiledb.Domain(d0)
 
     attrs = [
+        tiledb.Attr(name="description", dtype="ascii"),
         tiledb.Attr(name="timestamp", dtype="ascii"),
         tiledb.Attr(name="manifest", dtype="ascii"),
     ]
@@ -195,16 +190,16 @@ def save_manifest(
     if object_type is None:
         create_manifest_array(manifests_uri)
 
-    # Verify the manifest name is unique.
-    manifest_name = manifest["metadata"]["name"]
-    with tiledb.open(manifests_uri) as A:
-        df = A.df[manifest_name]
-        if len(df):
-            raise ValueError(f"Manifest name '{manifest_name}' already exists.")
+    # Create a unique name for the manifest.
+    manifest_name = manifest["workflow"]["name"] + ":"
+    manifest_name += manifest["workflow"]["version"] + "-"
+    manifest_name += uuid.uuid4().hex[:8]
+    manifest["metadata"]["name"] = manifest_name
 
     # Write the manifest to the manifest array.
     with tiledb.open(manifests_uri, mode="w") as A:
         A[manifest_name] = {
+            "description": manifest["metadata"]["description"],
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "manifest": json.dumps(manifest),
         }
