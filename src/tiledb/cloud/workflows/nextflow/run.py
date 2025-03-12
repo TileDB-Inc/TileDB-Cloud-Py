@@ -132,6 +132,7 @@ def setup_nextflow(
     *,
     plugin_id: str = "nf-tiledb@0.1.0",
     config_file: str = "tiledb.config",
+    config_str: Optional[str] = None,
 ) -> None:
     """
     Setup the Nextflow environment to run a workflow on TileDB.
@@ -144,6 +145,8 @@ def setup_nextflow(
     :param acn: TileDB access credentials name
     :param plugin_id: TileDB plugin ID, defaults to "nf-tiledb@0.1.0"
     :param config_file: name of the config file, defaults to "tiledb.config"
+    :param config_str: Nextflow config string appended to the Nextflow config file,
+        defaults to None
     """
 
     # Validate user input.
@@ -188,6 +191,9 @@ tiledb {{
 }}
 """
 
+    if config_str:
+        tiledb_config_str += config_str
+
     with open(config_file, "w") as fp:
         fp.write(tiledb_config_str)
 
@@ -207,6 +213,7 @@ def run(
     tmpdir: Optional[str] = None,
     run_wrapper: Optional[callable] = None,
     keep: bool = False,
+    config_str: Optional[str] = None,
 ) -> tuple[str, str]:
     """
     Run a workflow asset on TileDB.
@@ -220,6 +227,8 @@ def run(
     :param tmpdir: temporary run directory, defaults to None
     :param run_wrapper: function to run the command, defaults to None
     :param keep: keep the temporary run directory, defaults to False
+    :param config_str: Nextflow config string appended to the Nextflow config file,
+        defaults to None
     :return: status, session ID
     """
 
@@ -236,7 +245,7 @@ def run(
             print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
-        setup_nextflow(teamspace, acn)
+        setup_nextflow(teamspace, acn, config_str=config_str)
 
         # Setup the command to run the workflow.
         cmd, manifest = get_run_command(
@@ -273,6 +282,7 @@ def resume(
     keep: bool = False,
     tmpdir: Optional[str] = None,
     run_wrapper: Optional[callable] = None,
+    config_str: Optional[str] = None,
 ) -> tuple[str, str]:
     """
     Resume a workflow run from the history array.
@@ -283,6 +293,8 @@ def resume(
     :param keep: keep the temporary run directory, defaults to False
     :param tmpdir: temporary run directory, defaults to None
     :param run_wrapper: function to run the command, defaults to None
+    :param config_str: Nextflow config string appended to the Nextflow config file,
+        defaults to None
     :return: status, session ID
     """
 
@@ -291,7 +303,7 @@ def resume(
             print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
-        setup_nextflow(teamspace, acn)
+        setup_nextflow(teamspace, acn, config_str=config_str)
 
         # Read the history from the array.
         history_uri = get_history_uri(teamspace)
