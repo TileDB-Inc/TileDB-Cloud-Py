@@ -130,6 +130,9 @@ def register(
     local_path: Optional[str] = None,
     main_script: str = MAIN_SCRIPT,
     teamspace: Optional[str] = None,
+    provider: Optional[str] = None,
+    user: Optional[str] = None,
+    token: Optional[str] = None,
 ) -> str:
     """
     Register a Nextflow workflow as a TileDB asset.
@@ -143,6 +146,9 @@ def register(
     If `local_path` is provided, the workflow is registered from a local directory
     with the name `workflow`:`version`.
 
+    When registering a workflow from a private repository, the `provider`, `user`, and
+    `token` must be provided. Currently, "github" and "gitlab" are supported providers.
+
     :param workflow: name or URI of the workflow to register
     :param version: workflow version (a git branch, tag, or version number)
     :param local_path: path to a local directory where the workflow is stored,
@@ -150,6 +156,9 @@ def register(
     :param teamspace: TileDB teamspace where the workflow will be registered
     :param main_script: name of the script executed when running a workflow,
         defaults to "main.nf"
+    :param provider: SCM provider for nextflow, defaults to None
+    :param user: SCM user, defaults to None
+    :param token: SCM token, defaults to None
     :return: URI of the registered workflow
     """
 
@@ -168,6 +177,31 @@ def register(
 
     # Work in a temp directory
     with cd_tmpdir():
+        # Configure the SCM platform, if provided.
+        if provider:
+            if provider not in ["github", "gitlab"]:
+                raise ValueError(f"Unsupported SCM provider '{provider}'.")
+
+            if user is None or token is None:
+                raise ValueError(
+                    "User and token must be provided for the SCM provider."
+                )
+
+            # Create the SCM configuration file in the temp directory.
+            scm_config_str = "providers {\n"
+            scm_config_str += f"    {provider} {{\n"
+            scm_config_str += f"        user = '{user}'\n"
+            scm_config_str += f"        password = '{token}'\n"
+            scm_config_str += "    }\n"
+            scm_config_str += "}\n"
+
+            scm_config_path = os.path.join(os.getcwd(), "scm.config")
+
+            with open(scm_config_path, "w") as fp:
+                fp.write(scm_config_str)
+
+            os.environ["NXF_SCM_FILE"] = scm_config_path
+
         if local_path:
             tarfile_path = f"{os.getcwd()}/{WORKFLOW_TARFILE}"
             create_workflow_tarfile(tarfile_path, local_path)

@@ -157,3 +157,26 @@ def test_register_workflow_errors():
             version="1.0.1",
             local_path="foo",
         )
+
+
+@pytest.mark.skip(reason="Requires a private repository URL and token.")
+@pytest.mark.workflows
+@pytest.mark.parametrize(
+    "workflow,version",
+    [
+        ("__private_repo_url__", "__branch__"),
+    ],
+)
+@pytest.mark.usefixtures("test_fixture")
+def test_register_workflow_scm(workflow, version):
+    # Register the workflow.
+    uri = register(
+        workflow=workflow,
+        version=version,
+        provider="github",
+        user="...",
+        token="...",
+    )
+
+    # Check the registered workflow.
+    check_workflow(uri)
