@@ -130,9 +130,9 @@ def register(
     local_path: Optional[str] = None,
     main_script: str = MAIN_SCRIPT,
     teamspace: Optional[str] = None,
-    provider: Optional[str] = None,
-    user: Optional[str] = None,
-    token: Optional[str] = None,
+    scm_provider: Optional[str] = None,
+    scm_user: Optional[str] = None,
+    scm_token: Optional[str] = None,
 ) -> str:
     """
     Register a Nextflow workflow as a TileDB asset.
@@ -156,9 +156,9 @@ def register(
     :param teamspace: TileDB teamspace where the workflow will be registered
     :param main_script: name of the script executed when running a workflow,
         defaults to "main.nf"
-    :param provider: SCM provider for nextflow, defaults to None
-    :param user: SCM user, defaults to None
-    :param token: SCM token, defaults to None
+    :param scm_provider: SCM provider for nextflow, defaults to None
+    :param scm_user: SCM user, defaults to None
+    :param scm_token: SCM token, defaults to None
     :return: URI of the registered workflow
     """
 
@@ -178,20 +178,22 @@ def register(
     # Work in a temp directory
     with cd_tmpdir():
         # Configure the SCM platform, if provided.
-        if provider:
-            if provider not in ["github", "gitlab"]:
-                raise ValueError(f"Unsupported SCM provider '{provider}'.")
+        if scm_provider:
+            scm_provider = scm_provider.lower()
 
-            if user is None or token is None:
+            if scm_provider not in ["github", "gitlab"]:
+                raise ValueError(f"Unsupported SCM provider '{scm_provider}'.")
+
+            if scm_user is None or scm_token is None:
                 raise ValueError(
                     "User and token must be provided for the SCM provider."
                 )
 
             # Create the SCM configuration file in the temp directory.
             scm_config_str = "providers {\n"
-            scm_config_str += f"    {provider} {{\n"
-            scm_config_str += f"        user = '{user}'\n"
-            scm_config_str += f"        password = '{token}'\n"
+            scm_config_str += f"    {scm_provider} {{\n"
+            scm_config_str += f"        user = '{scm_user}'\n"
+            scm_config_str += f"        password = '{scm_token}'\n"
             scm_config_str += "    }\n"
             scm_config_str += "}\n"
 
