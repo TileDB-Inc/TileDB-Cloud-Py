@@ -20,8 +20,6 @@ def test_validate_manifest():
         },
         "metadata": {
             "name": "123",
-            "outdir": "/tiledb/teamspace/workflows/output/123",
-            "workdir": "/tiledb/teamspace/workflows/work/123",
         },
         "options": {},
         "params": {

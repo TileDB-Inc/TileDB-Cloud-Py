@@ -117,6 +117,3 @@ def test_resume_workflow(tmp_path):
 
     # Cleanup.
     delete_workgroup_asset(uri)
-
-
-# TODO: test exceptions
