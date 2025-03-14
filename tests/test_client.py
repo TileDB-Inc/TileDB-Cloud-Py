@@ -14,7 +14,7 @@ class NoResponseError(Exception):
 
 @pytest.fixture(scope="function")
 def workspace_header_check(monkeypatch):
-    """Intercept server requests and checks the headers."""
+    """Intercept server requests and check the headers."""
 
     def fake_and_check_request(self, method, url, *args, **kwargs):
         assert kwargs["headers"]["X-TILEDB-WORKSPACE-ID"] == "workspace"
@@ -36,7 +36,7 @@ def test_workspace_header(monkeypatch, workspace_header_check):
     # We could use any v4 endpoint, asset listing is a choice.
     api_instance = client.build(assets_api.AssetsApi)
 
-    # The workspace_header_check fixture asserts that the HTTP request
+    # The workspace_header_check fixture asserts that the HTTP request contains
     # the X-TILEDB-WORKSPACE-ID header. No valid response is prepared,
     # we catch the fixture's normal exception instead. If the expected
     # header wasn't found, an AssertionError would be raised.
