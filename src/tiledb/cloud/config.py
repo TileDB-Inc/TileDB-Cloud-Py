@@ -172,13 +172,13 @@ def setup_configuration(
     workspace_id = workspace
 
 
+# Loading of the default configuration file and determination of
+# whether we are logged in or not is now deferred to the first access
+# of this module's "config" attribute.
 workspace_id = None
 logged_in = None
 """Whether logged in or not, and into which workspace."""
 
-# Loading of the default configuration file and determination of
-# whether we are logged in or not is now deferred to the first access
-# of this module's "config" attribute.
 
 user: Optional[models.User] = None
 """The default user to use.

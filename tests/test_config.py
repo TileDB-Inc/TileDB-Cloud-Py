@@ -12,11 +12,6 @@ def test_login_bare_host(monkeypatch, tmp_path):
         tmp_path.joinpath("cloud.json"),
     )
     monkeypatch.setattr(
-        tiledb.cloud.config,
-        "default_config_file",
-        tmp_path.joinpath("cloud.json"),
-    )
-    monkeypatch.setattr(
         tiledb.cloud.client.config,
         "_config",
         tiledb.cloud.config.configuration.Configuration(),

@@ -142,6 +142,7 @@ def login(
         client.set_threads(threads)
 
         # TODO: future migration to new server API.
+        # See sc-64479.
         user_api = build(rest_api.UserApi)
         session = user_api.get_session(remember_me=True)
         token = session.token
