@@ -10,6 +10,7 @@ dependencies = [
     "attrs>=21.4.0",
     "certifi",
     "importlib-metadata",
+    "jsonschema",
     "packaging",
     "pandas>=1.2.4",
     "pyarrow>=3.0.0",
@@ -37,6 +38,7 @@ tests = [
     "pytest-split",
     "tiledbsoma",
     "xarray",
+    "nextflow",
 ]
 
 [project.urls]
@@ -47,12 +49,13 @@ repository = "https://github.com/TileDB-Inc/TileDB-Cloud-Py"
 requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 
 [tool.pytest.ini_options]
-explicit-only = ["bigfiles", "geospatial", "vcf"]
+explicit-only = ["bigfiles", "geospatial", "vcf", "workflows"]
 markers = [
     "bigfiles: tests that create and upload really big files",
     "geospatial: tests that require the geospatial libraries",
     "udf: tests that require a server UDF container",
-    "vcf: VCF tests that run on TileDB Cloud",
+    "vcf: VCF tests that run on TileDB",
+    "workflows: tests that run workflows on TileDB",
 ]
 norecursedirs = ["tiledb/cloud"]
 
