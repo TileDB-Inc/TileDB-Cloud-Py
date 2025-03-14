@@ -6,8 +6,8 @@ from typing import Optional
 
 from urllib3 import Retry
 
-from tiledb.cloud.rest_api import configuration
-from tiledb.cloud.rest_api import models
+from tiledb.cloud._common.api_v4 import configuration
+from tiledb.cloud._common.api_v4 import models
 
 default_host = "https://api.tiledb.com"
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
@@ -56,6 +56,9 @@ def save_configuration(config_file):
         if _config.password is not None and _config.password != "":
             config_to_save["password"] = _config.password
 
+        if workspace_id is not None:
+            config_to_save["workspace"] = workspace_id
+
         json.dump(config_to_save, f, indent=4, sort_keys=True)
 
 
@@ -70,6 +73,7 @@ def load_configuration(config_path):
     username = os.getenv("TILEDB_REST_USERNAME", None)
     password = os.getenv("TILEDB_REST_PASSWORD", None)
     verify_ssl = not parse_bool(os.getenv("TILEDB_REST_IGNORE_SSL_VALIDATION", "False"))
+    workspace = None
 
     if os.path.isfile(config_path):
         with open(config_path, "r") as f:
@@ -104,6 +108,8 @@ def load_configuration(config_path):
             if "verify_ssl" in config_obj:
                 verify_ssl = config_obj["verify_ssl"]
 
+            workspace = config_obj.get("workspace", None)
+
     if (token is None or token == "") and (username is None or username == ""):
         warnings.warn(
             "You must first login before you can run commands."
@@ -121,12 +127,18 @@ def load_configuration(config_path):
         password=password,
         host=host,
         verify_ssl=verify_ssl,
+        workspace=workspace,
     )
     return logged_in
 
 
 def setup_configuration(
-    api_key=None, host="", username=None, password=None, verify_ssl=True
+    api_key=None,
+    host="",
+    username=None,
+    password=None,
+    verify_ssl=True,
+    workspace=None,
 ):
     if api_key is None:
         api_key = {}
@@ -156,12 +168,18 @@ def setup_configuration(
     # Set logged in at this point
     global logged_in
     logged_in = True
+    global workspace_id
+    workspace_id = workspace
 
+
+workspace_id = None
+logged_in = None
+"""Whether logged in or not, and into which workspace."""
 
 # Loading of the default configuration file and determination of
 # whether we are logged in or not is now deferred to the first access
 # of this module's "config" attribute.
-logged_in = None
+
 user: Optional[models.User] = None
 """The default user to use.
 

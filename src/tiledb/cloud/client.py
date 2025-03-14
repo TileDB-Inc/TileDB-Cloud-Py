@@ -11,6 +11,7 @@ import urllib3
 
 import tiledb
 import tiledb.cloud._common.api_v2.models as models_v2
+import tiledb.cloud._common.api_v4.models as models_v4
 import tiledb.cloud.rest_api.models as models_v1
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
@@ -63,31 +64,49 @@ def Ctx(config=None):
     return tiledb.Ctx(Config(config))
 
 
-def login(
-    token=None,
-    username=None,
-    password=None,
-    host=None,
-    verify_ssl=None,
-    no_session=False,
-    threads=None,
-):
-    """
-    Login to cloud service
+class LoginError(tiledb.TileDBError):
+    """Raise for errors during login"""
 
-    :param token: api token for login
+
+def login(
+    token: Optional[str] = None,
+    username: Optional[str] = None,
+    password: Optional[str] = None,
+    workspace: Optional[str] = None,
+    host: Optional[str] = None,
+    verify_ssl: Optional[bool] = None,
+    no_session: Optional[bool] = False,
+    threads: Optional[int] = None,
+) -> None:
+    """
+    Login to cloud service and initialize a session
+
+    One of token or username/password pair are required to login.
+
+    :param token: API token for login
+    :type token: str, optional
     :param username: username for login
+    :type username: str, optional
     :param password: password for login
-    :param host: host to login to. the tiledb.cloud.regions module contains
-        region-specific host constants.
-    :param verify_ssl: Enable strict SSL verification
-    :param no_session: don't create a session token on login,
-        store instead username/password
-    :param threads: number of threads to enable for concurrent requests
-    :return:
+    :type password: str, optional
+    :param workspace: TileDB workspace name
+    :type workspace: str, optional
+    :param host: host to login to. the tiledb.cloud.regions module
+        contains region-specific host constants.
+    :type host: str, optional
+    :param verify_ssl: Enable strict SSL verification, defaults to
+        False
+    :type verify_ssl: bool, optional
+    :param no_session: don't create a session token on login, store
+        instead username/password, defaults to False
+    :type no_session: bool, optional
+    :param threads: number of threads to enable for concurrent
+        requests, default to None (determined by library)
+    :type threads: int, optional
     """
     if host is None:
         host = config.default_host
+
     # See sc-56351. Usually, a hostname doesn't include a protocol
     # scheme, but our SDK strictly requires the http(s) scheme.
     elif not host.startswith(("http://", "https://")):
@@ -96,11 +115,13 @@ def login(
     if (token is None or token == "") and (
         (username is None or username == "") and (password is None or password == "")
     ):
-        raise Exception("Username and Password OR token must be set")
+        raise LoginError("Username and Password OR token must be set.")
     if (username is None or username == "" or password is None or password == "") and (
         token is None or token == ""
     ):
-        raise Exception("Username and Password are both required")
+        raise LoginError("Username and Password are both required.")
+    if token and workspace:
+        raise LoginError("Workspace cannot be used with a token.")
 
     if verify_ssl is None:
         verify_ssl = not config.parse_bool(
@@ -115,10 +136,12 @@ def login(
         "api_key": {},
     }
 
-    # Is user logs in with username/password we need to create a session
+    # If user logs in with username/password we need to create a session
     if (token is None or token == "") and not no_session:
         config.setup_configuration(**config_args)
         client.set_threads(threads)
+
+        # TODO: future migration to new server API.
         user_api = build(rest_api.UserApi)
         session = user_api.get_session(remember_me=True)
         token = session.token
@@ -129,8 +152,8 @@ def login(
         del config_args["password"]
 
     config.setup_configuration(**config_args)
-    config.logged_in = True
-    client.set_threads(threads)
+    config.workspace_id = workspace
+
     try:
         config.save_configuration(config.default_config_file)
     except IOError:
@@ -140,6 +163,8 @@ def login(
                 " when this program exits."
             )
         )
+
+    config.logged_in = True
 
 
 def default_user() -> models_v1.User:
@@ -668,6 +693,7 @@ class Client:
         self._mode = retry_mode
         self.__client_v1 = None
         self.__client_v2 = None
+        self.__client_v4 = None
 
     @property
     def _client_v1(self):
@@ -683,9 +709,18 @@ class Client:
             self._rebuild_clients()
         return self.__client_v2
 
+    @property
+    def _client_v4(self):
+        if not self.__client_v4:
+            self._retry_mode(self._mode)
+            self._rebuild_clients()
+        return self.__client_v4
+
     def build(self, builder: Callable[[rest_api.ApiClient], _T]) -> _T:
         """Builds an API client with the given config."""
-        if builder.__module__.startswith("tiledb.cloud._common.api_v2"):
+        if builder.__module__.startswith("tiledb.cloud._common.api_v4"):
+            return builder(self._client_v4)
+        elif builder.__module__.startswith("tiledb.cloud._common.api_v2"):
             return builder(self._client_v2)
         return builder(self._client_v1)
 
@@ -716,6 +751,11 @@ class Client:
     def _rebuild_clients(self) -> None:
         self.__client_v1 = self._rebuild_client(models_v1)
         self.__client_v2 = self._rebuild_client(models_v2)
+        self.__client_v4 = self._rebuild_client(models_v4)
+        if config.workspace_id:
+            self._client_v4.set_default_header(
+                "X-TILEDB-WORKSPACE-ID", config.workspace_id
+            )
 
     def _rebuild_client(self, module: types.ModuleType) -> rest_api.ApiClient:
         """
