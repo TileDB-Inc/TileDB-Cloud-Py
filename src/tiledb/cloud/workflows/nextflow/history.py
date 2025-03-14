@@ -3,7 +3,7 @@
 import io
 import subprocess
 import tarfile
-from typing import Optional
+from typing import Dict, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -110,7 +110,7 @@ def update_history(
     lines = res.stdout.strip().split("\n")
     keys = lines[0].split("\t")
     values = lines[-1].split("\t")
-    data = {
+    data: Dict[str, Union[str, bytes]] = {
         k.strip().replace(" ", "_").lower(): v.strip() for k, v in zip(keys, values)
     }
 

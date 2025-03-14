@@ -7,7 +7,7 @@ import re
 import subprocess
 import tarfile
 import uuid
-from typing import Optional
+from typing import Callable, Optional
 
 import tiledb
 import tiledb.cloud
@@ -127,9 +127,9 @@ def get_run_command(
 
 
 def setup_nextflow(
-    teamspace: str,
-    acn: str,
     *,
+    teamspace: Optional[str],
+    acn: Optional[str],
     plugin_id: str = "nf-tiledb@0.1.0",
     config_file: str = "tiledb.config",
     config_str: Optional[str] = None,
@@ -165,7 +165,7 @@ def setup_nextflow(
     try:
         config = tiledb.cloud.Ctx().config()
     except Exception:
-        raise "Login to TileDB before running a workflow."
+        raise RuntimeError("Login to TileDB before running a workflow.")
 
     # Get the token from the config or current session.
     token = config.get("rest.token", None)
@@ -211,7 +211,7 @@ def run(
     acn: Optional[str] = None,
     run_uuid: Optional[str] = None,
     tmpdir: Optional[str] = None,
-    run_wrapper: Optional[callable] = None,
+    run_wrapper: Optional[Callable] = None,
     keep: bool = False,
     config_str: Optional[str] = None,
 ) -> tuple[str, str]:
@@ -245,7 +245,7 @@ def run(
             print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
-        setup_nextflow(teamspace, acn, config_str=config_str)
+        setup_nextflow(teamspace=teamspace, acn=acn, config_str=config_str)
 
         # Setup the command to run the workflow.
         cmd, manifest = get_run_command(
@@ -281,7 +281,7 @@ def resume(
     acn: Optional[str] = None,
     keep: bool = False,
     tmpdir: Optional[str] = None,
-    run_wrapper: Optional[callable] = None,
+    run_wrapper: Optional[Callable] = None,
     config_str: Optional[str] = None,
 ) -> tuple[str, str]:
     """
@@ -303,7 +303,7 @@ def resume(
             print(f"Running in {os.getcwd()}")
 
         # Setup the nextflow environment.
-        setup_nextflow(teamspace, acn, config_str=config_str)
+        setup_nextflow(teamspace=teamspace, acn=acn, config_str=config_str)
 
         # Read the history from the array.
         history_uri = get_history_uri(teamspace)
