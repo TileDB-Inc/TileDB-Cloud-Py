@@ -165,17 +165,20 @@ class InvitationsApi(object):
             collection_formats=collection_formats,
         )
 
-    def get_invitation(self, invitation_id, **kwargs):  # noqa: E501
+    def get_invitation(
+        self, invitation_id, invitation_retrieve_request, **kwargs
+    ):  # noqa: E501
         """Retrieve an invitation  # noqa: E501
 
         Invitee retrieves an invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_invitation(invitation_id, async_req=True)
+        >>> thread = api.get_invitation(invitation_id, invitation_retrieve_request, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str invitation_id: The invitation ID in the form inv_9m4e2mr0ui3e8a215n4g (required)
+        :param InvitationRetrieveRequest invitation_retrieve_request: The request body for retrieving an invitation (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -183,24 +186,29 @@ class InvitationsApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: InvitationGetResponse
+        :return: InvitationRetrieveResponse
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.get_invitation_with_http_info(invitation_id, **kwargs)  # noqa: E501
+        return self.get_invitation_with_http_info(
+            invitation_id, invitation_retrieve_request, **kwargs
+        )  # noqa: E501
 
-    def get_invitation_with_http_info(self, invitation_id, **kwargs):  # noqa: E501
+    def get_invitation_with_http_info(
+        self, invitation_id, invitation_retrieve_request, **kwargs
+    ):  # noqa: E501
         """Retrieve an invitation  # noqa: E501
 
         Invitee retrieves an invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_invitation_with_http_info(invitation_id, async_req=True)
+        >>> thread = api.get_invitation_with_http_info(invitation_id, invitation_retrieve_request, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str invitation_id: The invitation ID in the form inv_9m4e2mr0ui3e8a215n4g (required)
+        :param InvitationRetrieveRequest invitation_retrieve_request: The request body for retrieving an invitation (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -210,14 +218,14 @@ class InvitationsApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(InvitationGetResponse, status_code(int), headers(HTTPHeaderDict))
+        :return: tuple(InvitationRetrieveResponse, status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
         local_var_params = locals()
 
-        all_params = ["invitation_id"]
+        all_params = ["invitation_id", "invitation_retrieve_request"]
         all_params.extend(
             [
                 "async_req",
@@ -243,6 +251,14 @@ class InvitationsApi(object):
             raise ApiValueError(
                 "Missing the required parameter `invitation_id` when calling `get_invitation`"
             )  # noqa: E501
+        # verify the required parameter 'invitation_retrieve_request' is set
+        if self.api_client.client_side_validation and (
+            "invitation_retrieve_request" not in local_var_params
+            or local_var_params["invitation_retrieve_request"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `invitation_retrieve_request` when calling `get_invitation`"
+            )  # noqa: E501
 
         collection_formats = {}
 
@@ -260,8 +276,17 @@ class InvitationsApi(object):
         local_var_files = {}
 
         body_params = None
+        if "invitation_retrieve_request" in local_var_params:
+            body_params = local_var_params["invitation_retrieve_request"]
         # HTTP header `Accept`
         header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
             ["application/json"]
         )  # noqa: E501
 
@@ -270,14 +295,14 @@ class InvitationsApi(object):
 
         return self.api_client.call_api(
             "/invitations/{invitation_id}",
-            "GET",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="InvitationGetResponse",  # noqa: E501
+            response_type="InvitationRetrieveResponse",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -541,7 +566,7 @@ class InvitationsApi(object):
 
         return self.api_client.call_api(
             "/invitations/{invitation_id}",
-            "POST",
+            "PATCH",
             path_params,
             query_params,
             header_params,

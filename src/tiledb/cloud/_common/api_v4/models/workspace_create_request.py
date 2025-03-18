@@ -33,12 +33,30 @@ class WorkspaceCreateRequest(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"name": "str", "description": "str", "image": "str"}
+    openapi_types = {
+        "name": "str",
+        "description": "str",
+        "image": "str",
+        "default_credential": "CredentialCreateRequest",
+        "default_storage_setting": "StorageSettingsCreateRequest",
+    }
 
-    attribute_map = {"name": "name", "description": "description", "image": "image"}
+    attribute_map = {
+        "name": "name",
+        "description": "description",
+        "image": "image",
+        "default_credential": "default_credential",
+        "default_storage_setting": "default_storage_setting",
+    }
 
     def __init__(
-        self, name=None, description=None, image=None, local_vars_configuration=None
+        self,
+        name=None,
+        description=None,
+        image=None,
+        default_credential=None,
+        default_storage_setting=None,
+        local_vars_configuration=None,
     ):  # noqa: E501
         """WorkspaceCreateRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -48,6 +66,8 @@ class WorkspaceCreateRequest(object):
         self._name = None
         self._description = None
         self._image = None
+        self._default_credential = None
+        self._default_storage_setting = None
         self.discriminator = None
 
         self.name = name
@@ -55,6 +75,8 @@ class WorkspaceCreateRequest(object):
             self.description = description
         if image is not None:
             self.image = image
+        self.default_credential = default_credential
+        self.default_storage_setting = default_storage_setting
 
     @property
     def name(self):
@@ -138,6 +160,62 @@ class WorkspaceCreateRequest(object):
         """
 
         self._image = image
+
+    @property
+    def default_credential(self):
+        """Gets the default_credential of this WorkspaceCreateRequest.  # noqa: E501
+
+
+        :return: The default_credential of this WorkspaceCreateRequest.  # noqa: E501
+        :rtype: CredentialCreateRequest
+        """
+        return self._default_credential
+
+    @default_credential.setter
+    def default_credential(self, default_credential):
+        """Sets the default_credential of this WorkspaceCreateRequest.
+
+
+        :param default_credential: The default_credential of this WorkspaceCreateRequest.  # noqa: E501
+        :type: CredentialCreateRequest
+        """
+        if (
+            self.local_vars_configuration.client_side_validation
+            and default_credential is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `default_credential`, must not be `None`"
+            )  # noqa: E501
+
+        self._default_credential = default_credential
+
+    @property
+    def default_storage_setting(self):
+        """Gets the default_storage_setting of this WorkspaceCreateRequest.  # noqa: E501
+
+
+        :return: The default_storage_setting of this WorkspaceCreateRequest.  # noqa: E501
+        :rtype: StorageSettingsCreateRequest
+        """
+        return self._default_storage_setting
+
+    @default_storage_setting.setter
+    def default_storage_setting(self, default_storage_setting):
+        """Sets the default_storage_setting of this WorkspaceCreateRequest.
+
+
+        :param default_storage_setting: The default_storage_setting of this WorkspaceCreateRequest.  # noqa: E501
+        :type: StorageSettingsCreateRequest
+        """
+        if (
+            self.local_vars_configuration.client_side_validation
+            and default_storage_setting is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `default_storage_setting`, must not be `None`"
+            )  # noqa: E501
+
+        self._default_storage_setting = default_storage_setting
 
     def to_dict(self):
         """Returns the model properties as a dict"""

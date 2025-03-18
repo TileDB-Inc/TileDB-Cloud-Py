@@ -5,9 +5,9 @@ All URIs are relative to *https://api.tiledb.com/v4*
 | Method                                                         | HTTP request                            | Description                    |
 | -------------------------------------------------------------- | --------------------------------------- | ------------------------------ |
 | [**create_invitations**](InvitationsApi.md#create_invitations) | **POST** /invitations                   | Create one or more invitations |
-| [**get_invitation**](InvitationsApi.md#get_invitation)         | **GET** /invitations/{invitation_id}    | Retrieve an invitation         |
+| [**get_invitation**](InvitationsApi.md#get_invitation)         | **POST** /invitations/{invitation_id}   | Retrieve an invitation         |
 | [**list_invitations**](InvitationsApi.md#list_invitations)     | **GET** /invitations                    | Retrieve all sent invitations  |
-| [**respond_invitation**](InvitationsApi.md#respond_invitation) | **POST** /invitations/{invitation_id}   | Respond to an invitation       |
+| [**respond_invitation**](InvitationsApi.md#respond_invitation) | **PATCH** /invitations/{invitation_id}  | Respond to an invitation       |
 | [**revoke_invitation**](InvitationsApi.md#revoke_invitation)   | **DELETE** /invitations/{invitation_id} | Revoke an invitation           |
 
 # **create_invitations**
@@ -212,7 +212,7 @@ void (empty response body)
 
 # **get_invitation**
 
-> InvitationGetResponse get_invitation(invitation_id)
+> InvitationRetrieveResponse get_invitation(invitation_id, invitation_retrieve_request)
 
 Retrieve an invitation
 
@@ -266,10 +266,11 @@ with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud._common.api_v4.InvitationsApi(api_client)
     invitation_id = 'invitation_id_example' # str | The invitation ID in the form inv_9m4e2mr0ui3e8a215n4g
+invitation_retrieve_request = tiledb.cloud._common.api_v4.InvitationRetrieveRequest() # InvitationRetrieveRequest | The request body for retrieving an invitation
 
     try:
         # Retrieve an invitation
-        api_response = api_instance.get_invitation(invitation_id)
+        api_response = api_instance.get_invitation(invitation_id, invitation_retrieve_request)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling InvitationsApi->get_invitation: %s\n" % e)
@@ -321,10 +322,11 @@ with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud._common.api_v4.InvitationsApi(api_client)
     invitation_id = 'invitation_id_example' # str | The invitation ID in the form inv_9m4e2mr0ui3e8a215n4g
+invitation_retrieve_request = tiledb.cloud._common.api_v4.InvitationRetrieveRequest() # InvitationRetrieveRequest | The request body for retrieving an invitation
 
     try:
         # Retrieve an invitation
-        api_response = api_instance.get_invitation(invitation_id)
+        api_response = api_instance.get_invitation(invitation_id, invitation_retrieve_request)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling InvitationsApi->get_invitation: %s\n" % e)
@@ -376,10 +378,11 @@ with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud._common.api_v4.InvitationsApi(api_client)
     invitation_id = 'invitation_id_example' # str | The invitation ID in the form inv_9m4e2mr0ui3e8a215n4g
+invitation_retrieve_request = tiledb.cloud._common.api_v4.InvitationRetrieveRequest() # InvitationRetrieveRequest | The request body for retrieving an invitation
 
     try:
         # Retrieve an invitation
-        api_response = api_instance.get_invitation(invitation_id)
+        api_response = api_instance.get_invitation(invitation_id, invitation_retrieve_request)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling InvitationsApi->get_invitation: %s\n" % e)
@@ -387,13 +390,14 @@ with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-| Name              | Type    | Description                                            | Notes |
-| ----------------- | ------- | ------------------------------------------------------ | ----- |
-| **invitation_id** | **str** | The invitation ID in the form inv_9m4e2mr0ui3e8a215n4g |
+| Name                            | Type                                                          | Description                                            | Notes |
+| ------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------ | ----- |
+| **invitation_id**               | **str**                                                       | The invitation ID in the form inv_9m4e2mr0ui3e8a215n4g |
+| **invitation_retrieve_request** | [**InvitationRetrieveRequest**](InvitationRetrieveRequest.md) | The request body for retrieving an invitation          |
 
 ### Return type
 
-[**InvitationGetResponse**](InvitationGetResponse.md)
+[**InvitationRetrieveResponse**](InvitationRetrieveResponse.md)
 
 ### Authorization
 
@@ -401,7 +405,7 @@ with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 ### HTTP response details

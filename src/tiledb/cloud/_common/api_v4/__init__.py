@@ -100,11 +100,14 @@ from tiledb.cloud._common.api_v4.models.gcp_service_account_key import (
     GCPServiceAccountKey,
 )
 from tiledb.cloud._common.api_v4.models.invitation import Invitation
-from tiledb.cloud._common.api_v4.models.invitation_get_response import (
-    InvitationGetResponse,
-)
 from tiledb.cloud._common.api_v4.models.invitation_respond_request import (
     InvitationRespondRequest,
+)
+from tiledb.cloud._common.api_v4.models.invitation_retrieve_request import (
+    InvitationRetrieveRequest,
+)
+from tiledb.cloud._common.api_v4.models.invitation_retrieve_response import (
+    InvitationRetrieveResponse,
 )
 from tiledb.cloud._common.api_v4.models.invitation_workspace import InvitationWorkspace
 from tiledb.cloud._common.api_v4.models.invitations_create_request_workspace import (

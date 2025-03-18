@@ -1,11 +1,17 @@
 """Tests of the tiledb.cloud.asset module."""
 
+import base64
+import os
 import time
 import unittest
+import uuid
 from unittest import mock
 
+import mysql.connector
 import pytest
 
+import tiledb.cloud._common.api_v4
+import tiledb.cloud._common.api_v4.models as models_v4
 from tiledb.cloud import asset  # type: ignore
 from tiledb.cloud import client
 from tiledb.cloud import groups
@@ -306,3 +312,149 @@ def test_failure_bogus_uri():
     """Raise ValueError."""
     with pytest.raises(ValueError):
         asset.info("bogus")
+
+
+@pytest.fixture(scope="session")
+def user_workspace():
+    """A test user with its own workspace."""
+    # Ensure that user and workspace are unique to the session.
+    TAG = str(uuid.uuid4())[:8]
+    DISPLAY_NAME = "Test User {TAG}"
+    EMAIL = f"testuser.{TAG}@example.com"  # dash not allowed in email?
+    USERNAME = f"testuser-{TAG}"
+    PASSWORD = "password"
+    WORKSPACE = f"workspace-{TAG}"
+
+    # Four different secrets are required in the environment.
+    MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+    AWS_S3_PATH = os.getenv("AWS_S3_PATH")
+
+    configuration = tiledb.cloud._common.api_v4.Configuration(
+        host="http://localhost:8181/v4"
+    )
+
+    # 1. Create a test user.
+    with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
+        api_instance = tiledb.cloud._common.api_v4.UsersApi(api_client)
+        request = (
+            tiledb.cloud._common.api_v4.models.user_create_request.UserCreateRequest(
+                display_name=DISPLAY_NAME,
+                email=EMAIL,
+                username=USERNAME,
+                password=PASSWORD,
+            )
+        )
+        user_create_response = api_instance.create_user(request)
+        assert user_create_response.data.display_name == DISPLAY_NAME
+        assert user_create_response.data.email == EMAIL
+        assert user_create_response.data.username == USERNAME
+        assert not hasattr(user_create_response.data, "password")
+
+    # 2. Validate the test user's email.
+    cxn = mysql.connector.connect(
+        database="TILEDB_SERVER", user="tiledb_user", password=MYSQL_PASSWORD
+    )
+    cursor = cxn.cursor()
+    cursor.execute("UPDATE users2 SET is_valid_email = 1 WHERE email = %s", (EMAIL,))
+    cxn.commit()
+    cursor.close()
+    cxn.close()
+
+    # 3. Authenticate and create a workspace.
+    with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
+        basic_payload = base64.b64encode(
+            f"{USERNAME}:{PASSWORD}".encode("ascii")
+        ).decode("ascii")
+        api_client.set_default_header(
+            "Authorization",
+            f"Basic {basic_payload}",
+        )
+        credential = models_v4.Credential(
+            aws=models_v4.AWSCredential(
+                access_key_id=AWS_ACCESS_KEY_ID, secret_access_key=AWS_SECRET_ACCESS_KEY
+            )
+        )
+        default_credential_request = models_v4.CredentialCreateRequest(
+            name="mydefaultcredential", provider="AWS", credential=credential
+        )
+        default_storage_setting_request = models_v4.StorageSettingsCreateRequest(
+            name="mydefaultstoragesetting",
+            is_default=False,
+            path=AWS_S3_PATH,
+            credentials_name="mydefaultcredential",
+        )
+        workspace_request = models_v4.WorkspaceCreateRequest(
+            name=WORKSPACE,
+            default_credential=default_credential_request,
+            default_storage_setting=default_storage_setting_request,
+        )
+        api_instance = tiledb.cloud._common.api_v4.WorkspacesApi(api_client)
+        workspace_create_response = api_instance.create_workspace(workspace_request)
+        assert workspace_create_response.data.name == WORKSPACE
+
+    return (user_create_response, workspace_create_response)
+
+
+@pytest.fixture(scope="function")
+def teamspace(request, user_workspace):
+    """Create a teamspace for a user and workspace."""
+    # Ensure that the teamspace is unique.
+    TAG = f"{request.node.name}{str(uuid.uuid4())[:8]}".replace(
+        "_", ""
+    )  # teamspace name: alphanum,max=64
+    TEAMSPACE = f"{TAG}"
+
+    configuration = tiledb.cloud._common.api_v4.Configuration(
+        host="http://localhost:8181/v4"
+    )
+    user, workspace = user_workspace
+
+    # Authenticate and create a teamspace.
+    with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
+        api_client.set_default_header("X-TILEDB-WORKSPACE-ID", workspace.data.name)
+        basic_payload = base64.b64encode(
+            f"{user.data.username}:password".encode("ascii")
+        ).decode("ascii")
+        api_client.set_default_header(
+            "Authorization",
+            f"Basic {basic_payload}",
+        )
+        create_teamspace_request = models_v4.TeamspacesCreateRequest(
+            name=TEAMSPACE, visibility="public"
+        )
+        api_instance = tiledb.cloud._common.api_v4.TeamspacesApi(api_client)
+        create_teamspace_response = api_instance.create_teamspaces(
+            create_teamspace_request
+        )
+        assert create_teamspace_response.data.name == TEAMSPACE
+
+    return create_teamspace_response
+
+
+@pytest.mark.server
+def test_empty_asset_listing(user_workspace, teamspace):
+    """A teamspace with no assets has an empty listing."""
+    user, workspace = user_workspace
+    configuration = tiledb.cloud._common.api_v4.Configuration(
+        host="http://localhost:8181/v4"
+    )
+
+    with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
+        api_client.set_default_header("X-TILEDB-WORKSPACE-ID", workspace.data.name)
+        basic_payload = base64.b64encode(
+            f"{user.data.username}:password".encode("ascii")
+        ).decode("ascii")
+        api_client.set_default_header(
+            "Authorization",
+            f"Basic {basic_payload}",
+        )
+
+        api_instance = tiledb.cloud._common.api_v4.AssetsApi(api_client)
+        response = api_instance.list_assets(teamspace.data.name)
+        assert response.data == []
+        assert response.pagination_metadata.page == 1
+        assert response.pagination_metadata.per_page == 20
+        assert response.pagination_metadata.total_items == 0
+        assert response.pagination_metadata.total_pages == 0

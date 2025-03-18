@@ -73,7 +73,8 @@ class InvitingUser(object):
         self.user_id = user_id
         self.display_name = display_name
         self.email = email
-        self.image_id = image_id
+        if image_id is not None:
+            self.image_id = image_id
         self.workspace_role = workspace_role
 
     @property
@@ -184,12 +185,6 @@ class InvitingUser(object):
         :param image_id: The image_id of this InvitingUser.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and image_id is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `image_id`, must not be `None`"
-            )  # noqa: E501
 
         self._image_id = image_id
 

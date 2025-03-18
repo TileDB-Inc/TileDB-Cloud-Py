@@ -37,6 +37,7 @@ class InvitationWorkspace(object):
         "workspace_id": "str",
         "name": "str",
         "description": "str",
+        "image_id": "str",
         "prospective_role": "WorkspaceRole",
     }
 
@@ -44,6 +45,7 @@ class InvitationWorkspace(object):
         "workspace_id": "workspace_id",
         "name": "name",
         "description": "description",
+        "image_id": "image_id",
         "prospective_role": "prospective_role",
     }
 
@@ -52,6 +54,7 @@ class InvitationWorkspace(object):
         workspace_id=None,
         name=None,
         description=None,
+        image_id=None,
         prospective_role=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -63,6 +66,7 @@ class InvitationWorkspace(object):
         self._workspace_id = None
         self._name = None
         self._description = None
+        self._image_id = None
         self._prospective_role = None
         self.discriminator = None
 
@@ -70,6 +74,8 @@ class InvitationWorkspace(object):
         self.name = name
         if description is not None:
             self.description = description
+        if image_id is not None:
+            self.image_id = image_id
         self.prospective_role = prospective_role
 
     @property
@@ -153,6 +159,29 @@ class InvitationWorkspace(object):
         """
 
         self._description = description
+
+    @property
+    def image_id(self):
+        """Gets the image_id of this InvitationWorkspace.  # noqa: E501
+
+        The image's ID  # noqa: E501
+
+        :return: The image_id of this InvitationWorkspace.  # noqa: E501
+        :rtype: str
+        """
+        return self._image_id
+
+    @image_id.setter
+    def image_id(self, image_id):
+        """Sets the image_id of this InvitationWorkspace.
+
+        The image's ID  # noqa: E501
+
+        :param image_id: The image_id of this InvitationWorkspace.  # noqa: E501
+        :type: str
+        """
+
+        self._image_id = image_id
 
     @property
     def prospective_role(self):

@@ -1,4 +1,4 @@
-# InvitationGetResponse
+# InvitationRetrieveResponse
 
 The response object when retrieving an invitation
 

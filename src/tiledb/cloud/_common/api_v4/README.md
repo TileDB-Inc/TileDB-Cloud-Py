@@ -108,9 +108,9 @@ All URIs are relative to *https://api.tiledb.com/v4*
 | _FilesApi_           | [**folder_list**](docs/FilesApi.md#folder_list)                                             | **GET** /files/{teamspace_id}                                  | List folders and files contained in a folder                           |
 | _ImagesApi_          | [**get_image**](docs/ImagesApi.md#get_image)                                                | **GET** /static/images/{image_id}                              | Retrieves the given image                                              |
 | _InvitationsApi_     | [**create_invitations**](docs/InvitationsApi.md#create_invitations)                         | **POST** /invitations                                          | Create one or more invitations                                         |
-| _InvitationsApi_     | [**get_invitation**](docs/InvitationsApi.md#get_invitation)                                 | **GET** /invitations/{invitation_id}                           | Retrieve an invitation                                                 |
+| _InvitationsApi_     | [**get_invitation**](docs/InvitationsApi.md#get_invitation)                                 | **POST** /invitations/{invitation_id}                          | Retrieve an invitation                                                 |
 | _InvitationsApi_     | [**list_invitations**](docs/InvitationsApi.md#list_invitations)                             | **GET** /invitations                                           | Retrieve all sent invitations                                          |
-| _InvitationsApi_     | [**respond_invitation**](docs/InvitationsApi.md#respond_invitation)                         | **POST** /invitations/{invitation_id}                          | Respond to an invitation                                               |
+| _InvitationsApi_     | [**respond_invitation**](docs/InvitationsApi.md#respond_invitation)                         | **PATCH** /invitations/{invitation_id}                         | Respond to an invitation                                               |
 | _InvitationsApi_     | [**revoke_invitation**](docs/InvitationsApi.md#revoke_invitation)                           | **DELETE** /invitations/{invitation_id}                        | Revoke an invitation                                                   |
 | _OnboardingApi_      | [**delete_onboarding_items**](docs/OnboardingApi.md#delete_onboarding_items)                | **DELETE** /onboarding                                         | Delete Onboarding items                                                |
 | _OnboardingApi_      | [**get_onboarding_items**](docs/OnboardingApi.md#get_onboarding_items)                      | **GET** /onboarding                                            | Get onboarding items                                                   |
@@ -193,8 +193,9 @@ All URIs are relative to *https://api.tiledb.com/v4*
 - [GCPInteroperabilityCredential](docs/GCPInteroperabilityCredential.md)
 - [GCPServiceAccountKey](docs/GCPServiceAccountKey.md)
 - [Invitation](docs/Invitation.md)
-- [InvitationGetResponse](docs/InvitationGetResponse.md)
 - [InvitationRespondRequest](docs/InvitationRespondRequest.md)
+- [InvitationRetrieveRequest](docs/InvitationRetrieveRequest.md)
+- [InvitationRetrieveResponse](docs/InvitationRetrieveResponse.md)
 - [InvitationWorkspace](docs/InvitationWorkspace.md)
 - [InvitationsCreateRequestWorkspace](docs/InvitationsCreateRequestWorkspace.md)
 - [InvitationsListResponse](docs/InvitationsListResponse.md)

@@ -33,20 +33,53 @@ class InvitationRespondRequest(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"response": "str"}
+    openapi_types = {"jwt": "str", "response": "str"}
 
-    attribute_map = {"response": "response"}
+    attribute_map = {"jwt": "jwt", "response": "response"}
 
-    def __init__(self, response=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, jwt=None, response=None, local_vars_configuration=None
+    ):  # noqa: E501
         """InvitationRespondRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._jwt = None
         self._response = None
         self.discriminator = None
 
+        self.jwt = jwt
         self.response = response
+
+    @property
+    def jwt(self):
+        """Gets the jwt of this InvitationRespondRequest.  # noqa: E501
+
+        The JWT that authorizes the invitee to respond to the invitation  # noqa: E501
+
+        :return: The jwt of this InvitationRespondRequest.  # noqa: E501
+        :rtype: str
+        """
+        return self._jwt
+
+    @jwt.setter
+    def jwt(self, jwt):
+        """Sets the jwt of this InvitationRespondRequest.
+
+        The JWT that authorizes the invitee to respond to the invitation  # noqa: E501
+
+        :param jwt: The jwt of this InvitationRespondRequest.  # noqa: E501
+        :type: str
+        """
+        if (
+            self.local_vars_configuration.client_side_validation and jwt is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `jwt`, must not be `None`"
+            )  # noqa: E501
+
+        self._jwt = jwt
 
     @property
     def response(self):
