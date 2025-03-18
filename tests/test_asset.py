@@ -325,7 +325,11 @@ def user_workspace():
     PASSWORD = "password"
     WORKSPACE = f"workspace-{TAG}"
 
-    # Four different secrets are required in the environment.
+    # Config options may be specified in the environment.
+    MYSQL_HOST = os.getenv("MYSQL_HOST", "127.0.0.1")
+    MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
+    MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "TILEDB_SERVER")
+    MYSQL_USER = os.getenv("MYSQL_DATABASE", "tiledb_user")
     MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
@@ -359,7 +363,11 @@ def user_workspace():
 
     # 2. Validate the test user's email.
     cxn = mysql.connector.connect(
-        database="TILEDB_SERVER", user="tiledb_user", password=MYSQL_PASSWORD
+        host=MYSQL_HOST,
+        port=MYSQL_PORT,
+        database=MYSQL_DATABASE,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
     )
     cursor = cxn.cursor()
     cursor.execute("UPDATE users2 SET is_valid_email = 1 WHERE email = %s", (EMAIL,))
