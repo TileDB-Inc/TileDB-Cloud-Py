@@ -350,7 +350,12 @@ def user_workspace():
         assert user_create_response.data.display_name == DISPLAY_NAME
         assert user_create_response.data.email == EMAIL
         assert user_create_response.data.username == USERNAME
+
+        # For security, server API does not return the password.
+        # For testing only, we insert it into the creation response.
         assert not hasattr(user_create_response.data, "password")
+        user_create_response.data._testing_password = PASSWORD
+        assert user_create_response.data._testing_password == PASSWORD
 
     # 2. Validate the test user's email.
     cxn = mysql.connector.connect(
@@ -415,7 +420,7 @@ def teamspace(request, user_workspace):
     with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
         api_client.set_default_header("X-TILEDB-WORKSPACE-ID", workspace.data.name)
         basic_payload = base64.b64encode(
-            f"{user.data.username}:password".encode("ascii")
+            f"{user.data.username}:{user.data._testing_password}".encode("ascii")
         ).decode("ascii")
         api_client.set_default_header(
             "Authorization",
@@ -434,27 +439,37 @@ def teamspace(request, user_workspace):
 
 
 @pytest.mark.server
-def test_empty_asset_listing(user_workspace, teamspace):
+def test_empty_asset_listing(monkeypatch, tmp_path, user_workspace, teamspace):
     """A teamspace with no assets has an empty listing."""
-    user, workspace = user_workspace
-    configuration = tiledb.cloud._common.api_v4.Configuration(
-        host="http://localhost:8181/v4"
+    # Use monkeypatch to simulate logging out.
+    monkeypatch.setattr(
+        tiledb.cloud.client.config,
+        "default_config_file",
+        tmp_path.joinpath("cloud.json"),
     )
+    monkeypatch.setattr(
+        tiledb.cloud.client.config,
+        "_config",
+        tiledb.cloud.config.configuration.Configuration(),
+    )
+    monkeypatch.setattr(
+        tiledb.cloud.client.config,
+        "workspace_id",
+        None,
+    )
+    monkeypatch.setattr(tiledb.cloud.client.config, "logged_in", False)
 
-    with tiledb.cloud._common.api_v4.ApiClient(configuration) as api_client:
-        api_client.set_default_header("X-TILEDB-WORKSPACE-ID", workspace.data.name)
-        basic_payload = base64.b64encode(
-            f"{user.data.username}:password".encode("ascii")
-        ).decode("ascii")
-        api_client.set_default_header(
-            "Authorization",
-            f"Basic {basic_payload}",
-        )
-
-        api_instance = tiledb.cloud._common.api_v4.AssetsApi(api_client)
-        response = api_instance.list_assets(teamspace.data.name)
-        assert response.data == []
-        assert response.pagination_metadata.page == 1
-        assert response.pagination_metadata.per_page == 20
-        assert response.pagination_metadata.total_items == 0
-        assert response.pagination_metadata.total_pages == 0
+    user, workspace = user_workspace
+    tiledb.cloud.login(
+        host="http://localhost:8181/v4",
+        username=user.data.username,
+        password=user.data._testing_password,
+        workspace=workspace.data.name,
+        no_session=True,
+    )
+    response = asset.list(teamspace.data.name)
+    assert response.data == []
+    assert response.pagination_metadata.page == 1
+    assert response.pagination_metadata.per_page == 20
+    assert response.pagination_metadata.total_items == 0
+    assert response.pagination_metadata.total_pages == 0

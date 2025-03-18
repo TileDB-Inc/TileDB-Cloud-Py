@@ -8,6 +8,7 @@ import tiledb
 from . import array
 from . import client
 from . import groups
+from ._common.api_v4 import AssetsApi
 from .rest_api import models
 from .rest_api.api import assets_api
 
@@ -19,8 +20,8 @@ _CSVString = Union[str, Iterable[str]]
 
 
 def list(
+    teamspace: str,
     *,
-    namespace: Optional[str] = None,
     search: Optional[str] = None,
     type: Optional[_AssetType] = None,
     ownership_level: Optional[_OwnershipLevel] = None,
@@ -32,7 +33,7 @@ def list(
 ) -> models.AssetListResponse:
     """List/search for stored assets.
 
-    :param namespace: The namespace to use, or the current user if absent.
+    :param teamspace: The namespace to use, or the current user if absent.
     :param search: A search string to use.
     :param type: If provided, include only assets of the specified type
         ("array" or "group").
@@ -52,16 +53,16 @@ def list(
         They can be used alone or with "asc" or "desc" separated by a space
         (e.g. "created_at", "asset_type asc").
     """
-    return client.build(assets_api.AssetsApi).list_assets(
-        namespace or client.default_user().username,
-        search=search,
-        asset_type=type,
-        ownership_level=ownership_level,
-        depth=depth,
-        expand=_canonicalize_csv(expand),
-        page=page,
-        per_page=per_page,
-        order_by=order_by,
+    return client.build(AssetsApi).list_assets(
+        teamspace,
+        # search=search,
+        # asset_type=type,
+        # ownership_level=ownership_level,
+        # depth=depth,
+        # expand=_canonicalize_csv(expand),
+        # page=page,
+        # per_page=per_page,
+        # order_by=order_by,
     )
 
 
