@@ -467,9 +467,10 @@ def test_empty_asset_listing(monkeypatch, tmp_path, user_workspace, teamspace):
     )
     monkeypatch.setattr(tiledb.cloud.client.config, "logged_in", False)
 
+    TILEDB_HOST = os.getenv("TILEDB_HOST", "http://localhost:8181/v4")
     user, workspace = user_workspace
     tiledb.cloud.login(
-        host="http://localhost:8181/v4",
+        host=TILEDB_HOST,
         username=user.data.username,
         password=user.data._testing_password,
         workspace=workspace.data.name,
