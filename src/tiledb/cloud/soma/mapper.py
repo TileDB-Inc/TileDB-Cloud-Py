@@ -239,17 +239,11 @@ def build_collection_mapper_workflow_graph(
             % soma_collection_uri
         )
 
-        # Alternative:
-        #
-        # with tiledbsoma.Collection.open(soma_collection_uri) as soco:
-        #     soma_experiment_uris = {k: v.uri for k, v in soco.items()}
-        #
-        # -- however, that opens all the members sequentially, and we don't need
-        # that overhead here in the launcher node.
-        #
-        # See also: sc-49443
-        with tiledb.Group(soma_collection_uri) as grp:
-            soma_experiment_uris = {mbr.name: mbr.uri for mbr in grp}
+        with tiledbsoma.Collection.open(soma_collection_uri) as soco:
+            # Important:
+            # * soco.items() opens each element, which increases latency
+            # * soco.members().items() does not
+            soma_experiment_uris = {k: v.uri for k, v in soco.members().items()}
 
     if experiment_names is not None:
         logger.info("Filtering SOMA Experiment URIs for specified names")
