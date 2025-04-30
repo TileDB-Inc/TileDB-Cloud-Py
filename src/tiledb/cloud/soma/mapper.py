@@ -240,9 +240,12 @@ def build_collection_mapper_workflow_graph(
 
         with tiledbsoma.Collection.open(soma_collection_uri) as soco:
             # Important:
-            # * soco.items() opens each element, which increases latency
+            # * soco.items() opens each element, which increases latency.
+            #   We need k, v.uri.
             # * soco.members().items() does not
-            soma_experiment_uris = {k: v.uri for k, v in soco.members().items()}
+            #   We need k, v[0] since values are a tuple of URI and object type
+            #   where object type is "SOMAGroup" or "SOMAArray".
+            soma_experiment_uris = {k: v[0] for k, v in soco.members().items()}
 
     if experiment_names is not None:
         logger.info("Filtering SOMA Experiment URIs for specified names")
