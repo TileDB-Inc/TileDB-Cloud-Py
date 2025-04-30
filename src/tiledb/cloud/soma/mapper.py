@@ -3,7 +3,6 @@ from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 import anndata as ad
 import tiledbsoma
 
-import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
 from tiledb.cloud.utilities import get_logger_wrapper
