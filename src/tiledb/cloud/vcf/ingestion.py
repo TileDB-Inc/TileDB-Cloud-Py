@@ -75,6 +75,28 @@ class Contigs(enum.Enum):
     ALL_DISABLE_MERGE = enum.auto()
 
 
+
+class Status(str, enum.Enum):
+    """
+    The ingestion status of samples in the manifest.
+
+    OK = the VCF file can be ingested
+    MISSING_INDEX = the VCF file does not have a corresponding index file
+    MISSING_SAMPLE_NAME = the VCF file does not have a sample name
+    MULTIPLE_SAMPLES = the VCF file has multiple sample names
+    DUPLICATE_SAMPLE_NAME = one or more VCF files being ingested have duplicate sample names
+    BAD_INDEX = the VCF index file could not be properly read
+    """
+
+    OK = "ok"
+    MISSING_INDEX = "missing index"
+    MISSING_SAMPLE_NAME = "missing sample name"
+    MULTIPLE_SAMPLES = "multiple samples"
+    DUPLICATE_SAMPLE_NAME = "duplicate sample name"
+    BAD_INDEX = "bad index"
+
+
+
 def get_logger_wrapper(
     verbose: bool = False,
 ) -> logging.Logger:
@@ -619,7 +641,7 @@ def filter_samples_udf(
 
             with tiledb.open(manifest_uri) as A:
                 manifest_df = A.query(
-                    cond="status == 'ok' or status == 'missing index'"
+                    cond=f"status == '{Status.OK}' or status == '{Status.MISSING_INDEX}'"
                 ).df[:]
 
             # Sort manifest by sample_name
@@ -677,7 +699,7 @@ def ingest_manifest_udf(
                 values = defaultdict(list)
 
                 for vcf_uri in sample_uris:
-                    status = "ok"
+                    status = Status.OK
 
                     # Check for sample name issues
                     try:
@@ -690,13 +712,13 @@ def ingest_manifest_udf(
                         continue
 
                     if not sample_name:
-                        status = "missing sample name"
+                        status = Status.MISSING_SAMPLE_NAME
                     elif len(sample_name.split()) > 1:
-                        status = "multiple samples"
+                        status = Status.MULTIPLE_SAMPLES
                     elif sample_name in keys:
                         # TODO: check for duplicate sample names across all
                         # ingest_manifest_udf calls
-                        status = "duplicate sample name"
+                        status = Status.DUPLICATE_SAMPLE_NAME
                         # Generate a unique sample name for the manifest
                         sample_name_base = sample_name
                         i = 0
@@ -707,14 +729,14 @@ def ingest_manifest_udf(
                     # Check for index issues
                     index_uri = find_index(vcf_uri)
                     if not index_uri:
-                        status = "" if status == "ok" else status + ","
-                        status += "missing index"
+                        status = "" if status == Status.OK else status + ","
+                        status += Status.MISSING_INDEX
                         records = 0
                     else:
                         records = get_record_count(vcf_uri, index_uri)
                         if records is None:
-                            status = "" if status == "ok" else status + ","
-                            status += "bad index"
+                            status = "" if status == Status.OK else status + ","
+                            status += Status.BAD_INDEX
 
                     keys.append(sample_name)
                     values["status"].append(status)
