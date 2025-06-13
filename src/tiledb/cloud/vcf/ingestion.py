@@ -80,7 +80,8 @@ class Status(str, enum.Enum):
     """
     The ingestion status of samples in the manifest.
 
-    OK = the VCF file can be ingested
+    READY = the VCF file can be ingested
+    OK = the VCF file was successfully ingested
     MISSING_INDEX = the VCF file does not have a corresponding index file
     MISSING_SAMPLE_NAME = the VCF file does not have a sample name
     MULTIPLE_SAMPLES = the VCF file has multiple sample names
@@ -88,6 +89,7 @@ class Status(str, enum.Enum):
     BAD_INDEX = the VCF index file could not be properly read
     """
 
+    READY = "ready"
     OK = "ok"
     MISSING_INDEX = "missing index"
     MISSING_SAMPLE_NAME = "missing sample name"
@@ -611,6 +613,7 @@ def filter_samples_udf(
     dataset_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
+    resume: bool = True,
     verbose: bool = False,
 ) -> Sequence[str]:
     """
@@ -618,6 +621,7 @@ def filter_samples_udf(
 
     :param dataset_uri: dataset URI
     :param config: config dictionary, defaults to None
+    :param resume: enable resume ingestion mode, defaults to True
     :param verbose: verbose logging, defaults to False
     :return: sample URIs
     """
@@ -633,29 +637,38 @@ def filter_samples_udf(
                 dataset_uri,
                 cfg=tiledbvcf.ReadConfig(tiledb_config=config),
             )
-            existing_samples = set(ds.samples())
+            dataset_samples = set(ds.samples())
 
-            # Read all samples in the manifest with status == "ok"
+            # Read all samples in the manifest and samples ready for ingestion
             group = tiledb.Group(dataset_uri)
             manifest_uri = group[MANIFEST_ARRAY].uri
 
             with tiledb.open(manifest_uri) as A:
-                manifest_df = A.query(
-                    cond=f"status == '{Status.OK}' or status == '{Status.MISSING_INDEX}'"
+                manifest_df = A.df[:]
+                ingest_df = A.query(
+                    cond=f"status == '{Status.READY}' or status == '{Status.MISSING_INDEX}'"
                 ).df[:]
+            manifest_samples = set(manifest_df.sample_name)
 
             # Sort manifest by sample_name
-            manifest_df = manifest_df.sort_values(by=["sample_name"])
+            ingest_df = ingest_df.sort_values(by=["sample_name"])
+            ingest_samples = set(ingest_df.sample_name)
 
-            # Find samples that have not already been ingested
-            manifest_samples = set(manifest_df.sample_name)
-            new_samples = manifest_samples.difference(existing_samples)
-            manifest_df = manifest_df[manifest_df.sample_name.isin(new_samples)]
-            result = manifest_df.vcf_uri.to_list()
+            # Find samples that have already been ingested or failed to ingest
+            existing_samples = dataset_samples.difference(ingest_samples)
+            failed_samples = dataset_samples.intersection(ingest_samples)
 
+            # Finalize samples to ingest
+            if not resume:
+                ingest_df = ingest_df[~ingest_df.sample_name.isin(failed_samples)]
+            result = ingest_df.vcf_uri.to_list()
+
+            logger.info("%d samples in the dataset.", len(dataset_samples))
+            logger.info("%d samples fully ingested.", len(existing_samples))
+            logger.info("%d samples partially ingested.", len(failed_samples))
             logger.info("%d samples in the manifest.", len(manifest_samples))
-            logger.info("%d samples already ingested.", len(existing_samples))
-            logger.info("%d new samples to ingest.", len(result))
+            logger.info("%d samples ready to be ingested.", len(ingest_samples))
+            logger.info("%d samples will be ingested.", len(result))
             prof.write("count", len(result))
 
         return result
@@ -699,7 +712,7 @@ def ingest_manifest_udf(
                 values = defaultdict(list)
 
                 for vcf_uri in sample_uris:
-                    status = Status.OK
+                    status = Status.READY
 
                     # Check for sample name issues
                     try:
@@ -729,13 +742,13 @@ def ingest_manifest_udf(
                     # Check for index issues
                     index_uri = find_index(vcf_uri)
                     if not index_uri:
-                        status = "" if status == Status.OK else status + ","
+                        status = "" if status == Status.READY else status + ","
                         status += Status.MISSING_INDEX
                         records = 0
                     else:
                         records = get_record_count(vcf_uri, index_uri)
                         if records is None:
-                            status = "" if status == Status.OK else status + ","
+                            status = "" if status == Status.READY else status + ","
                             status += Status.BAD_INDEX
 
                     keys.append(sample_name)
@@ -768,6 +781,7 @@ def ingest_samples_udf(
     verbose: bool = False,
     trace_id: Optional[str] = None,
     use_remote_tmp: bool = False,
+    disable_manifest: bool = False,
 ) -> None:
     """
     Ingest samples into the dataset.
@@ -788,6 +802,7 @@ def ingest_samples_udf(
     :param trace_id: trace ID for logging, defaults to None
     :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
         defaults to False (preferred for small VCFs)
+    :param disable_manifest: disable manifest update, defaults to False
     """
     import tiledbvcf
 
@@ -840,6 +855,7 @@ def ingest_samples_udf(
             # Filter out failed index operations
             sample_uris = [uri for uri in sample_uris if uri]
 
+            # Ingest samples with indexes
             level = "debug" if verbose else "info"
             tiledbvcf.config_logging(level, "ingest.log")
             ds = tiledbvcf.Dataset(
@@ -859,6 +875,24 @@ def ingest_samples_udf(
             )
 
             prof.write("log", extra=read_file("ingest.log"))
+
+            # Update manifest status for ingested samples
+            if not disable_manifest:
+                group = tiledb.Group(dataset_uri)
+                manifest_uri = group[MANIFEST_ARRAY].uri
+
+                with tiledb.open(manifest_uri) as A:
+                    manifest_df = A.query(cond=f"vcf_uri in {sample_uris}").df[:]
+                manifest_df["status"] = Status.OK
+
+                manifest_dict = manifest_df.to_dict(orient="list")
+                sample_names = manifest_dict["sample_name"]
+                with tiledb.open(manifest_uri, "d") as A:
+                    A.query(cond=f"sample_name in {sample_names}").submit()
+
+                del manifest_dict["sample_name"]
+                with tiledb.open(manifest_uri, "w") as A:
+                    A[sample_names] = manifest_dict
 
             # Cleanup tmp space
             if use_remote_tmp and tmp_uris:
@@ -1162,6 +1196,7 @@ def ingest_samples_dag(
     consolidate_stats: bool = False,
     use_remote_tmp: bool = False,
     sample_list_uri: Optional[str] = None,
+    disable_manifest: bool = False,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1190,6 +1225,7 @@ def ingest_samples_dag(
     :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
         defaults to False (preferred for small VCFs)
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
+    :param disable_manifest: disable manifest update, defaults to False
     """
 
     logger = get_logger_wrapper(verbose)
@@ -1216,6 +1252,7 @@ def ingest_samples_dag(
             filter_samples_udf,
             dataset_uri,
             config=config,
+            resume=resume,
             verbose=verbose,
             name="Filter VCF samples",
             resource_class="large",
@@ -1227,7 +1264,7 @@ def ingest_samples_dag(
         sample_uris = sample_uris.result()
 
     if not sample_uris:
-        logger.info("No new samples to ingest.")
+        logger.info("No samples to ingest.")
         return None, []
 
     # Limit number of samples to ingest
@@ -1290,6 +1327,8 @@ def ingest_samples_dag(
                 consolidate_dataset_udf,
                 dataset_uri,
                 config=config,
+                exclude=None,
+                include=[MANIFEST_ARRAY, LOG_ARRAY],
                 id=f"vcf-consol-{i//workers}",
                 verbose=verbose,
                 resources=CONSOLIDATE_RESOURCES,
@@ -1317,6 +1356,7 @@ def ingest_samples_dag(
             resources=ingest_resources,
             name=f"Ingest VCF {i+1}/{num_partitions}",
             access_credentials_name=acn,
+            disable_manifest=disable_manifest,
         )
 
         if prev_consolidate:
@@ -1498,6 +1538,7 @@ def ingest_vcf_annotations(
             resources=ingest_resources,
             name=f"Ingest annotations {i+1}/{len(vcf_uris)}",
             access_credentials_name=acn,
+            disable_manifest=True,
         )
 
         # Set dependencies so that the ingest nodes run in parallel
@@ -1678,6 +1719,7 @@ def ingest_vcf(
         consolidate_stats=consolidate_stats,
         use_remote_tmp=use_remote_tmp,
         sample_list_uri=sample_list_uri if disable_manifest else None,
+        disable_manifest=disable_manifest,
     )
 
     # Register the dataset on TileDB Cloud
