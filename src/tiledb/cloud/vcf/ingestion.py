@@ -1247,7 +1247,6 @@ def ingest_samples_dag(
         )
 
         # Get list of sample uris that have not been ingested yet
-        # TODO: handle second pass resume
         sample_uris = graph.submit(
             filter_samples_udf,
             dataset_uri,
