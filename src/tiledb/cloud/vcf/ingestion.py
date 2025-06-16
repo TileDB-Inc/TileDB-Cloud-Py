@@ -75,7 +75,6 @@ class Contigs(enum.Enum):
     ALL_DISABLE_MERGE = enum.auto()
 
 
-
 class Status(str, enum.Enum):
     """
     The ingestion status of samples in the manifest.
@@ -85,7 +84,7 @@ class Status(str, enum.Enum):
     MISSING_INDEX = the VCF file does not have a corresponding index file
     MISSING_SAMPLE_NAME = the VCF file does not have a sample name
     MULTIPLE_SAMPLES = the VCF file has multiple sample names
-    DUPLICATE_SAMPLE_NAME = one or more VCF files being ingested have duplicate sample names
+    DUPLICATE_SAMPLE_NAME = one or more VCF files have duplicate sample names
     BAD_INDEX = the VCF index file could not be properly read
     """
 
@@ -96,7 +95,6 @@ class Status(str, enum.Enum):
     MULTIPLE_SAMPLES = "multiple samples"
     DUPLICATE_SAMPLE_NAME = "duplicate sample name"
     BAD_INDEX = "bad index"
-
 
 
 def get_logger_wrapper(
@@ -643,11 +641,10 @@ def filter_samples_udf(
             group = tiledb.Group(dataset_uri)
             manifest_uri = group[MANIFEST_ARRAY].uri
 
+            cond = f"status == '{Status.READY}' or status == '{Status.MISSING_INDEX}'"
             with tiledb.open(manifest_uri) as A:
                 manifest_df = A.df[:]
-                ingest_df = A.query(
-                    cond=f"status == '{Status.READY}' or status == '{Status.MISSING_INDEX}'"
-                ).df[:]
+                ingest_df = A.query(cond=cond).df[:]
             manifest_samples = set(manifest_df.sample_name)
 
             # Sort manifest by sample_name
