@@ -207,7 +207,7 @@ def create_dataset_udf(
     # Check if the dataset already exists
     with tiledb.scope_ctx(config):
         if tiledb.object_type(dataset_uri) != "group":
-            logger.info("Creating dataset: %r", dataset_uri)
+            logger.info(f"Creating dataset: {dataset_uri=}")
 
             # vcf_attrs overrides extra_attrs
             if vcf_attrs:
@@ -243,7 +243,7 @@ def create_dataset_udf(
 
             write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
         else:
-            logger.info("Using existing dataset: %r", dataset_uri)
+            logger.info(f"Using existing dataset: {dataset_uri=}")
 
         return dataset_uri
 
@@ -285,15 +285,13 @@ def register_dataset_udf(
 
         except Exception:
             # tiledb.object_type raises an exception if the namespace does not exist
-            logger.error(
-                "Error checking if %r is registered. Bad namespace?", tiledb_uri
-            )
+            logger.error(f"Error when checking if dataset is registered: {tiledb_uri=}")
             raise
 
         if found:
-            logger.info("Dataset already registered at %r.", tiledb_uri)
+            logger.info(f"Dataset is already registered: {tiledb_uri=}")
         else:
-            logger.info("Registering dataset at %r.", tiledb_uri)
+            logger.info(f"Registering dataset: {tiledb_uri=}")
             tiledb.cloud.groups.register(
                 dataset_uri,
                 name=register_name,
@@ -331,15 +329,15 @@ def read_uris_udf(
             cmd = ("zcat", "-f")
             process_stream(uri=list_uri, cmd=cmd, output_uri=local_list)
 
-            result = []
+            vcf_uris = []
             for line in open(local_list):
-                result.append(line.strip())
-                if max_files and len(result) == max_files:
+                vcf_uris.append(line.strip())
+                if max_files and len(vcf_uris) == max_files:
                     break
 
-            logger.info("Found %d VCF files.", len(result))
+            logger.info(f"Reading VCF URIs from URI: {list_uri=}, {len(vcf_uris)=}")
 
-        return result
+        return vcf_uris
 
 
 def read_metadata_uris_udf(
@@ -369,15 +367,18 @@ def read_metadata_uris_udf(
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
             with tiledb.open(metadata_uri) as A:
                 df = A.query(dims=[], attrs=[metadata_attr]).df[:]
-            results = df[metadata_attr].to_list()
+            vcf_uris = df[metadata_attr].to_list()
 
             if max_files:
-                results = results[:max_files]
+                vcf_uris = vcf_uris[:max_files]
 
-            logger.info("Read %d VCF URIs from the metadata array.", len(results))
-            prof.write("count", len(results))
+            logger.info(
+                "Reading VCF URIs from the metadata array: "
+                f"{metadata_uri=}, {metadata_attr=}, {len(vcf_uris)=}"
+            )
+            prof.write("count", len(vcf_uris))
 
-        return results
+        return vcf_uris
 
 
 def find_uris_udf(
@@ -461,7 +462,7 @@ def find_uris_udf(
             # Add one trailing slash to search_uri
             search_uri = search_uri.rstrip("/") + "/"
 
-            results = find(
+            vcf_uris = find(
                 search_uri,
                 config=config,
                 include=include,
@@ -469,10 +470,13 @@ def find_uris_udf(
                 max_count=max_files,
             )
 
-            logger.info("Found %d VCF files.", len(results))
-            prof.write("count", len(results))
+            logger.info(
+                "Searching for VCF URIs: "
+                f"{search_uri=}, {include=}, {exclude=}, {len(vcf_uris)=}"
+            )
+            prof.write("count", len(vcf_uris))
 
-            return results
+            return vcf_uris
 
 
 def find_uris_aws_udf(
@@ -556,16 +560,19 @@ def find_uris_aws_udf(
             # Build list of URIs from command output.
             # Example line from s3:
             # (dryrun) download: s3://1000genomes-dragen-v3.7.6/foo to foo
-            result = []
+            vcf_uris = []
             if res_stdout:
                 for line in res_stdout.splitlines():
                     line = line.split()[2] if use_s3 else line
-                    result.append(line)
+                    vcf_uris.append(line)
 
-            logger.info("Found %d VCF files.", len(result))
-            prof.write("count", len(result))
+            logger.info(
+                "Searching for VCF URIs with AWS CLI: "
+                f"{search_uri=}, {include=}, {exclude=}, {len(vcf_uris)=}"
+            )
+            prof.write("count", len(vcf_uris))
 
-        return result
+        return vcf_uris
 
 
 def filter_uris_udf(
@@ -598,13 +605,12 @@ def filter_uris_udf(
             # Find URIs that are not in the manifest
             sample_uris_set = set(sample_uris)
             manifest_uris = set(manifest_df.vcf_uri)
-            result = sorted(list(sample_uris_set.difference(manifest_uris)))
+            new_uris = sorted(list(sample_uris_set.difference(manifest_uris)))
 
-            logger.info("%d URIs in the manifest.", len(manifest_uris))
-            logger.info("%d new URIs.", len(result))
-            prof.write("count", len(result))
+            logger.info(f"Filtering URIs: {len(manifest_uris)=}, {len(new_uris)=}")
+            prof.write("count", len(new_uris))
 
-        return result
+        return new_uris
 
 
 def filter_samples_udf(
@@ -644,31 +650,34 @@ def filter_samples_udf(
             cond = f"status == '{Status.READY}' or status == '{Status.MISSING_INDEX}'"
             with tiledb.open(manifest_uri) as A:
                 manifest_df = A.df[:]
-                ingest_df = A.query(cond=cond).df[:]
+                ready_df = A.query(cond=cond).df[:]
             manifest_samples = set(manifest_df.sample_name)
 
             # Sort manifest by sample_name
-            ingest_df = ingest_df.sort_values(by=["sample_name"])
-            ingest_samples = set(ingest_df.sample_name)
+            ready_df = ready_df.sort_values(by=["sample_name"])
+            ready_samples = set(ready_df.sample_name)
 
             # Find samples that have already been ingested or failed to ingest
-            existing_samples = dataset_samples.difference(ingest_samples)
-            failed_samples = dataset_samples.intersection(ingest_samples)
+            ingested_samples = dataset_samples.difference(ready_samples)
+            incomplete_samples = dataset_samples.intersection(ready_samples)
 
             # Finalize samples to ingest
             if not resume:
-                ingest_df = ingest_df[~ingest_df.sample_name.isin(failed_samples)]
-            result = ingest_df.vcf_uri.to_list()
+                ready_df = ready_df[~ready_df.sample_name.isin(incomplete_samples)]
+            queued_samples = ready_df.vcf_uri.to_list()
 
-            logger.info("%d samples in the dataset.", len(dataset_samples))
-            logger.info("%d samples fully ingested.", len(existing_samples))
-            logger.info("%d samples partially ingested.", len(failed_samples))
-            logger.info("%d samples in the manifest.", len(manifest_samples))
-            logger.info("%d samples ready to be ingested.", len(ingest_samples))
-            logger.info("%d samples will be ingested.", len(result))
-            prof.write("count", len(result))
+            logger.info(
+                "Filtering samples: "
+                f"{len(dataset_samples)=}, "
+                f"{len(ingested_samples)=}, "
+                f"{len(incomplete_samples)=}, "
+                f"{len(manifest_samples)=}, "
+                f"{len(ready_samples)=}, "
+                f"{len(queued_samples)=}"
+            )
+            prof.write("count", len(queued_samples))
 
-        return result
+        return queued_samples
 
 
 def ingest_manifest_udf(
@@ -715,10 +724,7 @@ def ingest_manifest_udf(
                     try:
                         sample_name = get_sample_name(vcf_uri)
                     except Exception:
-                        logger.warning(
-                            "Skipping invalid VCF file: %r",
-                            vcf_uri,
-                        )
+                        logger.warning(f"Skipping invalid VCF file: {vcf_uri=}")
                         continue
 
                     if not sample_name:
@@ -830,12 +836,12 @@ def ingest_samples_udf(
                 """
                 with tiledb.scope_ctx(config):
                     if create_index or not find_index(uri):
-                        logger.info("indexing %r", uri)
+                        logger.info(f"Indexing VCF: {uri=}")
                         try:
                             create_index_file(uri)
                         except RuntimeError as exc:
                             logger.warning("%r: %s", uri, exc)
-                            logger.info("sort, bgzip, and index %r", uri)
+                            logger.info(f"sort, bgzip, and index: {uri=}")
                             try:
                                 uri = sort_and_bgzip(uri, tmp_space=tmp_space)
                                 tmp_uris.append(uri)
@@ -895,10 +901,10 @@ def ingest_samples_udf(
             if use_remote_tmp and tmp_uris:
                 vfs = tiledb.VFS()
                 for uri in tmp_uris:
-                    logger.debug("removing %r", uri)
+                    logger.debug(f"Removing tmp file: {uri=}")
                     vfs.remove_file(uri)
 
-    logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+    logger.info("Max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
 def consolidate_dataset_udf(
@@ -956,7 +962,9 @@ def consolidate_dataset_udf(
                     modes += ["fragments"]
 
                 for mode in modes:
-                    logger.debug("Consolidating %r in %r (%s)", mode, uri, name)
+                    logger.debug(
+                        f"Consolidating dataset array: {mode=}, {uri=}, {name=}"
+                    )
                     config = tiledb.Config({"sm.consolidation.mode": mode})
                     try:
                         tiledb.consolidate(uri, config=config)
@@ -964,14 +972,14 @@ def consolidate_dataset_udf(
                         print(e)
 
                 for mode in modes:
-                    logger.debug("Vacuuming %r in %r (%s)", mode, uri, name)
+                    logger.debug(f"Vacuuming dataset array: {mode=}, {uri=}, {name=}")
                     config = tiledb.Config({"sm.vacuum.mode": mode})
                     try:
                         tiledb.vacuum(uri, config=config)
                     except Exception as e:
                         print(e)
 
-    logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+    logger.info("Max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
 # --------------------------------------------------------------------
@@ -1108,10 +1116,10 @@ def ingest_manifest_dag(
     sample_uris = filtered_sample_uris.result()
 
     if not sample_uris:
-        logger.info("All samples found are already in the manifest.")
+        logger.info("All samples found are already in the manifest")
         return
 
-    logger.info("Found %d new URIs.", len(sample_uris))
+    logger.info(f"Found new URIs: {len(sample_uris)=}")
 
     graph = dag.DAG(
         name="vcf-populate-manifest",
@@ -1170,7 +1178,7 @@ def ingest_manifest_dag(
         if consolidate:
             consolidate.depends_on(ingest)
 
-    logger.info("Populating the manifest.")
+    logger.info("Populating the manifest")
     run_dag(graph)
 
 
@@ -1260,7 +1268,7 @@ def ingest_samples_dag(
         sample_uris = sample_uris.result()
 
     if not sample_uris:
-        logger.info("No samples to ingest.")
+        logger.info("No samples to ingest")
         return None, []
 
     # Limit number of samples to ingest
@@ -1306,9 +1314,13 @@ def ingest_samples_dag(
     if ingest_resources is None:
         ingest_resources = {"cpu": f"{threads}", "memory": f"{node_memory_mb}Mi"}
 
-    logger.debug("partitions=%d, consolidates=%d", num_partitions, num_consolidates)
-    logger.debug("ingest_resources=%s", ingest_resources)
-    logger.debug("consolidate_resources=%s", CONSOLIDATE_RESOURCES)
+    logger.debug(
+        "Ingesting samples DAG configuration: "
+        f"{num_partitions=}, "
+        f"{num_consolidates=}, "
+        f"{ingest_resources=}, "
+        f"{CONSOLIDATE_RESOURCES=}"
+    )
 
     # This loop creates a DAG with the following structure:
     # - Submit N ingest tasks in parallel, where N is `workers` or less
@@ -1386,12 +1398,12 @@ def ingest_samples_dag(
                     dependencies=[consolidate],
                 )
 
-    logger.info("Ingesting %d samples.", len(sample_uris))
+    logger.info(f"Ingesting samples: {len(sample_uris)=}")
     run_dag(graph, wait=False)
 
     logger.info(
-        "VCF samples ingestion submitted -"
-        " https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
+        "VCF samples ingestion submitted: "
+        "https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
         graph.namespace,
         graph.server_graph_uuid,
     )
@@ -1448,7 +1460,7 @@ def ingest_vcf_annotations(
         raise ValueError("acn must be provided to register the dataset")
 
     logger = get_logger_wrapper(verbose)
-    logger.info("Ingesting annotation VCF into %r", dataset_uri)
+    logger.info("Ingesting annotation VCF: {dataset_uri=}")
 
     if search_uri:
         # Create and run DAG to find VCF URIs.
@@ -1670,7 +1682,7 @@ def ingest_vcf(
     dataset_uri = dataset_uri.rstrip("/")
 
     logger = get_logger_wrapper(verbose)
-    logger.info("Ingesting VCF samples into %r", dataset_uri)
+    logger.info(f"Ingesting VCF samples: {dataset_uri=}")
 
     # Add VCF URIs to the manifest
     ingest_manifest_dag(
