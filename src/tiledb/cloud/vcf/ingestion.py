@@ -96,6 +96,9 @@ class Status(str, enum.Enum):
     DUPLICATE_SAMPLE_NAME = "duplicate sample name"
     BAD_INDEX = "bad index"
 
+    def __str__(self) -> str:
+        return self.value
+
 
 def get_logger_wrapper(
     verbose: bool = False,
