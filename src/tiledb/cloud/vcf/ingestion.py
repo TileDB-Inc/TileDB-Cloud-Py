@@ -753,6 +753,7 @@ def ingest_manifest_udf(
                         if records is None:
                             status = "" if status == Status.READY else status + ","
                             status += Status.BAD_INDEX
+                            records = 0
 
                     keys.append(sample_name)
                     values["status"].append(status)
