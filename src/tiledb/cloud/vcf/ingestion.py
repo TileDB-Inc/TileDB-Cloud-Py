@@ -691,7 +691,7 @@ def ingest_manifest_udf(
 
                     if not sample_name:
                         status = "missing sample name"
-                    elif len(sample_name.split()) > 1:
+                    elif len(sample_name.split(",")) > 1:
                         status = "multiple samples"
                     elif sample_name in keys:
                         # TODO: check for duplicate sample names across all
