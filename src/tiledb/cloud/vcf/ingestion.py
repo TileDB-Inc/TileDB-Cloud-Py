@@ -732,7 +732,7 @@ def ingest_manifest_udf(
 
                     if not sample_name:
                         status = Status.MISSING_SAMPLE_NAME
-                    elif len(sample_name.split()) > 1:
+                    elif len(sample_name.split(",")) > 1:
                         status = Status.MULTIPLE_SAMPLES
                     elif sample_name in keys:
                         # TODO: check for duplicate sample names across all
