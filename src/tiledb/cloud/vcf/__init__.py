@@ -3,6 +3,7 @@ from .ingestion import Contigs
 from .ingestion import create_dataset_udf as create_dataset
 from .ingestion import ingest
 from .ingestion import ingest_annotations
+from .ingestion import ingest_vcf
 from .ingestion import register_dataset_udf as register_dataset
 from .query import build_read_dag
 from .query import read
@@ -21,6 +22,7 @@ __all__ = [
     "create_dataset",
     "ingest",
     "ingest_annotations",
+    "ingest_vcf",
     "register_dataset",
     "build_read_dag",
     "read",
