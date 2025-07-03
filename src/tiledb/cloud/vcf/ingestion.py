@@ -1206,6 +1206,7 @@ def ingest_samples_dag(
     use_remote_tmp: bool = False,
     sample_list_uri: Optional[str] = None,
     disable_manifest: bool = False,
+    wait: bool = False,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1235,6 +1236,7 @@ def ingest_samples_dag(
         defaults to False (preferred for small VCFs)
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
     :param disable_manifest: disable manifest update, defaults to False
+    :param wait: wait for the ingestion to complete before returning, defaults to False
     """
 
     logger = get_logger_wrapper(verbose)
@@ -1403,7 +1405,6 @@ def ingest_samples_dag(
                 )
 
     logger.info(f"Ingesting samples: {len(sample_uris)=}")
-    run_dag(graph, wait=False)
 
     logger.info(
         "VCF samples ingestion submitted: "
@@ -1411,6 +1412,7 @@ def ingest_samples_dag(
         graph.namespace,
         graph.server_graph_uuid,
     )
+    run_dag(graph, wait=wait)
 
 
 # --------------------------------------------------------------------
@@ -1615,6 +1617,7 @@ def ingest_vcf(
     aws_find_mode: bool = False,
     use_remote_tmp: bool = False,
     disable_manifest: bool = False,
+    wait: bool = False,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1664,6 +1667,7 @@ def ingest_vcf(
     :param use_remote_tmp: use remote tmp space if VCFs need to be sorted and bgzipped,
         defaults to False (preferred for small VCFs)
     :param disable_manifest: disable manifest creation, defaults to False
+    :param wait: wait for the ingestion to complete before returning, defaults to False
     """
 
     # Validate user input
@@ -1732,6 +1736,7 @@ def ingest_vcf(
         use_remote_tmp=use_remote_tmp,
         sample_list_uri=sample_list_uri if disable_manifest else None,
         disable_manifest=disable_manifest,
+        wait=wait,
     )
 
     # Register the dataset on TileDB Cloud
