@@ -159,7 +159,35 @@ class TestVCFIngestionBase(unittest.TestCase):
         self.assertIn(MISSING_INDEX_SAMPLE_NAME, samples)
 
 
-# TODO: search_uri, pattern, ignore
+class TestVCFIngestionSearch(TestVCFIngestionBase):
+    __unittest_skip__ = False
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionSearch, cls)._setup()
+        cls.search_uri = cls.data_uri + "/"
+        cls.search_pattern = "*.vcf.gz"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            search_uri=cls.search_uri,
+            pattern=cls.search_pattern,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_find_uris_logs(self):
+        msg = (
+            "Searching for VCF URIs: "
+            f"search_uri='{self.search_uri}', "
+            f"include='{self.search_pattern}', "
+            "exclude=None, "
+            "len(vcf_uris)=6"
+        )
+        self.assertIn(msg, self.logs)
+
 
 # TODO: sample_list_uri, disable_manifest
 
