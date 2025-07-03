@@ -280,6 +280,7 @@ def build_read_dag(
     ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
+    dag_name: str = "VCF-Distributed-Query",
     max_workers: int = MAX_WORKERS,
     samples: Optional[
         Union[
@@ -312,6 +313,7 @@ def build_read_dag(
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
+    :param dag_name: the name of the built DAG, defaults to "VCF-Distributed-Query",
     :param max_workers: maximum number of workers, defaults to 40
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
@@ -380,7 +382,7 @@ def build_read_dag(
 
     dag = tiledb.cloud.dag.DAG(
         namespace=namespace,
-        name="VCF-Distributed-Query",
+        name=dag_name,
         max_workers=max_workers,
         mode=mode,
     )
@@ -462,6 +464,7 @@ def read(
     ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
+    dag_name: str = "VCF-Distributed-Query",
     max_workers: int = MAX_WORKERS,
     samples: Optional[
         Union[
@@ -494,6 +497,7 @@ def read(
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
+    :param dag_name: the name of the read DAG, defaults to "VCF-Distributed-Query",
     :param max_workers: maximum number of workers, defaults to 40
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
@@ -519,6 +523,7 @@ def read(
         regions=regions,
         bed_file=bed_file,
         num_region_partitions=num_region_partitions,
+        dag_name=dag_name,
         max_workers=max_workers,
         samples=samples,
         memory_budget_mb=memory_budget_mb,
