@@ -112,8 +112,9 @@ class TestVCFIngestionCommon(TestVCFIngestionBase):
         self.assertEqual(tiledb.object_type(self.dataset_uri), "group")
         group = tiledb.Group(self.dataset_uri)
         manifest_uri = group[MANIFEST_ARRAY].uri
+        log_uri = group[LOG_ARRAY].uri
         self.assertEqual(tiledb.object_type(manifest_uri), "array")
-        self.assertEqual(tiledb.object_type(group[LOG_ARRAY].uri), "array")
+        self.assertEqual(tiledb.object_type(log_uri), "array")
 
     def test_filter_uris(self):
         self.assertIn(
@@ -131,10 +132,12 @@ class TestVCFIngestionCommon(TestVCFIngestionBase):
 
         ok_df = manifest_df[manifest_df["status"] == "ok"]
         self.assertEqual(len(ok_df), 2)
-        self.assertIn(READY_URI, ok_df["vcf_uri"].tolist())
-        self.assertIn(READY_URI + ".tbi", ok_df["index_uri"].tolist())
-        self.assertIn(MISSING_INDEX_URI, ok_df["vcf_uri"].tolist())
-        self.assertIn("None", ok_df["index_uri"].tolist())
+        ok_vcfs = ok_df["vcf_uri"].tolist()
+        ok_indexes = ok_df["index_uri"].tolist()
+        self.assertIn(READY_URI, ok_vcfs)
+        self.assertIn(READY_URI + ".tbi", ok_indexes)
+        self.assertIn(MISSING_INDEX_URI, ok_vcfs)
+        self.assertIn("None", ok_indexes)
 
         # NOTE: This code path is currently unreachable; an error is logged instead
         self.assertIn(
