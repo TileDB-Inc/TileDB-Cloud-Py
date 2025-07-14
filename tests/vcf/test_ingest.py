@@ -214,6 +214,29 @@ class TestVCFIngestionSampleList(TestVCFIngestionBase):
         self.assertIn(msg, self.logs)
 
 
-# TODO: metadata_uri, metadata_attr
+class TestVCFIngestionMetadata(TestVCFIngestionBase):
+    __unittest_skip__ = False
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionMetadata, cls)._setup()
+        cls.metadata_uri = cls.data_uri + "/metadata-array/"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_read_metadata_logs(self):
+        msg = (
+            "Reading VCF URIs from the metadata array: "
+            f"metadata_uri='{self.metadata_uri}', metadata_attr='uri', len(vcf_uris)=6"
+        )
+        self.assertIn(msg, self.logs)
+
 
 # TODO: test resume
