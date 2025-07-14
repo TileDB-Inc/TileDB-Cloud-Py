@@ -101,6 +101,10 @@ class TestVCFIngestionBase(unittest.TestCase):
         if tiledb.object_type(cls.dataset_uri):
             tiledb.cloud.asset.delete(cls.dataset_uri, recursive=True)
 
+
+class TestVCFIngestionCommon(TestVCFIngestionBase):
+    __unittest_skip__ = True
+
     def test_dataset_creation(self):
         self.assertIn(f"Creating dataset: dataset_uri='{self.dataset_uri}'", self.logs)
 
@@ -159,7 +163,7 @@ class TestVCFIngestionBase(unittest.TestCase):
         self.assertIn(MISSING_INDEX_SAMPLE_NAME, samples)
 
 
-class TestVCFIngestionSearch(TestVCFIngestionBase):
+class TestVCFIngestionSearch(TestVCFIngestionCommon):
     __unittest_skip__ = False
 
     @classmethod
@@ -189,7 +193,7 @@ class TestVCFIngestionSearch(TestVCFIngestionBase):
         self.assertIn(msg, self.logs)
 
 
-class TestVCFIngestionSampleList(TestVCFIngestionBase):
+class TestVCFIngestionSampleList(TestVCFIngestionCommon):
     __unittest_skip__ = False
 
     @classmethod
@@ -214,7 +218,7 @@ class TestVCFIngestionSampleList(TestVCFIngestionBase):
         self.assertIn(msg, self.logs)
 
 
-class TestVCFIngestionMetadata(TestVCFIngestionBase):
+class TestVCFIngestionMetadata(TestVCFIngestionCommon):
     __unittest_skip__ = False
 
     @classmethod
