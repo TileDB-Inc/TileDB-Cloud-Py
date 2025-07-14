@@ -189,7 +189,30 @@ class TestVCFIngestionSearch(TestVCFIngestionBase):
         self.assertIn(msg, self.logs)
 
 
-# TODO: sample_list_uri, disable_manifest
+class TestVCFIngestionSampleList(TestVCFIngestionBase):
+    __unittest_skip__ = False
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionSampleList, cls)._setup()
+        cls.sample_list_uri = cls.data_uri + "/sample-list.txt"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            sample_list_uri=cls.sample_list_uri,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_read_uris_logs(self):
+        msg = (
+            "Reading VCF URIs from URI: "
+            f"list_uri='{self.sample_list_uri}', len(vcf_uris)=6"
+        )
+        self.assertIn(msg, self.logs)
+
 
 # TODO: metadata_uri, metadata_attr
 
