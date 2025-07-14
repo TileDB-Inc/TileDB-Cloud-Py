@@ -11,6 +11,26 @@ import tiledb.cloud.vcf
 from tiledb.cloud._vendor import cloudpickle
 from tiledb.cloud.utilities import get_logger
 
+
+def ingest_samples_with_failure_dag(*args, config={}, **kwargs) -> None:
+    """
+    Wraps the original `ingest_samples_dag` function and reads the config to determine
+    if an ingestion failure should be simulated, i.e. the manifest is not updated after
+    ingestion.
+    """
+    from tiledb.cloud.vcf.ingestion import _ingest_samples_dag
+
+    if config.get("test.vcf.fail_ingest", False):
+        kwargs["disable_manifest"] = True
+    return _ingest_samples_dag(*args, config=config, **kwargs)
+
+
+# Monkey patch the failure function
+tiledb.cloud.vcf.ingestion._ingest_samples_dag = (
+    tiledb.cloud.vcf.ingestion.ingest_samples_dag
+)
+tiledb.cloud.vcf.ingestion.ingest_samples_dag = ingest_samples_with_failure_dag
+
 # Pickle the vcf module by value, so tests run on the latest code.
 cloudpickle.register_pickle_by_value(tiledb.cloud.vcf)
 
@@ -246,4 +266,50 @@ class TestVCFIngestionMetadata(TestVCFIngestionCommon):
         self.assertIn(msg, self.logs)
 
 
-# TODO: test resume
+class TestVCFIngestionResume(TestVCFIngestionBase):
+    __unittest_skip__ = False
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionResume, cls)._setup()
+        cls.metadata_uri = cls.data_uri + "/metadata-array/"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        # Ingest with "failure"
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config | {"test.vcf.fail_ingest": True},
+            wait=True,
+        )
+        # Re-ingest without resume
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config,
+            wait=True,
+            resume=False,
+        )
+        # Re-ingest with resume
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_existing_dataset(self):
+        self.assertIn(
+            f"Using existing dataset: dataset_uri='{self.dataset_uri}'",
+            self.logs,
+        )
+
+    def test_failed_ingest(self):
+        self.assertIn(FILTER_SAMPLES_LOG.format(0, 0, 0, 5, 2, 2), self.logs)
+
+    def test_no_resume(self):
+        self.assertIn(FILTER_SAMPLES_LOG.format(2, 0, 2, 5, 2, 0), self.logs)
+
+    def test_resume(self):
+        self.assertIn(FILTER_SAMPLES_LOG.format(2, 0, 2, 5, 2, 2), self.logs)
