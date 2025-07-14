@@ -4,8 +4,6 @@ import re
 import unittest
 from contextlib import redirect_stdout
 
-import tiledbvcf
-
 import tiledb.cloud
 import tiledb.cloud.vcf
 from tiledb.cloud._vendor import cloudpickle
@@ -176,6 +174,8 @@ class TestVCFIngestionCommon(TestVCFIngestionBase):
         self.assertEqual(len(bad_index_df), 1)
 
     def test_dataset(self):
+        import tiledbvcf
+
         ds = tiledbvcf.Dataset(
             self.dataset_uri,
             cfg=tiledbvcf.ReadConfig(tiledb_config=self.config),
