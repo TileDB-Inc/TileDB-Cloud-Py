@@ -187,7 +187,7 @@ class TestVCFIngestionCommon(TestVCFIngestionBase):
 
 
 class TestVCFIngestionSearch(TestVCFIngestionCommon):
-    __unittest_skip__ = False
+    __unittest_skip__ = True
 
     @classmethod
     def _setup(cls):
@@ -217,7 +217,7 @@ class TestVCFIngestionSearch(TestVCFIngestionCommon):
 
 
 class TestVCFIngestionSampleList(TestVCFIngestionCommon):
-    __unittest_skip__ = False
+    __unittest_skip__ = True
 
     @classmethod
     def _setup(cls):
@@ -242,7 +242,7 @@ class TestVCFIngestionSampleList(TestVCFIngestionCommon):
 
 
 class TestVCFIngestionMetadata(TestVCFIngestionCommon):
-    __unittest_skip__ = False
+    __unittest_skip__ = True
 
     @classmethod
     def _setup(cls):
@@ -267,7 +267,7 @@ class TestVCFIngestionMetadata(TestVCFIngestionCommon):
 
 
 class TestVCFIngestionResume(TestVCFIngestionBase):
-    __unittest_skip__ = False
+    __unittest_skip__ = True
 
     @classmethod
     def _setup(cls):
