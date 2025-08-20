@@ -7,7 +7,7 @@ from typing import Callable, Optional, Union
 import tiledb.cloud
 from tiledb.cloud.dag.decorators._context import _dag_context
 from tiledb.cloud.dag.decorators._inputs import TaskGraphInput
-from tiledb.cloud.dag.decorators._log import log_submission
+from tiledb.cloud.dag.decorators._log import log_tg_submission
 from tiledb.cloud.utilities.logging import get_logger
 
 logger = get_logger()
@@ -141,7 +141,7 @@ def taskgraph(
 
                 dag.compute()
 
-                log_submission(
+                log_tg_submission(
                     namespace=dag.namespace,
                     server_graph_uuid=dag.server_graph_uuid,
                 )

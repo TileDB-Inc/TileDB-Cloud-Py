@@ -10,7 +10,8 @@ from tiledb.cloud.dag import DAG
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag.decorators._context import _dag_context
 from tiledb.cloud.dag.decorators._inputs import UDFInput
-from tiledb.cloud.dag.decorators._log import log_submission
+from tiledb.cloud.dag.decorators._log import log_node_submission
+from tiledb.cloud.dag.decorators._log import log_tg_submission
 from tiledb.cloud.dag.decorators._resources import Resources
 from tiledb.cloud.udf import exec as udf_exec
 from tiledb.cloud.utilities.logging import get_logger
@@ -111,7 +112,7 @@ class UDFHandler:
 
         graph.compute()
 
-        task_uri = log_submission(
+        task_uri = log_tg_submission(
             namespace=graph.namespace,
             server_graph_uuid=graph.server_graph_uuid,
         )
@@ -166,10 +167,13 @@ class UDFHandler:
                     dyn_params["expand_node_output"] = self.input.expand
                 submit = dag.submit_udf_stage if self.input.expand else dag.submit
 
-            logger.info(f"> Submit UDF {self.input.name} to {dag}")
-            logger.info(f"|---args = {self.args}")
-            logger.info(f"|---kwargs = {self.kwargs}")
-            logger.info(f"|---resources = {dyn_params[rkey]}")
+            log_node_submission(
+                name=self.input.name,
+                dag=dag,
+                args=self.args,
+                kwargs=self.kwargs,
+                resources=dyn_params[rkey],
+            )
 
             # Submit the task to the DAG with dynamic parameters
             return submit(
