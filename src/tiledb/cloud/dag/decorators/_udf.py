@@ -10,6 +10,7 @@ from tiledb.cloud.dag import DAG
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag.decorators._context import _dag_context
 from tiledb.cloud.dag.decorators._inputs import UDFInput
+from tiledb.cloud.dag.decorators._log import log_submission
 from tiledb.cloud.dag.decorators._resources import Resources
 from tiledb.cloud.udf import exec as udf_exec
 from tiledb.cloud.utilities.logging import get_logger
@@ -110,12 +111,10 @@ class UDFHandler:
 
         graph.compute()
 
-        task_uri = self.log_url.format(
-            graph.namespace,
-            graph.server_graph_uuid,
+        task_uri = log_submission(
+            namespace=graph.namespace,
+            server_graph_uuid=graph.server_graph_uuid,
         )
-
-        logger.info(f"TileDB Cloud task submitted - {task_uri}")
 
         if open_browser:
             try:
@@ -370,27 +369,3 @@ def udf(
         )
     else:
         return decorator
-
-
-if __name__ == "__main__":
-
-    @udf(mode=Mode.REALTIME)
-    def a(name):
-        print(f"Hello, {name}!")
-
-        return name
-
-    o = a("ss")
-    print(o)
-
-    @udf(mode=Mode.BATCH)
-    def a(name):
-        print(f"Hello, {name}!")
-
-        return name
-
-    o = a("ss")
-    print(o)
-
-    med = udf("TileDB-Inc/my_median", vals=[1, 5])
-    print(f"med: {med}")

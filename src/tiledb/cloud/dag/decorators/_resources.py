@@ -32,9 +32,6 @@ class Resources:
     """CPUs."""
     memory_gb: Optional[int] = None
     """Memory in GiB."""
-    # mode: enum.Enum = Mode.REALTIME
-    """Execution mode."""
-    # validate_on_init: bool = True
     """Whether to validate resources on init. Rarely should be set to False."""
     resource_opts: Sequence[str] = field(
         default_factory=lambda: load_defaults(

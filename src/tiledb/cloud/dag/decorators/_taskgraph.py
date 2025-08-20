@@ -5,9 +5,9 @@ from functools import wraps
 from typing import Callable, Optional, Union
 
 import tiledb.cloud
-from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag.decorators._context import _dag_context
 from tiledb.cloud.dag.decorators._inputs import TaskGraphInput
+from tiledb.cloud.dag.decorators._log import log_submission
 from tiledb.cloud.utilities.logging import get_logger
 
 logger = get_logger()
@@ -140,6 +140,12 @@ def taskgraph(
                 result = func(*args, **kwargs)
 
                 dag.compute()
+
+                log_submission(
+                    namespace=dag.namespace,
+                    server_graph_uuid=dag.server_graph_uuid,
+                )
+
                 if input.wait:
                     dag.wait()
 
@@ -168,29 +174,3 @@ def get_arg_index(fn, arg_name):
     """Get the index of a functions arg by name."""
     # TODO: implement for expand
     pass
-
-
-if __name__ == "__main__":
-    from tiledb.cloud.dag.decorators import udf
-
-    @udf(mode=Mode.REALTIME)
-    def a(number):
-        print(f"Received {number} from tg start")
-
-        return number
-
-    @udf(mode=Mode.BATCH)
-    def b(number):
-        print(f"Received {number} from a")
-
-        return number
-
-    @taskgraph(mode=Mode.BATCH, wait=False)
-    def tg(number):
-        o = a(number)
-        o2 = b(o)
-        med = udf("TileDB-Inc/my_median", vals=[o2, 10])
-        return med
-
-    result = tg(1)
-    print(result)
