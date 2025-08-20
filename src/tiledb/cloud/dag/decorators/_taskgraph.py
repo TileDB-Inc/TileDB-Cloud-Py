@@ -1,112 +1,111 @@
 """Task graph and udf decorators."""
 
 from contextlib import contextmanager
-from contextvars import ContextVar
 from functools import wraps
 from typing import Callable, Optional, Union
 
 import tiledb.cloud
+from tiledb.cloud.dag import Mode
+from tiledb.cloud.dag.decorators._context import _dag_context
+from tiledb.cloud.dag.decorators._inputs import TaskGraphInput
 from tiledb.cloud.utilities.logging import get_logger
 
 logger = get_logger()
 
-MODES = ["local", "realtime", "batch"]
-
-
-# Context variable to hold the active (and potentially nested) DAG contexts.
-_dag_context: ContextVar[tiledb.cloud.dag.DAG] = ContextVar("current_dag")
-
-
-# TODO: add timeout, result_format, retry_strategy, deadline
-
 
 @contextmanager
-def taskgraph_context(
-    acn: Optional[str] = None,
-    max_workers: Optional[int] = None,
-    mode: str = "realtime",
-    name: Optional[str] = None,
-    namespace: Optional[str] = None,
-):
+def taskgraph_context(input: TaskGraphInput):
     """
     Context manager for task graphs, which creates a DAG with the specified parameters
     and pushes the DAG onto the context stack.
 
-    :param acn: TileDB access credentials name, defaults to None
-    :param max_workers: max parallel workers, defaults to None
-    :param mode: task graph mode, "realtime"|"batch"|"local", defaults to None
-    :param name: task graph name, defaults to None
-    :param namespace: TileDB namespace, defaults to None
+    :param input: TaskGraph input configuration
     :yield: the DAG
     """
 
-    # Validate user input and set the mode.
-    if mode == "realtime" or mode == "local":
-        mode_enum = tiledb.cloud.dag.Mode.REALTIME
-    elif mode == "batch":
-        mode_enum = tiledb.cloud.dag.Mode.BATCH
-    else:
-        raise ValueError(f"Invalid mode: {mode}")
-
-    # Create the DAG.
     dag = tiledb.cloud.dag.DAG(
-        max_workers=max_workers,
-        mode=mode_enum,
-        name=name,
-        namespace=namespace,
+        max_workers=input.max_workers,
+        mode=input.mode,
+        name=input.name,
+        namespace=input.namespace,
     )
 
-    # Add state used when submitting tasks.
-    dag._acn = acn if mode == "batch" else None
-    dag._is_realtime = mode == "realtime"
-    dag._is_local = mode == "local"
-    dag._is_batch = mode == "batch"
-
-    # Add the DAG to the context variable.
+    # add the DAG to the context variable.
     token = _dag_context.set(dag)
+    logger.debug(f"DAG context object: {_dag_context}")
     try:
-        logger.info(f"Create DAG: {name}, mode={mode}, namespace={namespace}")
+        # TODO: once in cararra, get the default namespace and use in logging
+        logger.info(
+            "Initialize DAG: "
+            f"name={input.name}, mode={str(input.mode)}, namespace={input.namespace}"
+        )
         yield dag
     finally:
-        logger.info(f"Destroy DAG: {name}")
-        # Remove the DAG from the context variable.
+        logger.debug(f"Destroyed DAG: name={input.name}")
+        # remove DAG from the context variable.
         _dag_context.reset(token)
 
 
 def taskgraph(
     func: Optional[Union[Callable, str]] = None,
-    acn: Optional[str] = None,
-    max_workers: Optional[int] = None,
     mode: str = "realtime",
     name: Optional[str] = None,
     namespace: Optional[str] = None,
+    retry_limit: int = 0,
+    timeout: Optional[int] = None,
     wait: bool = True,
+    max_workers: Optional[int] = None,
     return_dag: bool = False,
 ):
     """Function decorator for a TileDB task graph. When a function wrapped
     with this decorator is executed:
 
         1. A new DAG is created.
-        2. Calls to @task wrapped functions are submitted to the DAG.
+        2. Calls to @udf wrapped functions are submitted to the DAG.
         3. The DAG is executed.
         4. Optionally wait for the DAG to complete.
         5. Return the results and optionally the DAG.
+
+    example:
+
+        ```python
+        @udf
+        def a(number):
+            print(f"Received {number} from tg start")
+
+            return number
+
+        @udf(mode=Mode.BATCH)
+        def b(number):
+            print(f"Received {number} from a")
+
+            return number
+
+        @taskgraph(mode=Mode.REALTIME)
+        def tg(number):
+
+            o = a(number)
+            o2 = b(o)  # batch mode overrided with taskgraph mode
+            med = udf("TileDB-Inc/my_median", vals=[o2, 10])  # registered udf
+            return med
+
+        result = tg(1)
+        ```
 
     Kwargs to the wrapped function can override kwargs in the original
         decorator following the convention of prepending the arg name
         with an underscore. For example:
 
         ```python
-        @taskgraph(mode="realtime")
+        @taskgraph(mode=Mode.REALTIME)
         def compute_taskgraph(a):
             # Do some work.
             pass
 
-        # Override the original task graph mode
-        compute_taskgraph(16, _mode="local")
+        # override the original task graph mode
+        compute_taskgraph(16, _mode=Mode.LOCAL)
         ```
 
-    :param acn: TileDB access credentials name, defaults to None
     :param max_workers: max parallel workers, defaults to None
     :param mode: task graph mode, "realtime"|"batch"|"local", defaults to None
     :param name: task graph name, defaults to None
@@ -120,43 +119,36 @@ def taskgraph(
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Optionally override decorator args with function kwargs.
-            _acn = kwargs.pop("_acn", acn)
-            _max_workers = kwargs.pop("_max_workers", max_workers)
-            _mode = kwargs.pop("_mode", mode)
-            _name = kwargs.pop("_name", name or func.__name__)
-            _namespace = kwargs.pop("_namespace", namespace)
-            _wait = kwargs.pop("_wait", wait)
-            _return_dag = kwargs.pop("_return_dag", return_dag)
+            input = TaskGraphInput(
+                name=name,
+                mode=mode,
+                namespace=namespace,
+                retry_limit=retry_limit,
+                timeout=timeout,
+                wait=wait,
+                max_workers=max_workers,
+                return_dag=return_dag,
+            )
 
-            # Validate user input.
-            if _mode not in MODES:
-                raise ValueError(f"Invalid mode: {_mode}")
+            input.sub_private(**kwargs)
 
-            # Create the DAG with the context manager.
-            with taskgraph_context(
-                acn=_acn,
-                max_workers=_max_workers,
-                mode=_mode,
-                name=_name,
-                namespace=_namespace,
-            ) as dag:
-                # Run the wrapped function, which submits tasks to the task graph.
+            if input.name is None:
+                input.name = func.__name__
+
+            with taskgraph_context(input) as dag:
+                # submits tasks to the task graph.
                 result = func(*args, **kwargs)
 
-                # Execute the DAG.
                 dag.compute()
-
-                # Optionally wait for the DAG to complete.
-                if _wait:
+                if input.wait:
                     dag.wait()
 
-                    # Get the result from the Node, if needed.
+                    # get the result from the Node, if needed.
                     if isinstance(result, tiledb.cloud.dag.Node):
                         result = result.result()
 
-                # Return the DAG and result, if requested.
-                if _return_dag:
+                # return the DAG and result, if requested.
+                if input.return_dag:
                     return dag, result
 
                 return result
@@ -167,7 +159,7 @@ def taskgraph(
     if callable(func):
         return decorator(func)
     elif isinstance(func, str):
-        raise ValueError("Calling registered UDF not yet supported.")
+        raise ValueError("Calling registered taskgraph not yet supported.")
     else:
         return decorator
 
@@ -176,3 +168,29 @@ def get_arg_index(fn, arg_name):
     """Get the index of a functions arg by name."""
     # TODO: implement for expand
     pass
+
+
+if __name__ == "__main__":
+    from tiledb.cloud.dag.decorators import udf
+
+    @udf(mode=Mode.REALTIME)
+    def a(number):
+        print(f"Received {number} from tg start")
+
+        return number
+
+    @udf(mode=Mode.BATCH)
+    def b(number):
+        print(f"Received {number} from a")
+
+        return number
+
+    @taskgraph(mode=Mode.BATCH, wait=False)
+    def tg(number):
+        o = a(number)
+        o2 = b(o)
+        med = udf("TileDB-Inc/my_median", vals=[o2, 10])
+        return med
+
+    result = tg(1)
+    print(result)

@@ -32,9 +32,9 @@ class Resources:
     """CPUs."""
     memory_gb: Optional[int] = None
     """Memory in GiB."""
-    mode: enum.Enum = Mode.REALTIME
+    # mode: enum.Enum = Mode.REALTIME
     """Execution mode."""
-    validate_on_init: bool = True
+    # validate_on_init: bool = True
     """Whether to validate resources on init. Rarely should be set to False."""
     resource_opts: Sequence[str] = field(
         default_factory=lambda: load_defaults(
@@ -43,15 +43,6 @@ class Resources:
         )
     )
     """Valid resource classes."""
-
-    def __post_init__(self) -> None:
-        # self.mode = self.mode.lower()
-
-        if self.validate_on_init:
-            if self.mode == Mode.LOCAL:
-                logger.debug("Resource validation skipped when running locally.")
-            else:
-                self.validate()
 
     def translate_to_resource_class(self) -> str:
         """Translate as best as possible from custom resources to
@@ -71,14 +62,19 @@ class Resources:
         logger.debug(f"Setting resource class to {size} based on cpu + memory_gb.")
         return size
 
-    def validate(self) -> None:
+    def validate(self, mode: enum.Enum) -> None:
         """Validate resources based on input and mode requirements."""
 
         if not self.cpu and not self.memory_gb and not self.resource_class:
-            if self.mode == Mode.REALTIME:
-                # default first value in rersource opts
+            if mode == Mode.REALTIME:
+                logger.debug(
+                    "No REALTIME resources specified. Setting default resource class."
+                )
                 self.resource_class = self.resource_opts[0]
-            elif self.mode == Mode.BATCH:
+            elif mode == Mode.BATCH:
+                logger.debug(
+                    "No BATCH resources specified. Setting default cpu + memory_gb."
+                )
                 self.cpu = 2
                 self.memory_gb = 2
 
@@ -99,5 +95,6 @@ class Resources:
         if self.resource_class and (self.cpu or self.memory_gb):
             raise ValueError("Cannot specify both resource_class and cpu + memory_gb.")
 
-        if self.mode == Mode.REALTIME and (self.cpu or self.memory_gb):
+        if mode == Mode.REALTIME and (self.cpu or self.memory_gb):
+            logger.debug("Translating cpu + memory_gb to resource class.")
             self.resource_class = self.translate_to_resource_class()

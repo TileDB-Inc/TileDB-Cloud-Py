@@ -1,6 +1,0 @@
-
-mode_options = [
-    "local",
-    "realtime",
-    "batch"
-]
