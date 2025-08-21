@@ -19,6 +19,8 @@ def load_defaults(
     toml_key: str,
     config: str = "tiledb.cloud.dag.decorators.configs",
 ) -> List[str]:
+    """Load default resources from toml file."""
+
     return toml.loads(files(config).joinpath(file).read_text())[toml_key]
 
 
@@ -32,7 +34,6 @@ class Resources:
     """CPUs."""
     memory_gb: Optional[int] = None
     """Memory in GiB."""
-    """Whether to validate resources on init. Rarely should be set to False."""
     resource_opts: Sequence[str] = field(
         default_factory=lambda: load_defaults(
             file="resources.toml",
@@ -41,7 +42,7 @@ class Resources:
     )
     """Valid resource classes."""
 
-    def translate_to_resource_class(self) -> str:
+    def translate_to_resource_class(self) -> None:
         """Translate as best as possible from custom resources to
         resource class.
 
@@ -52,46 +53,69 @@ class Resources:
         """
 
         if self.cpu <= 2 and self.memory_gb <= 2:
-            size = "standard"
+            self.resource_class = "standard"
         else:
-            size = "large"
+            self.resource_class = "large"
 
-        logger.debug(f"Setting resource class to {size} based on cpu + memory_gb.")
-        return size
+    def translate_to_cpu_memory_gb(self) -> None:
+        """Translate resource class to cpu + memory_gb."""
+
+        if self.resource_class == "standard":
+            self.cpu = 2
+            self.memory_gb = 2
+        elif self.resource_class == "large":
+            self.cpu = 8
+            self.memory_gb = 8
+
+    def _set_defaults(self, mode: enum.Enum) -> None:
+        """Set default resources based on mode."""
+
+        if mode == Mode.REALTIME:
+            logger.debug("Using default resource class.")
+            self.resource_class = self.resource_opts[0]
+        elif mode == Mode.BATCH:
+            logger.debug("Using default cpu + memory_gb.")
+            self.cpu = 2
+            self.memory_gb = 2
+
+    def _validate_and_translate(self, mode: enum.Enum) -> None:
+        """Validate existing resources and translate if needed."""
+
+        if mode == Mode.REALTIME:
+            if self.resource_class:
+                self._validate_resource_class()
+            else:
+                logger.debug("Translating cpu + memory_gb to resource class.")
+                self.translate_to_resource_class()
+        elif mode == Mode.BATCH:
+            if self.cpu or self.memory_gb:
+                self.cpu = self.cpu or 2
+                self.memory_gb = self.memory_gb or 2
+            else:
+                logger.debug("Translating resource class to cpu + memory_gb.")
+                self.translate_to_cpu_memory_gb()
+
+    def _validate_resource_class(self) -> None:
+        """Validate resource class is in allowed options."""
+
+        self.resource_class = self.resource_class.lower()
+        if self.resource_class not in self.resource_opts:
+            logger.warning(
+                f"Invalid resource class: {self.resource_class}. "
+                f"Must be one of {self.resource_opts}. "
+                f"Forcing default resource class."
+            )
+            self._set_defaults(Mode.REALTIME)
 
     def validate(self, mode: enum.Enum) -> None:
         """Validate resources based on input and mode requirements."""
 
-        if not self.cpu and not self.memory_gb and not self.resource_class:
-            if mode == Mode.REALTIME:
-                logger.debug(
-                    "No REALTIME resources specified. Setting default resource class."
-                )
-                self.resource_class = self.resource_opts[0]
-            elif mode == Mode.BATCH:
-                logger.debug(
-                    "No BATCH resources specified. Setting default cpu + memory_gb."
-                )
-                self.cpu = 2
-                self.memory_gb = 2
+        if mode == Mode.LOCAL:
+            return None
 
-        if self.resource_class:
-            self.resource_class = self.resource_class.lower()
+        has_resources = any([self.cpu, self.memory_gb, self.resource_class])
 
-        # when one not set, force a default
-        if self.cpu or self.memory_gb:
-            self.cpu = self.cpu or 2
-            self.memory_gb = self.memory_gb or 2
-
-        if self.resource_class and self.resource_class not in self.resource_opts:
-            raise ValueError(
-                f"Invalid resource class: {self.resource_class}. "
-                f"Must be one of {self.resource_opts}."
-            )
-
-        if self.resource_class and (self.cpu or self.memory_gb):
-            raise ValueError("Cannot specify both resource_class and cpu + memory_gb.")
-
-        if mode == Mode.REALTIME and (self.cpu or self.memory_gb):
-            logger.debug("Translating cpu + memory_gb to resource class.")
-            self.resource_class = self.translate_to_resource_class()
+        if not has_resources:
+            self._set_defaults(mode)
+        else:
+            self._validate_and_translate(mode)
