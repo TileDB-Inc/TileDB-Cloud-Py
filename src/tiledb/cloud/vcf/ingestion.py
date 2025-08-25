@@ -949,6 +949,8 @@ def ingest_manifest_dag(
     verbose: bool = False,
     aws_find_mode: bool = False,
     disable_manifest: bool = False,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    manifest_resources: Optional[Mapping[str, str]] = MANIFEST_RESOURCES,
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -975,6 +977,10 @@ def ingest_manifest_dag(
     :param verbose: verbose logging, defaults to False
     :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
     :param disable_manifest: disable manifest creation, defaults to False
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to CONSOLIDATE_RESOURCES
+    :param manifest_resources: manual override for manifest UDF resources,
+        defaults to MANIFEST_RESOURCES
     """
 
     logger = get_logger()
@@ -1096,7 +1102,7 @@ def ingest_manifest_dag(
                 include=[MANIFEST_ARRAY, LOG_ARRAY],
                 id=f"manifest-consol-{i//workers}",
                 verbose=verbose,
-                resources=CONSOLIDATE_RESOURCES,
+                resources=consolidate_resources,
                 name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates}",
                 access_credentials_name=acn,
             )
@@ -1108,7 +1114,7 @@ def ingest_manifest_dag(
             config=config,
             verbose=verbose,
             id=f"manifest-ingest-{i}",
-            resources=MANIFEST_RESOURCES,
+            resources=manifest_resources,
             name=f"Ingest VCF Manifest {i+1}/{num_partitions}",
             access_credentials_name=acn,
         )
@@ -1141,6 +1147,7 @@ def ingest_samples_dag(
     consolidate_stats: bool = False,
     use_remote_tmp: bool = False,
     sample_list_uri: Optional[str] = None,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1169,6 +1176,8 @@ def ingest_samples_dag(
     :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
         defaults to False (preferred for small VCFs)
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to None
     """
 
     logger = get_logger_wrapper(verbose)
@@ -1254,7 +1263,7 @@ def ingest_samples_dag(
 
     logger.debug("partitions=%d, consolidates=%d", num_partitions, num_consolidates)
     logger.debug("ingest_resources=%s", ingest_resources)
-    logger.debug("consolidate_resources=%s", CONSOLIDATE_RESOURCES)
+    logger.debug("consolidate_resources=%s", consolidate_resources)
 
     # This loop creates a DAG with the following structure:
     # - Submit N ingest tasks in parallel, where N is `workers` or less
@@ -1271,7 +1280,7 @@ def ingest_samples_dag(
                 config=config,
                 id=f"vcf-consol-{i//workers}",
                 verbose=verbose,
-                resources=CONSOLIDATE_RESOURCES,
+                resources=consolidate_resources,
                 name=f"Consolidate VCF {i//workers + 1}/{num_consolidates}",
                 access_credentials_name=acn,
             )
@@ -1359,6 +1368,7 @@ def ingest_vcf_annotations(
     register_name: Optional[str] = None,
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
 ) -> None:
     """
     Ingest annotation VCF into a dataset. For example, a ClinVar or gnomAD VCF.
@@ -1379,6 +1389,8 @@ def ingest_vcf_annotations(
         defaults to None
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to None
     """
 
     if vcf_uri is None and search_uri is None:
@@ -1450,7 +1462,7 @@ def ingest_vcf_annotations(
         dataset_uri,
         config=config,
         verbose=verbose,
-        resources=CONSOLIDATE_RESOURCES,
+        resources=consolidate_resources,
         name="Consolidate annotations",
         access_credentials_name=acn,
     )
@@ -1541,6 +1553,8 @@ def ingest_vcf(
     aws_find_mode: bool = False,
     use_remote_tmp: bool = False,
     disable_manifest: bool = False,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    manifest_resources: Optional[Mapping[str, str]] = MANIFEST_RESOURCES,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1590,6 +1604,10 @@ def ingest_vcf(
     :param use_remote_tmp: use remote tmp space if VCFs need to be sorted and bgzipped,
         defaults to False (preferred for small VCFs)
     :param disable_manifest: disable manifest creation, defaults to False
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to CONSOLIDATE_RESOURCES
+    :param manifest_resources: manual override for manifest UDF resources,
+        defaults to MANIFEST_RESOURCES
     """
 
     # Validate user input
@@ -1636,6 +1654,8 @@ def ingest_vcf(
         verbose=verbose,
         aws_find_mode=aws_find_mode,
         disable_manifest=disable_manifest,
+        consolidate_resources=consolidate_resources,
+        manifest_resources=manifest_resources,
     )
 
     # Ingest VCFs using URIs in the manifest
@@ -1657,6 +1677,7 @@ def ingest_vcf(
         consolidate_stats=consolidate_stats,
         use_remote_tmp=use_remote_tmp,
         sample_list_uri=sample_list_uri if disable_manifest else None,
+        consolidate_resources=consolidate_resources,
     )
 
     # Register the dataset on TileDB Cloud
