@@ -212,7 +212,7 @@ def _udf(
     expand: Optional[str] = None,
     image_name: Optional[str] = None,
     **kwargs: Mapping[str, Any],
-):
+) -> Any:
     logger.debug(f"args: {args}")
     logger.debug(f"kwargs: {kwargs}")
 
@@ -286,14 +286,18 @@ def udf(
     retry_limit: int = 0,
     **kwargs: Mapping[str, Any],
 ) -> Any:
-    """
-    Function decorator for a TileDB task. When a function wrapped with this decorator
-    is executed:
+    """Execute or decorate a function as a TileDB UDF.
 
-    1. Get the DAG from the current DAG context.
-    2. Submit the task to the DAG using the specified parameters.
+    Example:
 
-    If the decorated function is run outside of a DAG context, it will run locally.
+        ```python
+        @udf
+        def compute_task(a):
+            return result
+
+        # Run the UDF.
+        compute_task(16)
+        ```
 
     Kwargs to the wrapped function can override kwargs in the original decorator
     following the convention of prepending the arg name with an underscore.
@@ -303,7 +307,6 @@ def udf(
         ```python
         @udf(resource_class="standard")
         def compute_task(a):
-            # Do some work.
             return result
 
         @taskgraph(mode="realtime")

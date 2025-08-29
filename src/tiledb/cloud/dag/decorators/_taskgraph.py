@@ -34,7 +34,8 @@ def taskgraph_context(input: TaskGraphInput):
     token = _dag_context.set(dag)
     logger.debug(f"DAG context object: {_dag_context}")
     try:
-        # TODO: once in cararra, get the default namespace and use in logging
+        # TODO: once in cararra, get the default namespace (get_self_user) and
+        # use in logging
         logger.info(
             "Initialize DAG: "
             f"name={input.name}, mode={str(input.mode)}, namespace={input.namespace}"
