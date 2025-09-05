@@ -58,6 +58,12 @@ MANIFEST_RESOURCES = {
     "memory": "2Gi",
 }
 
+# Filter samples task resources
+FILTER_SAMPLES_RESOURCES = {
+    "cpu": "2",
+    "memory": "8Gi",
+}
+
 
 class Contigs(enum.Enum):
     """
@@ -951,6 +957,9 @@ def ingest_manifest_dag(
     disable_manifest: bool = False,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
     manifest_resources: Optional[Mapping[str, str]] = MANIFEST_RESOURCES,
+    create_resources: Optional[Mapping[str, str]] = None,
+    read_vcf_uris_resources: Optional[Mapping[str, str]] = None,
+    filter_uri_resources: Optional[Mapping[str, str]] = None,
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -981,6 +990,11 @@ def ingest_manifest_dag(
         defaults to CONSOLIDATE_RESOURCES
     :param manifest_resources: manual override for manifest UDF resources,
         defaults to MANIFEST_RESOURCES
+    :param create_resources: manual override for create UDF resources, defaults to None
+    :param read_vcf_uris_resources: manual override for read VCF UDF resources,
+        defaults to None
+    :param filter_uri_resources: manual override for filter VCF UDF resources,
+        defaults to None
     """
 
     logger = get_logger()
@@ -1002,6 +1016,7 @@ def ingest_manifest_dag(
         verbose=verbose,
         name="Create VCF dataset",
         access_credentials_name=acn,
+        resources=create_resources,
     )
 
     # If manifest creation is disabled, return after creating the dataset
@@ -1019,6 +1034,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             name="Read VCF URIs",
             access_credentials_name=acn,
+            resources=read_vcf_uris_resources,
         )
 
     if search_uri:
@@ -1033,6 +1049,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             name="Find VCF URIs",
             access_credentials_name=acn,
+            resources=read_vcf_uris_resources,
         )
 
     if metadata_uri:
@@ -1045,6 +1062,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             name="Read VCF URIs from metadata",
             access_credentials_name=acn,
+            resources=read_vcf_uris_resources,
         )
 
     filtered_sample_uris = graph.submit(
@@ -1055,6 +1073,7 @@ def ingest_manifest_dag(
         verbose=verbose,
         name="Filter VCF URIs",
         access_credentials_name=acn,
+        resources=filter_uri_resources,
     )
 
     run_dag(graph)
@@ -1148,6 +1167,7 @@ def ingest_samples_dag(
     use_remote_tmp: bool = False,
     sample_list_uri: Optional[str] = None,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    filter_samples_resources: Optional[Mapping[str, str]] = FILTER_SAMPLES_RESOURCES,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1206,7 +1226,7 @@ def ingest_samples_dag(
             config=config,
             verbose=verbose,
             name="Filter VCF samples",
-            resource_class="large",
+            resources=filter_samples_resources,
             access_credentials_name=acn,
         )
 
@@ -1369,6 +1389,9 @@ def ingest_vcf_annotations(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    find_uris_resources: Optional[Mapping[str, str]] = None,
+    create_resources: Optional[Mapping[str, str]] = None,
+    register_resources: Optional[Mapping[str, str]] = None,
 ) -> None:
     """
     Ingest annotation VCF into a dataset. For example, a ClinVar or gnomAD VCF.
@@ -1390,6 +1413,11 @@ def ingest_vcf_annotations(
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to None
+    :param find_uris_resources: manual override for find VCF UDF resources,
+        defaults to None
+    :param create_resources: manual override for create UDF resources, defaults to None
+    :param register_resources: manual override for register UDF resources,
         defaults to None
     """
 
@@ -1423,6 +1451,7 @@ def ingest_vcf_annotations(
             verbose=verbose,
             name="Find annotation VCF URIs",
             access_credentials_name=acn,
+            resources=find_uris_resources,
         )
 
         run_dag(graph)
@@ -1454,6 +1483,7 @@ def ingest_vcf_annotations(
         verbose=verbose,
         name="Create annotation dataset",
         access_credentials_name=acn,
+        resources=create_resources,
     )
 
     # Add a node to consolidate the dataset.
@@ -1508,6 +1538,7 @@ def ingest_vcf_annotations(
             verbose=verbose,
             name="Register annotations",
             access_credentials_name=acn,
+            resources=register_resources,
         )
 
         register.depends_on(consolidate_node)
@@ -1555,6 +1586,10 @@ def ingest_vcf(
     disable_manifest: bool = False,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
     manifest_resources: Optional[Mapping[str, str]] = MANIFEST_RESOURCES,
+    create_resources: Optional[Mapping[str, str]] = None,
+    read_vcf_uris_resources: Optional[Mapping[str, str]] = None,
+    filter_uri_resources: Optional[Mapping[str, str]] = None,
+    filter_samples_resources: Optional[Mapping[str, str]] = FILTER_SAMPLES_RESOURCES,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1608,6 +1643,13 @@ def ingest_vcf(
         defaults to CONSOLIDATE_RESOURCES
     :param manifest_resources: manual override for manifest UDF resources,
         defaults to MANIFEST_RESOURCES
+    :param create_resources: manual override for create UDF resources, defaults to None
+    :param read_vcf_uris_resources: manual override for read VCF UDF resources,
+        defaults to None
+    :param filter_uri_resources: manual override for filter VCF UDF resources,
+        defaults to None
+    :param filter_samples_resources: manual override for filter samples UDF resources,
+        defaults to FILTER_SAMPLES_RESOURCES
     """
 
     # Validate user input
@@ -1656,6 +1698,9 @@ def ingest_vcf(
         disable_manifest=disable_manifest,
         consolidate_resources=consolidate_resources,
         manifest_resources=manifest_resources,
+        create_resources=create_resources,
+        read_vcf_uris_resources=read_vcf_uris_resources,
+        filter_uri_resources=filter_uri_resources,
     )
 
     # Ingest VCFs using URIs in the manifest
@@ -1678,6 +1723,7 @@ def ingest_vcf(
         use_remote_tmp=use_remote_tmp,
         sample_list_uri=sample_list_uri if disable_manifest else None,
         consolidate_resources=consolidate_resources,
+        filter_samples_resources=filter_samples_resources,
     )
 
     # Register the dataset on TileDB Cloud
