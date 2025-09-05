@@ -1159,13 +1159,13 @@ def ingest_samples_dag(
     workers: int = VCF_WORKERS,
     max_samples: Optional[int] = None,
     resume: bool = True,
-    ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     create_index: bool = True,
     trace_id: Optional[str] = None,
     consolidate_stats: bool = False,
     use_remote_tmp: bool = False,
     sample_list_uri: Optional[str] = None,
+    ingest_resources: Optional[Mapping[str, str]] = None,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
     filter_samples_resources: Optional[Mapping[str, str]] = FILTER_SAMPLES_RESOURCES,
 ) -> None:
@@ -1188,7 +1188,6 @@ def ingest_samples_dag(
     :param workers: maximum number of parallel workers, defaults to VCF_WORKERS
     :param max_samples: maximum number of samples to ingest, defaults to None (no limit)
     :param resume: enable resume ingestion mode, defaults to True
-    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
@@ -1196,7 +1195,10 @@ def ingest_samples_dag(
     :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
         defaults to False (preferred for small VCFs)
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to None
+    :param filter_samples_resources: manual override for filter samples UDF resources,
         defaults to None
     """
 
@@ -1386,8 +1388,8 @@ def ingest_vcf_annotations(
     acn: Optional[str] = None,
     namespace: Optional[str] = None,
     register_name: Optional[str] = None,
-    ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
+    ingest_resources: Optional[Mapping[str, str]] = None,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
     find_uris_resources: Optional[Mapping[str, str]] = None,
     create_resources: Optional[Mapping[str, str]] = None,
@@ -1410,8 +1412,8 @@ def ingest_vcf_annotations(
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param register_name: name to register the dataset with on TileDB Cloud,
         defaults to None
-    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param consolidate_resources: manual override for consolidate UDF resources,
         defaults to None
     :param find_uris_resources: manual override for find VCF UDF resources,
@@ -1576,7 +1578,6 @@ def ingest_vcf(
     vcf_batch_size: int = VCF_BATCH_SIZE,
     vcf_workers: int = VCF_WORKERS,
     vcf_threads: int = VCF_THREADS,
-    ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     create_index: bool = True,
     trace_id: Optional[str] = None,
@@ -1584,6 +1585,7 @@ def ingest_vcf(
     aws_find_mode: bool = False,
     use_remote_tmp: bool = False,
     disable_manifest: bool = False,
+    ingest_resources: Optional[Mapping[str, str]] = None,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
     manifest_resources: Optional[Mapping[str, str]] = MANIFEST_RESOURCES,
     create_resources: Optional[Mapping[str, str]] = None,
@@ -1630,7 +1632,6 @@ def ingest_vcf(
     :param vcf_batch_size: batch size for VCF ingestion, defaults to VCF_BATCH_SIZE
     :param vcf_workers: number of workers for VCF ingestion, defaults to VCF_WORKERS
     :param vcf_threads: number of threads for VCF ingestion, defaults to VCF_THREADS
-    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
@@ -1639,6 +1640,7 @@ def ingest_vcf(
     :param use_remote_tmp: use remote tmp space if VCFs need to be sorted and bgzipped,
         defaults to False (preferred for small VCFs)
     :param disable_manifest: disable manifest creation, defaults to False
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param consolidate_resources: manual override for consolidate UDF resources,
         defaults to CONSOLIDATE_RESOURCES
     :param manifest_resources: manual override for manifest UDF resources,
