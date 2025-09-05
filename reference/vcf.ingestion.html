@@ -1176,16 +1176,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    disable_manifest<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    consolidate_resources<span class="op">=</span>CONSOLIDATE_RESOURCES,</span>
 <span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    manifest_resources<span class="op">=</span>MANIFEST_RESOURCES,</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    create_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    read_vcf_uris_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    filter_uri_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create a DAG to load the manifest array.</p>
 <section id="parameters-8" class="level4 doc-section doc-section-parameters">
 <h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
+<col style="width: 12%">
 <col style="width: 22%">
 <col style="width: 52%">
-<col style="width: 13%">
+<col style="width: 12%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1328,6 +1331,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>manual override for manifest UDF resources, defaults to MANIFEST_RESOURCES</td>
 <td><code>MANIFEST_RESOURCES</code></td>
 </tr>
+<tr class="odd">
+<td>create_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for create UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>read_vcf_uris_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for read VCF UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>filter_uri_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for filter VCF UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -1409,25 +1430,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    workers<span class="op">=</span>VCF_WORKERS,</span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    max_samples<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    resume<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    consolidate_stats<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    use_remote_tmp<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    sample_list_uri<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    consolidate_stats<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    use_remote_tmp<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    sample_list_uri<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    consolidate_resources<span class="op">=</span>CONSOLIDATE_RESOURCES,</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    filter_samples_resources<span class="op">=</span>FILTER_SAMPLES_RESOURCES,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Create a DAG to ingest samples into the dataset.</p>
 <p>Note: If <code>sample_list_uri</code> is provided, the manifest is not checked for existing samples.</p>
 <section id="parameters-10" class="level4 doc-section doc-section-parameters">
 <h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-10">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 9%">
-<col style="width: 19%">
-<col style="width: 61%">
 <col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 59%">
+<col style="width: 11%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1499,45 +1521,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>True</code></td>
 </tr>
 <tr class="odd">
-<td>ingest_resources</td>
-<td>Optional[Mapping[str, str]]</td>
-<td>manual override for ingest UDF resources, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
 <td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>create_index</td>
 <td>bool</td>
 <td>force creation of a local index file, defaults to True</td>
 <td><code>True</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>trace_id</td>
 <td>Optional[str]</td>
 <td>trace ID for logging, defaults to None</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>consolidate_stats</td>
 <td>bool</td>
 <td>consolidate the stats arrays, defaults to False</td>
 <td><code>False</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>use_remote_tmp</td>
 <td>bool</td>
 <td>use remote tmp space if VCFs need to be bgzipped, defaults to False (preferred for small VCFs)</td>
 <td><code>False</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>sample_list_uri</td>
 <td>Optional[str]</td>
 <td>URI with a list of VCF URIs, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>ingest_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for ingest UDF resources, defaults to None</td>
 <td><code>None</code></td>
 </tr>
 <tr class="even">
@@ -1545,6 +1567,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Optional[Mapping[str, str]]</td>
 <td>manual override for consolidate UDF resources, defaults to None</td>
 <td><code>CONSOLIDATE_RESOURCES</code></td>
+</tr>
+<tr class="odd">
+<td>filter_samples_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for filter samples UDF resources, defaults to None</td>
+<td><code>FILTER_SAMPLES_RESOURCES</code></td>
 </tr>
 </tbody>
 </table>
@@ -1711,26 +1739,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    vcf_batch_size<span class="op">=</span>VCF_BATCH_SIZE,</span>
 <span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    vcf_workers<span class="op">=</span>VCF_WORKERS,</span>
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    vcf_threads<span class="op">=</span>VCF_THREADS,</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    consolidate_stats<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    aws_find_mode<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    use_remote_tmp<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    disable_manifest<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    create_index<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    trace_id<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    consolidate_stats<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    aws_find_mode<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    use_remote_tmp<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    disable_manifest<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    consolidate_resources<span class="op">=</span>CONSOLIDATE_RESOURCES,</span>
 <span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    manifest_resources<span class="op">=</span>MANIFEST_RESOURCES,</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    create_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    read_vcf_uris_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    filter_uri_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    filter_samples_resources<span class="op">=</span>FILTER_SAMPLES_RESOURCES,</span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Ingest samples into a dataset.</p>
 <section id="parameters-12" class="level4 doc-section doc-section-parameters">
 <h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-12">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 9%">
-<col style="width: 19%">
-<col style="width: 61%">
 <col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 59%">
+<col style="width: 11%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1886,52 +1918,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>VCF_THREADS</code></td>
 </tr>
 <tr class="odd">
-<td>ingest_resources</td>
-<td>Optional[Mapping[str, str]]</td>
-<td>manual override for ingest UDF resources, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
 <td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>create_index</td>
 <td>bool</td>
 <td>force creation of a local index file, defaults to True</td>
 <td><code>True</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>trace_id</td>
 <td>Optional[str]</td>
 <td>trace ID for logging, defaults to None</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>consolidate_stats</td>
 <td>bool</td>
 <td>consolidate the stats arrays, defaults to True</td>
 <td><code>True</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>aws_find_mode</td>
 <td>bool</td>
 <td>use AWS CLI to find VCFs, defaults to False</td>
 <td><code>False</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>use_remote_tmp</td>
 <td>bool</td>
 <td>use remote tmp space if VCFs need to be sorted and bgzipped, defaults to False (preferred for small VCFs)</td>
 <td><code>False</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>disable_manifest</td>
 <td>bool</td>
 <td>disable manifest creation, defaults to False</td>
 <td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>ingest_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for ingest UDF resources, defaults to None</td>
+<td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>consolidate_resources</td>
@@ -1944,6 +1976,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Optional[Mapping[str, str]]</td>
 <td>manual override for manifest UDF resources, defaults to MANIFEST_RESOURCES</td>
 <td><code>MANIFEST_RESOURCES</code></td>
+</tr>
+<tr class="odd">
+<td>create_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for create UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>read_vcf_uris_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for read VCF UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>filter_uri_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for filter VCF UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>filter_samples_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for filter samples UDF resources, defaults to FILTER_SAMPLES_RESOURCES</td>
+<td><code>FILTER_SAMPLES_RESOURCES</code></td>
 </tr>
 </tbody>
 </table>
@@ -1963,10 +2019,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    acn<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    namespace<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    register_name<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    ingest_resources<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    consolidate_resources<span class="op">=</span>CONSOLIDATE_RESOURCES,</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    find_uris_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    create_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    register_resources<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Ingest annotation VCF into a dataset. For example, a ClinVar or gnomAD VCF.</p>
 <section id="parameters-13" class="level4 doc-section doc-section-parameters">
 <h4 class="doc-section doc-section-parameters anchored" data-anchor-id="parameters-13">Parameters</h4>
@@ -2047,22 +2106,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td>ingest_resources</td>
-<td>Optional[Mapping[str, str]]</td>
-<td>manual override for ingest UDF resources, defaults to None</td>
-<td><code>None</code></td>
-</tr>
-<tr class="even">
 <td>verbose</td>
 <td>bool</td>
 <td>verbose logging, defaults to False</td>
 <td><code>False</code></td>
+</tr>
+<tr class="even">
+<td>ingest_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for ingest UDF resources, defaults to None</td>
+<td><code>None</code></td>
 </tr>
 <tr class="odd">
 <td>consolidate_resources</td>
 <td>Optional[Mapping[str, str]]</td>
 <td>manual override for consolidate UDF resources, defaults to None</td>
 <td><code>CONSOLIDATE_RESOURCES</code></td>
+</tr>
+<tr class="even">
+<td>find_uris_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for find VCF UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td>create_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for create UDF resources, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td>register_resources</td>
+<td>Optional[Mapping[str, str]]</td>
+<td>manual override for register UDF resources, defaults to None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
