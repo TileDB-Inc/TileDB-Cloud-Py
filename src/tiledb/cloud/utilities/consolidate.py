@@ -165,8 +165,10 @@ def consolidate_fragments(
     :param group_by_first_dim: group fragment by first dimension, defaults to True
     :param graph: graph to submit nodes to, defaults to None
     :param dependencies: list of nodes in the graph to depend on, defaults to None
-    :param consolidate_resources: resources for the consolidate node, defaults to None
-    :param group_fragments_resource: resources for the group_fragments node, defaults to None
+    :param consolidate_resources: resources for the consolidate node,
+        defaults to None
+    :param group_fragments_resources: resources for the group_fragments node,
+        defaults to None
     :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
     :param max_fragment_size: max size of consolidated fragments,
         defaults to MAX_FRAGMENT_SIZE_BYTES
