@@ -64,6 +64,12 @@ FILTER_SAMPLES_RESOURCES = {
     "memory": "8Gi",
 }
 
+# Group fragments task resources
+GROUP_FRAGMENTS_RESOURCES = {
+    "cpu": "2",
+    "memory": "16Gi",
+} 
+
 
 class Contigs(enum.Enum):
     """
@@ -1168,6 +1174,7 @@ def ingest_samples_dag(
     ingest_resources: Optional[Mapping[str, str]] = None,
     consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
     filter_samples_resources: Optional[Mapping[str, str]] = FILTER_SAMPLES_RESOURCES,
+    group_fragments_resources: Optional[Mapping[str, str]] = GROUP_FRAGMENTS_RESOURCES,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1200,6 +1207,7 @@ def ingest_samples_dag(
         defaults to None
     :param filter_samples_resources: manual override for filter samples UDF resources,
         defaults to None
+    :param group_fragments_resources: resources for the group_fragments node, defaults to None
     """
 
     logger = get_logger_wrapper(verbose)
@@ -1358,6 +1366,8 @@ def ingest_samples_dag(
                     group_by_first_dim=True,
                     graph=graph,
                     dependencies=[consolidate],
+                    consolidate_resources=consolidate_resources,
+                    group_fragments_resources=group_fragments_resources,
                 )
 
     logger.info("Ingesting %d samples.", len(sample_uris))
@@ -1592,6 +1602,7 @@ def ingest_vcf(
     read_vcf_uris_resources: Optional[Mapping[str, str]] = None,
     filter_uri_resources: Optional[Mapping[str, str]] = None,
     filter_samples_resources: Optional[Mapping[str, str]] = FILTER_SAMPLES_RESOURCES,
+    group_fragments_resources: Optional[Mapping[str, str]] = GROUP_FRAGMENTS_RESOURCES,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1652,6 +1663,7 @@ def ingest_vcf(
         defaults to None
     :param filter_samples_resources: manual override for filter samples UDF resources,
         defaults to FILTER_SAMPLES_RESOURCES
+    :param group_fragments_resources: resources for the group_fragments node, defaults to None
     """
 
     # Validate user input
@@ -1726,6 +1738,7 @@ def ingest_vcf(
         sample_list_uri=sample_list_uri if disable_manifest else None,
         consolidate_resources=consolidate_resources,
         filter_samples_resources=filter_samples_resources,
+        group_fragments_resources=group_fragments_resources,
     )
 
     # Register the dataset on TileDB Cloud
