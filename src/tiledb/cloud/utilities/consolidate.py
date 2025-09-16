@@ -140,6 +140,7 @@ def consolidate_fragments(
     graph: Optional[dag.DAG] = None,
     dependencies: Optional[Sequence[dag.Node]] = None,
     consolidate_resources: Optional[Mapping[str, str]] = None,
+    group_fragments_resources: Optional[Mapping[str, str]] = None,
     namespace: Optional[str] = None,
     max_fragment_size: int = MAX_FRAGMENT_SIZE_BYTES,
 ) -> None:
@@ -165,6 +166,7 @@ def consolidate_fragments(
     :param graph: graph to submit nodes to, defaults to None
     :param dependencies: list of nodes in the graph to depend on, defaults to None
     :param consolidate_resources: resources for the consolidate node, defaults to None
+    :param group_fragments_resource: resources for the group_fragments node, defaults to None
     :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
     :param max_fragment_size: max size of consolidated fragments,
         defaults to MAX_FRAGMENT_SIZE_BYTES
@@ -197,6 +199,12 @@ def consolidate_fragments(
         "memory": "16Gi",
     }
 
+    # Set resources for the group fragments node, if not provided.
+    group_fragments_resources = group_fragments_resources or {
+        "cpu": "2",
+        "memory": "16Gi",
+    }
+
     name = basename(array_uri)
 
     fragment_groups = graph.submit(
@@ -206,10 +214,7 @@ def consolidate_fragments(
         group_by_first_dim=group_by_first_dim,
         name=f"Groups Fragments - {name}",
         access_credentials_name=acn,
-        resources={
-            "cpu": "1",
-            "memory": "1Gi",
-        },
+        resources=group_fragments_resources,
     )
 
     if dependencies:
