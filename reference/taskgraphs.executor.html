@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,14 +69,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../t_favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1706312780242cf9172546e1e8c25255.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b16be16db64b6bb93dbeb5a5a37ed20d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../TileDB_logo_primary.png" alt="" class="navbar-logo">
+    <img src="../TileDB_logo_primary.png" alt="" class="navbar-logo light-content">
+    <img src="../TileDB_logo_primary.png" alt="" class="navbar-logo dark-content">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -154,6 +156,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -508,7 +514,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="tiledb.cloud.taskgraphs.executor.Executor" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor">Executor</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor(graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor(graph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>An interface allowing for execution and management of a task graph.</p>
 <p>This is the basic interface fulfilled by any task graph executor. While some implementations may provide more control, these operations, to the extent that they are supported, are universal across task graph implementations.</p>
 <section id="attributes-1" class="level4">
@@ -602,88 +608,88 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.add_update_callback" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.add_update_callback">add_update_callback</h5>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.add_update_callback(callback)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.add_update_callback(callback)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Adds a callback that will be called when a node’s state changes.</p>
 <p>Callbacks are delivered on a best-effort basis and may be asynchronous or batched depending upon the implementation. There is no guarantee as to what thread the callback may come in on.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.cancel" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.cancel">cancel</h5>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.cancel()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.cancel()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If possible, cancels further execution of this graph.</p>
 <p>Like <code>futures.Future.cancel</code>, this returns <code>True</code> if the graph could be cancelled, and <code>False</code> if not.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.cancelled_nodes" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.cancelled_nodes">cancelled_nodes</h5>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.cancelled_nodes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.cancelled_nodes()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A snapshot of all nodes that have been cancelled.</p>
 <p>This includes both nodes that were manually cancelled, and nodes that are not executed because their parents failed.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.execute" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.execute">execute</h5>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.execute(<span class="op">**</span>inputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.execute(<span class="op">**</span>inputs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Starts execution of this graph with the given input values.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.failed_nodes" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.failed_nodes">failed_nodes</h5>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.failed_nodes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.failed_nodes()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A snapshot of all nodes that have failed.</p>
 <p>The returned collection of nodes is not guaranteed to be fully consistent, since in the process of iterating over nodes, the status of some nodes may have changed.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.node" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.node">node</h5>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.node(nid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.node(nid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Gets the node identified either by name, ID, or builder node.</p>
 <p>When passed: - a <code>str</code>: The node with the given name. - a :class:<code>uuid.UUID</code>: The node with the given ID. - a :class:<code>builder.Node</code>: The execution node corresponding to the given node from the :class:<code>builder.Builder</code>.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.nodes_by_name" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.nodes_by_name">nodes_by_name</h5>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.nodes_by_name()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.nodes_by_name()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A dictionary of all nodes, keyed by node name.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.retry" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.retry">retry</h5>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.retry(node)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.retry(node)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Attempts to retry a node.</p>
 <p>Returns True if the node was retried, false if not.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.retry_all" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.retry_all">retry_all</h5>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.retry_all()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.retry_all()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Retries all retry-able nodes.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.running_nodes" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.running_nodes">running_nodes</h5>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.running_nodes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.running_nodes()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A snapshot of all nodes currently running.</p>
 <p>The returned collection of nodes is not guaranteed to be fully consistent, since in the process of iterating over nodes, the status of some nodes may have changed.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.successful_nodes" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.successful_nodes">successful_nodes</h5>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.successful_nodes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.successful_nodes()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A snapshot of all nodes that have completed successfully.</p>
 <p>The returned collection of nodes is not guaranteed to be fully consistent, since in the process of iterating over nodes, the status of some nodes may have changed.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.unstarted_nodes" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.unstarted_nodes">unstarted_nodes</h5>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.unstarted_nodes()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.unstarted_nodes()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>A snapshot of all nodes that have not yet been started.</p>
 <p>The returned collection of nodes is not guaranteed to be fully consistent, since in the process of iterating over nodes, the status of some nodes may have changed.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.visualize" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.visualize">visualize</h5>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.visualize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.visualize()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Returns a visualization of this graph for a Jupyter notebook.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Executor.wait" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Executor.wait">wait</h5>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.wait(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Executor.wait(timeout<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Waits for the execution of this task graph to complete.</p>
 </section>
 </section>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node">Node</h3>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node(uid, owner, name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node(uid, owner, name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>An abstract type specifying the operations on a Node of a task graph.</p>
 <p>Executor implementations will return instances of implementations of these Nodes when executing a task graph. If a caller uses only the methods here when manipulating task graph nodes, the actions they take will work (to the extent that they are supported) no matter the specifics of the executor itself (client-side, server-side, etc.).</p>
 <p>The external-facing API matches that of <code>futures.Future</code>, with some added niceties (like <code>status</code>), and without the internal methods that are only “meant for use in unit tests and Executor implementations”: <code>set_running_or_notify_cancel</code>, <code>set_result</code>, and <code>set_exception</code>.</p>
@@ -782,69 +788,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="tiledb.cloud.taskgraphs.executor.Node.add_done_callback" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.add_done_callback">add_done_callback</h5>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.add_done_callback(fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.add_done_callback(fn)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Adds a callback that will be called when this Node completes.</p>
 <p>While the current behavior is similar to the way <code>add_done_callback</code> on a regular <code>Future</code> works, we don’t guarantee that it will remain the same (e.g.&nbsp;will it be called immediately, on what thread). A callback may be called back multiple times if the Node completes multiple times.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.cancel" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.cancel">cancel</h5>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.cancel()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.cancel()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If possible, cancels execution of this node.</p>
 <p>Returns True if cancellation succeeded, False if we could not cancel.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.cancelled" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.cancelled">cancelled</h5>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.cancelled()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.cancelled()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Returns True if the Node was cancelled.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.done" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.done">done</h5>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.done()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.done()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Returns True if this Node has completed or been cancelled.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.exception" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.exception">exception</h5>
-<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.exception(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.exception(timeout<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If this node failed, the exception that was raised.</p>
 <p>If the Node succeeded, returns None. If the Node was cancelled, a <code>futures.CancelledError</code> will be <em>raised</em> rather than returned.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.result" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.result">result</h5>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.result(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.result(timeout<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The value resulting from executing this node.</p>
 <p>Returns the result if present, or raises an exception if execution raised an exception.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.retry" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.retry">retry</h5>
-<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.retry()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.retry()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Attempts to submit this node for retry, if possible.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.running" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.running">running</h5>
-<div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.running()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.running()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Returns True if the Node is currently executing.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.task_id" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.task_id">task_id</h5>
-<div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.task_id(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.task_id(timeout<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The task ID that was returned from the server, if applicable.</p>
 <p>If this was executed on the server side, this should return the UUID of the actual execution of this task. If it was purely client-side, or the server did not return a UUID, this should return None.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Node.wait" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Node.wait">wait</h5>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.wait(timeout<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Node.wait(timeout<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Waits for the given amount of time for this Node to complete.</p>
 </section>
 </section>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.ParentFailedError" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.ParentFailedError">ParentFailedError</h3>
-<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.ParentFailedError(cause, node)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.ParentFailedError(cause, node)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Raised when the parent of a Node fails.</p>
 </section>
 <section id="tiledb.cloud.taskgraphs.executor.Status" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.taskgraphs.executor.Status">Status</h3>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Status()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>cloud.taskgraphs.executor.Status()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The current status of a Node (or a graph).</p>
 <section id="attributes-3" class="level4">
 <h4 class="anchored" data-anchor-id="attributes-3">Attributes</h4>
@@ -945,13 +951,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
