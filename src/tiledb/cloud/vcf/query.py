@@ -407,11 +407,6 @@ def build_read_dag(
         else tiledb.cloud.UDFResultType.ARROW
     )
 
-    if batch_mode:
-        resource_class = None
-    else:
-        resources = None
-
     tables = []
     for region in range(num_region_partitions):
         for sample in range(num_sample_partitions):
