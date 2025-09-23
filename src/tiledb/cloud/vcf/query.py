@@ -327,8 +327,9 @@ def build_read_dag(
         defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
-    :param resources: TileDB-Cloud resource class for batch UDFs, defaults to None
+    :param resource_class: TileDB-Cloud resource_class for realtime UDFs,
+        defaults to None
+    :param resources: TileDB-Cloud resources for batch UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run the query with batch UDFs, defaults to False
     :return: DAG and result Node
@@ -519,8 +520,9 @@ def read(
         defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
-    :param resources: TileDB-Cloud resource class for batch UDFs, defaults to None
+    :param resource_class: TileDB-Cloud resource_class for realtime UDFs,
+        defaults to None
+    :param resources: TileDB-Cloud resources for batch UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run the query with batch UDFs, defaults to False
     :return: Arrow table containing the query results
