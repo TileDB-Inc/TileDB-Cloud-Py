@@ -280,6 +280,7 @@ def build_read_dag(
     ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
+    dag_name: str = "VCF-Distributed-Query",
     max_workers: int = MAX_WORKERS,
     samples: Optional[
         Union[
@@ -299,6 +300,7 @@ def build_read_dag(
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
+    resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     batch_mode: bool = False,
 ) -> Tuple[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node]:
@@ -312,6 +314,7 @@ def build_read_dag(
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
+    :param dag_name: the name of the built DAG, defaults to "VCF-Distributed-Query",
     :param max_workers: maximum number of workers, defaults to 40
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
@@ -324,7 +327,9 @@ def build_read_dag(
         defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
+    :param resource_class: TileDB-Cloud resource_class for realtime UDFs,
+        defaults to None
+    :param resources: TileDB-Cloud resources for batch UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run the query with batch UDFs, defaults to False
     :return: DAG and result Node
@@ -343,6 +348,11 @@ def build_read_dag(
     if regions is None and bed_file is None:
         raise ValueError(
             "`regions` or `bed_file` must be provided in order to partition the query."
+        )
+
+    if resources and resource_class:
+        raise ValueError(
+            "use `resources` when `batch_mode` is True and `resource_class` if False"
         )
 
     attrs = attrs or DEFAULT_ATTRS
@@ -380,7 +390,7 @@ def build_read_dag(
 
     dag = tiledb.cloud.dag.DAG(
         namespace=namespace,
-        name="VCF-Distributed-Query",
+        name=dag_name,
         max_workers=max_workers,
         mode=mode,
     )
@@ -421,6 +431,7 @@ def build_read_dag(
                     name=f"VCF Query - Region {region+1}/{num_region_partitions},"
                     f" Sample {sample+1}/{num_sample_partitions}",
                     resource_class=resource_class,
+                    resources=resources,
                     result_format=result_format,
                 )
             )
@@ -462,6 +473,7 @@ def read(
     ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
+    dag_name: str = "VCF-Distributed-Query",
     max_workers: int = MAX_WORKERS,
     samples: Optional[
         Union[
@@ -481,6 +493,7 @@ def read(
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
+    resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     batch_mode: bool = False,
 ) -> pa.Table:
@@ -494,6 +507,7 @@ def read(
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
+    :param dag_name: the name of the read DAG, defaults to "VCF-Distributed-Query",
     :param max_workers: maximum number of workers, defaults to 40
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
@@ -506,7 +520,9 @@ def read(
         defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
+    :param resource_class: TileDB-Cloud resource_class for realtime UDFs,
+        defaults to None
+    :param resources: TileDB-Cloud resources for batch UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run the query with batch UDFs, defaults to False
     :return: Arrow table containing the query results
@@ -519,6 +535,7 @@ def read(
         regions=regions,
         bed_file=bed_file,
         num_region_partitions=num_region_partitions,
+        dag_name=dag_name,
         max_workers=max_workers,
         samples=samples,
         memory_budget_mb=memory_budget_mb,
@@ -529,6 +546,7 @@ def read(
         log_uri=log_uri,
         namespace=namespace,
         resource_class=resource_class,
+        resources=resources,
         verbose=verbose,
         batch_mode=batch_mode,
     )

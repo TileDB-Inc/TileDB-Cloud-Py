@@ -58,6 +58,18 @@ MANIFEST_RESOURCES = {
     "memory": "2Gi",
 }
 
+# Filter samples task resources
+FILTER_SAMPLES_RESOURCES = {
+    "cpu": "2",
+    "memory": "8Gi",
+}
+
+# Group fragments task resources
+GROUP_FRAGMENTS_RESOURCES = {
+    "cpu": "2",
+    "memory": "16Gi",
+}
+
 
 class Contigs(enum.Enum):
     """
@@ -288,7 +300,10 @@ def register_dataset_udf(
 
         except Exception:
             # tiledb.object_type raises an exception if the namespace does not exist
-            logger.error(f"Error when checking if dataset is registered: {tiledb_uri=}")
+            logger.error(
+                f"Error when checking if dataset is registered: {tiledb_uri=}. "
+                "Bad namespace?"
+            )
             raise
 
         if found:
@@ -958,7 +973,8 @@ def consolidate_dataset_udf(
                 if (exclude and name in exclude) or (include and name not in include):
                     continue
 
-                # NOTE: REST currently only supports fragment_meta, commits, metadata
+                # NOTE: REST currently only supports fragment_meta, commits,
+                # metadata
                 modes = ["commits", "fragment_meta"]
 
                 # Consolidate fragments for selected arrays
@@ -1013,6 +1029,11 @@ def ingest_manifest_dag(
     verbose: bool = False,
     aws_find_mode: bool = False,
     disable_manifest: bool = False,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    manifest_resources: Optional[Mapping[str, str]] = MANIFEST_RESOURCES,
+    create_resources: Optional[Mapping[str, str]] = None,
+    read_vcf_uris_resources: Optional[Mapping[str, str]] = None,
+    filter_uri_resources: Optional[Mapping[str, str]] = None,
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -1039,6 +1060,16 @@ def ingest_manifest_dag(
     :param verbose: verbose logging, defaults to False
     :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
     :param disable_manifest: disable manifest creation, defaults to False
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to CONSOLIDATE_RESOURCES
+    :param manifest_resources: manual override for manifest UDF resources,
+        defaults to MANIFEST_RESOURCES
+    :param create_resources: manual override for create UDF resources,
+        defaults to None
+    :param read_vcf_uris_resources: manual override for read VCF UDF resources,
+        defaults to None
+    :param filter_uri_resources: manual override for filter VCF UDF resources,
+        defaults to None
     """
 
     logger = get_logger()
@@ -1060,6 +1091,7 @@ def ingest_manifest_dag(
         verbose=verbose,
         name="Create VCF dataset",
         access_credentials_name=acn,
+        resources=create_resources,
     )
 
     # If manifest creation is disabled, return after creating the dataset
@@ -1077,6 +1109,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             name="Read VCF URIs",
             access_credentials_name=acn,
+            resources=read_vcf_uris_resources,
         )
 
     if search_uri:
@@ -1091,6 +1124,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             name="Find VCF URIs",
             access_credentials_name=acn,
+            resources=read_vcf_uris_resources,
         )
 
     if metadata_uri:
@@ -1103,6 +1137,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             name="Read VCF URIs from metadata",
             access_credentials_name=acn,
+            resources=read_vcf_uris_resources,
         )
 
     filtered_sample_uris = graph.submit(
@@ -1113,6 +1148,7 @@ def ingest_manifest_dag(
         verbose=verbose,
         name="Filter VCF URIs",
         access_credentials_name=acn,
+        resources=filter_uri_resources,
     )
 
     run_dag(graph)
@@ -1158,10 +1194,10 @@ def ingest_manifest_dag(
                 config=config,
                 exclude=None,
                 include=[MANIFEST_ARRAY, LOG_ARRAY],
-                id=f"manifest-consol-{i//workers}",
+                id=f"manifest-consol-{i // workers}",
                 verbose=verbose,
-                resources=CONSOLIDATE_RESOURCES,
-                name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates}",
+                resources=consolidate_resources,
+                name=f"Consolidate VCF Manifest {i // workers + 1}/{num_consolidates}",
                 access_credentials_name=acn,
             )
 
@@ -1172,8 +1208,8 @@ def ingest_manifest_dag(
             config=config,
             verbose=verbose,
             id=f"manifest-ingest-{i}",
-            resources=MANIFEST_RESOURCES,
-            name=f"Ingest VCF Manifest {i+1}/{num_partitions}",
+            resources=manifest_resources,
+            name=f"Ingest VCF Manifest {i + 1}/{num_partitions}",
             access_credentials_name=acn,
         )
         if prev_consolidate:
@@ -1198,7 +1234,6 @@ def ingest_samples_dag(
     workers: int = VCF_WORKERS,
     max_samples: Optional[int] = None,
     resume: bool = True,
-    ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     create_index: bool = True,
     trace_id: Optional[str] = None,
@@ -1207,6 +1242,10 @@ def ingest_samples_dag(
     sample_list_uri: Optional[str] = None,
     disable_manifest: bool = False,
     wait: bool = False,
+    ingest_resources: Optional[Mapping[str, str]] = None,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    filter_samples_resources: Optional[Mapping[str, str]] = FILTER_SAMPLES_RESOURCES,
+    group_fragments_resources: Optional[Mapping[str, str]] = GROUP_FRAGMENTS_RESOURCES,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1227,7 +1266,6 @@ def ingest_samples_dag(
     :param workers: maximum number of parallel workers, defaults to VCF_WORKERS
     :param max_samples: maximum number of samples to ingest, defaults to None (no limit)
     :param resume: enable resume ingestion mode, defaults to True
-    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
@@ -1237,6 +1275,14 @@ def ingest_samples_dag(
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
     :param disable_manifest: disable manifest update, defaults to False
     :param wait: wait for the ingestion to complete before returning, defaults to False
+    :param ingest_resources: manual override for ingest UDF resources,
+        defaults to None
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to CONSOLIDATE_RESOURCES
+    :param filter_samples_resources: manual override for filter samples UDF resources,
+        defaults to FILTER_SAMPLES_RESOURCES
+    :param group_fragments_resources: resources for the group_fragments node,
+        defaults to GROUP_FRAGMENTS_RESOURCES
     """
 
     logger = get_logger_wrapper(verbose)
@@ -1265,7 +1311,7 @@ def ingest_samples_dag(
             resume=resume,
             verbose=verbose,
             name="Filter VCF samples",
-            resource_class="large",
+            resources=filter_samples_resources,
             access_credentials_name=acn,
         )
 
@@ -1282,7 +1328,7 @@ def ingest_samples_dag(
         sample_uris = sample_uris[:max_samples]
 
     contig_fragment_merging = True
-    if type(contigs) == list:
+    if isinstance(contigs, list):
         contig_mode = "separate"
         contigs_to_keep_separate = contigs
     else:
@@ -1325,7 +1371,7 @@ def ingest_samples_dag(
         f"{num_partitions=}, "
         f"{num_consolidates=}, "
         f"{ingest_resources=}, "
-        f"{CONSOLIDATE_RESOURCES=}"
+        f"{consolidate_resources=}"
     )
 
     # This loop creates a DAG with the following structure:
@@ -1343,10 +1389,10 @@ def ingest_samples_dag(
                 config=config,
                 exclude=None,
                 include=[MANIFEST_ARRAY, LOG_ARRAY],
-                id=f"vcf-consol-{i//workers}",
+                id=f"vcf-consol-{i // workers}",
                 verbose=verbose,
-                resources=CONSOLIDATE_RESOURCES,
-                name=f"Consolidate VCF {i//workers + 1}/{num_consolidates}",
+                resources=consolidate_resources,
+                name=f"Consolidate VCF {i // workers + 1}/{num_consolidates}",
                 access_credentials_name=acn,
             )
 
@@ -1368,7 +1414,7 @@ def ingest_samples_dag(
             create_index=create_index,
             trace_id=trace_id,
             resources=ingest_resources,
-            name=f"Ingest VCF {i+1}/{num_partitions}",
+            name=f"Ingest VCF {i + 1}/{num_partitions}",
             access_credentials_name=acn,
             disable_manifest=disable_manifest,
         )
@@ -1402,6 +1448,8 @@ def ingest_samples_dag(
                     group_by_first_dim=True,
                     graph=graph,
                     dependencies=[consolidate],
+                    consolidate_resources=consolidate_resources,
+                    group_fragments_resources=group_fragments_resources,
                 )
 
     logger.info(f"Ingesting samples: {len(sample_uris)=}")
@@ -1432,8 +1480,12 @@ def ingest_vcf_annotations(
     acn: Optional[str] = None,
     namespace: Optional[str] = None,
     register_name: Optional[str] = None,
-    ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
+    ingest_resources: Optional[Mapping[str, str]] = None,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    find_uris_resources: Optional[Mapping[str, str]] = None,
+    create_resources: Optional[Mapping[str, str]] = None,
+    register_resources: Optional[Mapping[str, str]] = None,
 ) -> None:
     """
     Ingest annotation VCF into a dataset. For example, a ClinVar or gnomAD VCF.
@@ -1452,8 +1504,15 @@ def ingest_vcf_annotations(
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param register_name: name to register the dataset with on TileDB Cloud,
         defaults to None
-    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to CONSOLIDATE_RESOURCES
+    :param find_uris_resources: manual override for find VCF UDF resources,
+        defaults to None
+    :param create_resources: manual override for create UDF resources, defaults to None
+    :param register_resources: manual override for register UDF resources,
+        defaults to None
     """
 
     if vcf_uri is None and search_uri is None:
@@ -1486,6 +1545,7 @@ def ingest_vcf_annotations(
             verbose=verbose,
             name="Find annotation VCF URIs",
             access_credentials_name=acn,
+            resources=find_uris_resources,
         )
 
         run_dag(graph)
@@ -1517,6 +1577,7 @@ def ingest_vcf_annotations(
         verbose=verbose,
         name="Create annotation dataset",
         access_credentials_name=acn,
+        resources=create_resources,
     )
 
     # Add a node to consolidate the dataset.
@@ -1525,7 +1586,7 @@ def ingest_vcf_annotations(
         dataset_uri,
         config=config,
         verbose=verbose,
-        resources=CONSOLIDATE_RESOURCES,
+        resources=consolidate_resources,
         name="Consolidate annotations",
         access_credentials_name=acn,
     )
@@ -1550,7 +1611,7 @@ def ingest_vcf_annotations(
             create_index=create_index,
             verbose=verbose,
             resources=ingest_resources,
-            name=f"Ingest annotations {i+1}/{len(vcf_uris)}",
+            name=f"Ingest annotations {i + 1}/{len(vcf_uris)}",
             access_credentials_name=acn,
             disable_manifest=True,
         )
@@ -1572,6 +1633,7 @@ def ingest_vcf_annotations(
             verbose=verbose,
             name="Register annotations",
             access_credentials_name=acn,
+            resources=register_resources,
         )
 
         register.depends_on(consolidate_node)
@@ -1609,7 +1671,6 @@ def ingest_vcf(
     vcf_batch_size: int = VCF_BATCH_SIZE,
     vcf_workers: int = VCF_WORKERS,
     vcf_threads: int = VCF_THREADS,
-    ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     create_index: bool = True,
     trace_id: Optional[str] = None,
@@ -1618,6 +1679,14 @@ def ingest_vcf(
     use_remote_tmp: bool = False,
     disable_manifest: bool = False,
     wait: bool = False,
+    ingest_resources: Optional[Mapping[str, str]] = None,
+    consolidate_resources: Optional[Mapping[str, str]] = CONSOLIDATE_RESOURCES,
+    manifest_resources: Optional[Mapping[str, str]] = MANIFEST_RESOURCES,
+    create_resources: Optional[Mapping[str, str]] = None,
+    read_vcf_uris_resources: Optional[Mapping[str, str]] = None,
+    filter_uri_resources: Optional[Mapping[str, str]] = None,
+    filter_samples_resources: Optional[Mapping[str, str]] = FILTER_SAMPLES_RESOURCES,
+    group_fragments_resources: Optional[Mapping[str, str]] = GROUP_FRAGMENTS_RESOURCES,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1658,7 +1727,6 @@ def ingest_vcf(
     :param vcf_batch_size: batch size for VCF ingestion, defaults to VCF_BATCH_SIZE
     :param vcf_workers: number of workers for VCF ingestion, defaults to VCF_WORKERS
     :param vcf_threads: number of threads for VCF ingestion, defaults to VCF_THREADS
-    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
@@ -1668,6 +1736,20 @@ def ingest_vcf(
         defaults to False (preferred for small VCFs)
     :param disable_manifest: disable manifest creation, defaults to False
     :param wait: wait for the ingestion to complete before returning, defaults to False
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
+    :param consolidate_resources: manual override for consolidate UDF resources,
+        defaults to CONSOLIDATE_RESOURCES
+    :param manifest_resources: manual override for manifest UDF resources,
+        defaults to MANIFEST_RESOURCES
+    :param create_resources: manual override for create UDF resources, defaults to None
+    :param read_vcf_uris_resources: manual override for read VCF UDF resources,
+        defaults to None
+    :param filter_uri_resources: manual override for filter VCF UDF resources,
+        defaults to None
+    :param filter_samples_resources: manual override for filter samples UDF resources,
+        defaults to FILTER_SAMPLES_RESOURCES
+    :param group_fragments_resources: resources for the group_fragments node,
+        defaults to GROUP_FRAGMENTS_RESOURCES
     """
 
     # Validate user input
@@ -1714,6 +1796,11 @@ def ingest_vcf(
         verbose=verbose,
         aws_find_mode=aws_find_mode,
         disable_manifest=disable_manifest,
+        consolidate_resources=consolidate_resources,
+        manifest_resources=manifest_resources,
+        create_resources=create_resources,
+        read_vcf_uris_resources=read_vcf_uris_resources,
+        filter_uri_resources=filter_uri_resources,
     )
 
     # Ingest VCFs using URIs in the manifest
@@ -1737,6 +1824,9 @@ def ingest_vcf(
         sample_list_uri=sample_list_uri if disable_manifest else None,
         disable_manifest=disable_manifest,
         wait=wait,
+        consolidate_resources=consolidate_resources,
+        filter_samples_resources=filter_samples_resources,
+        group_fragments_resources=group_fragments_resources,
     )
 
     # Register the dataset on TileDB Cloud
