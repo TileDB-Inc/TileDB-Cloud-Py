@@ -303,6 +303,7 @@ def build_read_dag(
     resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     batch_mode: bool = False,
+    concat_results: bool = True,
 ) -> Tuple[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node]:
     """
     Build the DAG for a distributed read on a TileDB-VCF dataset.
@@ -332,6 +333,7 @@ def build_read_dag(
     :param resources: TileDB-Cloud resources for batch UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run the query with batch UDFs, defaults to False
+    :param concat_results: concat results into single pyarrow table, defaults to True
     :return: DAG and result Node
     """
 
@@ -436,20 +438,23 @@ def build_read_dag(
                 )
             )
 
-    if len(tables) > 1:
-        submit = dag.submit if batch_mode else dag.submit_local
+    if concat_results:
+        if len(tables) > 1:
+            submit = dag.submit if batch_mode else dag.submit_local
 
-        table = submit(
-            concat_tables_udf,
-            tables,
-            config=config,
-            log_uri=log_uri,
-            promote_null=promote_null,
-            verbose=verbose,
-            name="Combine Results",
-        )
+            table = submit(
+                concat_tables_udf,
+                tables,
+                config=config,
+                log_uri=log_uri,
+                promote_null=promote_null,
+                verbose=verbose,
+                name="Combine Results",
+            )
+        else:
+            table = tables[0]
     else:
-        table = tables[0]
+        table = tables
 
     logger.debug("tasks=%d", len(tables))
 
@@ -496,6 +501,7 @@ def read(
     resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     batch_mode: bool = False,
+    concat_results: bool = True,
 ) -> pa.Table:
     """
     Run a distributed read on a TileDB-VCF dataset.
@@ -525,6 +531,7 @@ def read(
     :param resources: TileDB-Cloud resources for batch UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run the query with batch UDFs, defaults to False
+    :param concat_results: concat results into single pyarrow table, defaults to True
     :return: Arrow table containing the query results
     """
 
@@ -549,6 +556,7 @@ def read(
         resources=resources,
         verbose=verbose,
         batch_mode=batch_mode,
+        concat_results=concat_results,
     )
 
     run_dag(dag, debug=verbose)
