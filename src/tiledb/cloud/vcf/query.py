@@ -9,6 +9,7 @@ import pandas as pd
 import pyarrow as pa
 
 import tiledb.cloud
+from tiledb.cloud._common import functions
 from tiledb.cloud.compute import Delayed
 from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedMultiArrayUDF
@@ -113,6 +114,7 @@ def vcf_query_udf(
     log_uri: Optional[str] = None,
     log_id: str = "query",
     verbose: bool = False,
+    transform_incomplete_results: bool = False,
 ) -> pa.table:
     """
     Run a query on a TileDB-VCF dataset.
@@ -137,6 +139,7 @@ def vcf_query_udf(
     :param log_uri: log array URI for profiling, defaults to None
     :param log_id: profiler event ID, defaults to "query"
     :param verbose: verbose logging, defaults to False
+    :param transform_incomplete_results: apply transformation on partial result sets
     :return: Arrow table containing the query results
     """
     import tiledbvcf
@@ -184,35 +187,53 @@ def vcf_query_udf(
         # Open TileDB-VCF Dataset
         ds = tiledbvcf.Dataset(dataset_uri, cfg=cfg)
 
-        # Issue read query
-        tables = [
-            ds.read_arrow(
-                attrs=attrs,
-                regions=regions,
-                bed_file=bed_file,
-                samples=samples,
-                set_af_filter=af_filter or "",
-            )
-        ]
 
-        # Loop over any incomplete queries
-        while not ds.read_completed():
-            tables.append(ds.continue_read_arrow())
+        num_queries = 1
+        if transform_incomplete_results and transform_result:
+            table = ds.read_arrow(
+                    attrs=attrs,
+                    regions=regions,
+                    bed_file=bed_file,
+                    samples=samples,
+                    set_af_filter=af_filter or "",
+                )
+            results = [transform_result(table)]
+            while not ds.read_completed():
+                results.append(transform_result(ds.continue_read_arrow()))
+                num_queries += 1
 
-        # Combine any incomplete queries into a single arrow table
-        table = _concat_tables(tables, promote_null)
+            table = _concat_tables(results, promote_null)
+        else:
+            # Issue read query
+            tables = [
+                ds.read_arrow(
+                    attrs=attrs,
+                    regions=regions,
+                    bed_file=bed_file,
+                    samples=samples,
+                    set_af_filter=af_filter or "",
+                )
+            ]
 
-        prof.write("result", table.num_rows, table.nbytes)
+            # Loop over any incomplete queries
+            while not ds.read_completed():
+                tables.append(ds.continue_read_arrow())
+                num_queries += 1
 
-    # Apply function to the result table
-    if transform_result is not None:
-        with Profiler(array_uri=log_uri, id=log_id + "-tr") as prof:
-            table = transform_result(table)
+            # Combine any incomplete queries into a single arrow table
+            table = _concat_tables(tables, promote_null)
+
             prof.write("result", table.num_rows, table.nbytes)
+
+            # Apply function to the result table
+            if transform_result is not None:
+                with Profiler(array_uri=log_uri, id=log_id + "-tr") as prof:
+                    table = transform_result(table)
+                    prof.write("result", table.num_rows, table.nbytes)
 
     memory_usage_gb = max_memory_usage() / (1 << 30)
     logger.debug("Max memory usage: %0.3f GiB", memory_usage_gb)
-    logger.debug("Incomplete queries: %d", len(tables) - 1)
+    logger.debug("Incomplete queries: %d", num_queries - 1)
     logger.debug("Records read: %d", table.num_rows)
     logger.debug("Arrow table size: %0.3f MiB", table.nbytes / (1 << 20))
 
@@ -304,6 +325,8 @@ def build_read_dag(
     verbose: bool = False,
     batch_mode: bool = False,
     concat_results: bool = True,
+    all_samples: bool = False,
+    transform_incomplete_results: bool = False,
 ) -> Tuple[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node]:
     """
     Build the DAG for a distributed read on a TileDB-VCF dataset.
@@ -334,13 +357,14 @@ def build_read_dag(
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run the query with batch UDFs, defaults to False
     :param concat_results: concat results into single pyarrow table, defaults to True
+    :param all_samples: read all samples, defaults to False
+    :param transform_incomplete_results: apply transformation on partial result sets
     :return: DAG and result Node
     """
 
     logger = setup(config, verbose)
 
     # Validate inputs
-    all_samples = False
     if samples is None:
         try:
             import tiledbvcf
@@ -388,9 +412,9 @@ def build_read_dag(
     # looking through it to try and find parent nodes when constructing
     # the task graph based on function parameters. This hides it in the
     # `partial` object so that it's not treated as a regular parameter.
-    vcf_query_udf_partial = functools.partial(vcf_query_udf)
+    vcf_query_udf_partial = functools.partial(_vcf_query_udf)
     if not all_samples:
-        vcf_query_udf_partial = functools.partial(vcf_query_udf, samples=samples)
+        vcf_query_udf_partial = functools.partial(_vcf_query_udf, samples=samples)
 
     logger.debug("num_samples=%d", num_samples)
     logger.debug("sample_batch_size=%d", sample_batch_size)
@@ -444,6 +468,7 @@ def build_read_dag(
                     resource_class=resource_class,
                     resources=resources,
                     result_format=result_format,
+                    transform_incomplete_results=transform_incomplete_results,
                 )
             )
 
@@ -571,3 +596,6 @@ def read(
     run_dag(dag, debug=verbose)
 
     return table.result()
+
+# Allow pickling by value to get test versions
+_vcf_query_udf = functions.to_register_by_value(vcf_query_udf)
