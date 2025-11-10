@@ -340,12 +340,19 @@ def build_read_dag(
     logger = setup(config, verbose)
 
     # Validate inputs
+    all_samples = False
     if samples is None:
-        raise ValueError(
-            "`samples` must be provided in order to partition the query. "
-            "If querying a sample-less annotation VCF (like gnomAD or ClinVar)"
-            "set `samples=''`"
-        )
+        try:
+            import tiledbvcf
+            with tiledbvcf.Dataset(dataset_uri, mode='r') as ds:
+                samples = ds.samples()
+                all_samples = True
+        except:
+            raise ValueError(
+                "`samples` must be provided in order to partition the query. "
+                "If querying a sample-less annotation VCF (like gnomAD or ClinVar)"
+                "set `samples=''`"
+            )
 
     if regions is None and bed_file is None:
         raise ValueError(
@@ -381,7 +388,9 @@ def build_read_dag(
     # looking through it to try and find parent nodes when constructing
     # the task graph based on function parameters. This hides it in the
     # `partial` object so that it's not treated as a regular parameter.
-    vcf_query_udf_partial = functools.partial(vcf_query_udf, samples=samples)
+    vcf_query_udf_partial = functools.partial(vcf_query_udf)
+    if not all_samples:
+        vcf_query_udf_partial = functools.partial(vcf_query_udf, samples=samples)
 
     logger.debug("num_samples=%d", num_samples)
     logger.debug("sample_batch_size=%d", sample_batch_size)
