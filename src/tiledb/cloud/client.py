@@ -624,7 +624,7 @@ _RETRY_CONFIGS = {
     RetryMode.FORCEFUL: urllib3.Retry(
         total=100,
         backoff_factor=0.25,
-        status_forcelist=[400, 500, 501, 502, 503],
+        status_forcelist=[400, 401, 402, 403, 500, 501, 502, 503],
         allowed_methods=[
             "HEAD",
             "GET",
