@@ -21,7 +21,7 @@ dependencies = [
     "tblib>=1.7",
     "tiledb~=0.30,!=0.33.1,!=0.33.2",
     "typing-extensions",
-    "urllib3>=1.26",
+    "urllib3>=1.26,<2.6.0",
 ]
 
 [project.optional-dependencies]
