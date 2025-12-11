@@ -907,12 +907,6 @@ def consolidate_dataset_udf(
                             arrays.append((member.name, member.uri))
 
             for name, uri in arrays:
-                # Skip non-array members
-                if member.type != tiledb.Array:
-                    continue
-
-                uri = member.uri
-                name = member.name
                 is_remote = uri.startswith("tiledb://")
 
                 # Skip excluded and non-included arrays
