@@ -894,15 +894,19 @@ def consolidate_dataset_udf(
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
-            group = tiledb.Group(dataset_uri)
+            # extract all arrays recursivelly
+            groups: list[str] = [dataset_uri]
+            arrays: list[tuple[str, str]] = []
 
-            for member in group:
-                # Skip non-array members
-                if member.type != tiledb.Array:
-                    continue
+            while len(groups) != 0:
+                with tiledb.Group(groups.pop(0)) as group:
+                    for member in group:
+                        if member.type == tiledb.Group:
+                            groups.append(member.uri)
+                        elif member.type == tiledb.Array:
+                            arrays.append((member.name, member.uri))
 
-                uri = member.uri
-                name = member.name
+            for name, uri in arrays:
                 is_remote = uri.startswith("tiledb://")
 
                 # Skip excluded and non-included arrays
