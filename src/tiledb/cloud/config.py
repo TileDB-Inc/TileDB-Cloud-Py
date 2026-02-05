@@ -70,6 +70,7 @@ def load_configuration(config_path):
     username = os.getenv("TILEDB_REST_USERNAME", None)
     password = os.getenv("TILEDB_REST_PASSWORD", None)
     verify_ssl = not parse_bool(os.getenv("TILEDB_REST_IGNORE_SSL_VALIDATION", "False"))
+    ca_file = os.getenv("TILEDB_SSL_CA_FILE", None)
 
     if os.path.isfile(config_path):
         with open(config_path, "r") as f:
@@ -104,6 +105,9 @@ def load_configuration(config_path):
             if "verify_ssl" in config_obj:
                 verify_ssl = config_obj["verify_ssl"]
 
+            if "ca_file" in config_obj:
+                ca_file = config_obj["ca_file"]
+
     if (token is None or token == "") and (username is None or username == ""):
         warnings.warn(
             "You must first login before you can run commands."
@@ -121,12 +125,18 @@ def load_configuration(config_path):
         password=password,
         host=host,
         verify_ssl=verify_ssl,
+        ca_file=ca_file,
     )
     return logged_in
 
 
 def setup_configuration(
-    api_key=None, host="", username=None, password=None, verify_ssl=True
+    api_key=None,
+    host="",
+    username=None,
+    password=None,
+    verify_ssl=True,
+    ca_file=None,
 ):
     if api_key is None:
         api_key = {}
@@ -135,6 +145,7 @@ def setup_configuration(
     _config.username = username
     _config.password = password
     _config.verify_ssl = verify_ssl
+    _config.ssl_ca_cert = ca_file
     _config.retries = Retry(
         total=10,
         backoff_factor=0.25,
