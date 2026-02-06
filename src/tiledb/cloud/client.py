@@ -38,6 +38,10 @@ def Config(cfg_dict=None):
     host = config.config.host
 
     cfg_dict["rest.server_address"] = host
+
+    if config.config.ssl_ca_cert:
+        cfg_dict["ssl.ca_file"] = config.config.ssl_ca_cert
+
     cfg = tiledb.Config(cfg_dict)
 
     if (
@@ -71,6 +75,7 @@ def login(
     verify_ssl=None,
     no_session=False,
     threads=None,
+    ca_file=None,
 ):
     """
     Login to cloud service
@@ -113,6 +118,7 @@ def login(
         "host": host,
         "verify_ssl": verify_ssl,
         "api_key": {},
+        "ca_file": ca_file,
     }
 
     # Is user logs in with username/password we need to create a session
