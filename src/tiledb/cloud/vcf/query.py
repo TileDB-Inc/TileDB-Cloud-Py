@@ -2,6 +2,7 @@
 
 import functools
 import logging
+import uuid
 from math import ceil
 from typing import Any, Callable, List, Mapping, Optional, Sequence, Tuple, Union
 
@@ -13,6 +14,7 @@ from tiledb.cloud.compute import Delayed
 from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedMultiArrayUDF
 from tiledb.cloud.compute import DelayedSQL
+from tiledb.cloud.tasks import fetch_results
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
@@ -104,6 +106,7 @@ def vcf_query_udf(
     regions: Optional[Union[Sequence[str], str, pd.DataFrame]] = None,
     bed_file: Optional[str] = None,
     samples: Optional[Union[Sequence[str], str]] = None,
+    samples_task_id: Optional[uuid.UUID] = None,
     region_partition: Optional[Tuple[int, int]] = None,
     sample_partition: Optional[Tuple[int, int]] = None,
     memory_budget_mb: int = 1024,
@@ -123,7 +126,9 @@ def vcf_query_udf(
     :param regions: genomics regions to read, defaults to None
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
-    :param samples: sample names to read, defaults to None
+    :param samples: sample names to read ('' for sample-less query; None for all),
+        defaults to None
+    :param samples_task_id: the ID of a task that fetches sample names, defaults to None
     :param region_partition: region partition tuple (0-based indexed, num_partitions),
         defaults to None
     :param sample_partition: sample partition tuple (0-based indexed, num_partitions),
@@ -155,8 +160,22 @@ def vcf_query_udf(
     elif isinstance(regions, pd.DataFrame):
         regions = regions.values.flatten()
 
+    if samples and samples_task_id:
+        raise ValueError(
+            "`samples` and `samples_task_id` are mutually exclusive parameters"
+        )
+
     if isinstance(samples, str):
         samples = [samples]
+    elif samples is None:
+        if isinstance(samples_task_id, uuid.UUID):
+            samples = fetch_results(samples_task_id).to_pylist()
+        elif samples_task_id is None:
+            samples, samples_task_id = read_samples(dataset_uri, config, verbose)
+        else:
+            raise ValueError("`samples_task_id` must be of type uuid.UUID or None")
+    elif not isinstance(samples, Sequence) or not len(samples):
+        raise ValueError("`samples` must be a non-empty Sequence")
 
     logger = setup(config, verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
@@ -263,6 +282,70 @@ def concat_tables_udf(
 # --------------------------------------------------------------------
 
 
+def read_samples(
+    dataset_uri: str,
+    config: Optional[Mapping[str, Any]] = None,
+    verbose: bool = False,
+) -> List[str]:
+    """
+    Reads sample IDs from a TileDB-VCF dataset.
+
+    :param dataset_uri: dataset URI
+    :param config: config dictionary, defaults to None
+    :param verbose: verbose logging, defaults to False
+    :return: List of sample IDs as strings
+    """
+
+    if config is None:
+        config = {}
+    else:
+        config = config.copy()
+
+    logger = setup(config, verbose)
+
+    def fetch_samples(dataset_uri, config):
+        import pyarrow as pa
+        import tiledbvcf
+
+        sample_list = tiledbvcf.Dataset(dataset_uri, tiledb_config=config).samples()
+        # return as arrow
+        return pa.array(sample_list)
+
+    sample_dag = tiledb.cloud.dag.DAG(
+        name="VCF-Federated-read-samples",
+        mode=(
+            tiledb.cloud.dag.Mode.BATCH
+            if config.get("batch")
+            else tiledb.cloud.dag.Mode.REALTIME
+        ),
+    )
+    samples_node = sample_dag.submit(
+        fetch_samples,
+        dataset_uri,
+        config,
+        resource_class="large" if config.get("use_large") else None,
+        resources=(
+            {
+                "cpu": config.get("cpu"),
+                "memory": config.get("memory"),
+                "gpu": 0,
+            }
+            if config.get("cpu") and config.get("memory")
+            else None
+        ),
+        store_results=True,
+    )
+    run_dag(sample_dag)
+
+    samples = samples_node.result().to_pylist()
+    samples_task_id = samples_node.task_id()
+
+    logger.debug("len(samples)=%d", len(samples))
+    logger.debug("samples_task_id=%s", samples_task_id)
+
+    return samples, samples_task_id
+
+
 def build_read_dag(
     dataset_uri: str,
     *,
@@ -292,6 +375,7 @@ def build_read_dag(
             DelayedSQL,
         ]
     ] = None,
+    samples_task_id: Optional[uuid.UUID] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
@@ -316,7 +400,9 @@ def build_read_dag(
     :param num_region_partitions: number of region partitions, defaults to 1
     :param dag_name: the name of the built DAG, defaults to "VCF-Distributed-Query",
     :param max_workers: maximum number of workers, defaults to 40
-    :param samples: sample names to read, defaults to None
+    :param samples: sample names to read ('' for sample-less query; None for all),
+        defaults to None
+    :param samples_task_id: the ID of a task that fetches sample names, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
     :param transform_result: function to apply to each partition;
@@ -337,17 +423,14 @@ def build_read_dag(
 
     logger = setup(config, verbose)
 
-    # Validate inputs
-    if samples is None:
-        raise ValueError(
-            "`samples` must be provided in order to partition the query. "
-            "If querying a sample-less annotation VCF (like gnomAD or ClinVar)"
-            "set `samples=''`"
-        )
-
     if regions is None and bed_file is None:
         raise ValueError(
             "`regions` or `bed_file` must be provided in order to partition the query."
+        )
+
+    if samples and samples_task_id:
+        raise ValueError(
+            "`samples` and `samples_task_id` are mutually exclusive parameters"
         )
 
     if resources and resource_class:
@@ -360,16 +443,32 @@ def build_read_dag(
     # If `samples` is a Delayed object, we execute the node to get the list of
     # samples. This is necessary because we need to know the number of samples
     # to determine the number of sample partitions.
+    # If `samples` is `None`, we use a samples task to get sample names. If
+    # `samples_task_id` is not `None`, an existing task is used, otherwise a
+    # new task that reads all samples in the dataset is used.
     if isinstance(
         samples,
         (Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL),
     ):
         samples = samples.compute().values.flatten()
-    elif isinstance(samples, str):
-        samples = [samples]
+    if isinstance(samples, str):
+        partition_samples = samples = [samples]
+    elif isinstance(samples, list):
+        partition_samples = samples
+    elif samples is None:
+        if isinstance(samples_task_id, uuid.UUID):
+            partition_samples = fetch_results(samples_task_id).to_pylist()
+        elif samples_task_id is None:
+            partition_samples, samples_task_id = read_samples(
+                dataset_uri, config, verbose
+            )
+        else:
+            raise ValueError("`samples_task_id` must be of type uuid.UUID or None")
+    elif not isinstance(samples, Sequence) or not len(samples):
+        raise ValueError("`samples` must be a non-empty Sequence")
 
     # Set number of sample partitions
-    num_samples = len(samples)
+    num_samples = len(partition_samples)
     sample_batch_size = ceil(num_samples * num_region_partitions / max_workers)
     sample_batch_size = min(sample_batch_size, max_sample_batch_size)  # max batch size
     sample_batch_size = max(sample_batch_size, MIN_SAMPLE_BATCH_SIZE)  # min batch size
@@ -419,6 +518,7 @@ def build_read_dag(
                     attrs=attrs,
                     regions=regions,
                     bed_file=bed_file,
+                    samples_task_id=samples_task_id,
                     region_partition=(region, num_region_partitions),
                     sample_partition=(sample, num_sample_partitions),
                     memory_budget_mb=memory_budget_mb,
@@ -485,6 +585,7 @@ def read(
             DelayedSQL,
         ]
     ] = None,
+    samples_task_id: Optional[uuid.UUID] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
@@ -509,7 +610,9 @@ def read(
     :param num_region_partitions: number of region partitions, defaults to 1
     :param dag_name: the name of the read DAG, defaults to "VCF-Distributed-Query",
     :param max_workers: maximum number of workers, defaults to 40
-    :param samples: sample names to read, defaults to None
+    :param samples: sample names to read ('' for sample-less query; None for all),
+        defaults to None
+    :param samples_task_id: the ID of a task that fetches sample names, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
     :param transform_result: function to apply to each partition;
@@ -538,6 +641,7 @@ def read(
         dag_name=dag_name,
         max_workers=max_workers,
         samples=samples,
+        samples_task_id=samples_task_id,
         memory_budget_mb=memory_budget_mb,
         af_filter=af_filter,
         transform_result=transform_result,
