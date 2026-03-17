@@ -1,0 +1,315 @@
+import io
+import logging
+import re
+import unittest
+from contextlib import redirect_stdout
+
+import tiledb.cloud
+import tiledb.cloud.vcf
+from tiledb.cloud._vendor import cloudpickle
+from tiledb.cloud.utilities import get_logger
+
+
+def ingest_samples_with_failure_dag(*args, config={}, **kwargs) -> None:
+    """
+    Wraps the original `ingest_samples_dag` function and reads the config to determine
+    if an ingestion failure should be simulated, i.e. the manifest is not updated after
+    ingestion.
+    """
+    from tiledb.cloud.vcf.ingestion import _ingest_samples_dag
+
+    if config.get("test.vcf.fail_ingest", False):
+        kwargs["disable_manifest"] = True
+    return _ingest_samples_dag(*args, config=config, **kwargs)
+
+
+# Monkey patch the failure function
+tiledb.cloud.vcf.ingestion._ingest_samples_dag = (
+    tiledb.cloud.vcf.ingestion.ingest_samples_dag
+)
+tiledb.cloud.vcf.ingestion.ingest_samples_dag = ingest_samples_with_failure_dag
+
+# Pickle the vcf module by value, so tests run on the latest code.
+cloudpickle.register_pickle_by_value(tiledb.cloud.vcf)
+
+# Test data location
+S3_BUCKET = "s3://tiledb-unittest/vcf-ingestion-test"
+
+# Test VCF URIs
+READY_URI = f"{S3_BUCKET}/01-ready.vcf.gz"  # "OK" after ingestion
+MISSING_INDEX_URI = f"{S3_BUCKET}/02-missing-index.vcf.gz"  # "OK" after ingestion
+MISSING_SAMPLE_NAME_URI = f"{S3_BUCKET}/03-missing-sample-name.vcf.gz"
+MULTIPLE_SAMPLES_URI = f"{S3_BUCKET}/04-multiple-samples.vcf.gz"
+DUPLICATE_SAMPLE_NAME_URI = f"{S3_BUCKET}/05-duplicate-sample-name.vcf.gz"
+BAD_INDEX_URI = f"{S3_BUCKET}/06-bad-index.vcf.gz"
+
+# Test data samples
+READY_SAMPLE_NAME = "ready"
+MISSING_INDEX_SAMPLE_NAME = "missing index"
+
+# Array names
+LOG_ARRAY = "log"
+MANIFEST_ARRAY = "manifest"
+
+# Filter samples log message
+FILTER_SAMPLES_LOG = (
+    "Filtering samples: "
+    "len(dataset_samples)={}, "
+    "len(ingested_samples)={}, "
+    "len(incomplete_samples)={}, "
+    "len(manifest_samples)={}, "
+    "len(ready_samples)={}, "
+    "len(queued_samples)={}"
+)
+
+
+def outputs2msgs(outputs: list[str]) -> list[str]:
+    """
+    Extracts the messages from log outputs with the format
+    "[%(asctime)s] [%(module)s] [%(funcName)s] [%(levelname)s] %(message)s"
+    """
+    pattern = re.compile(r"\[.*\] \[.*\] \[.*\] \[.*\] ")
+    msgs = []
+    for o in outputs:
+        if pattern.match(o):
+            msg = pattern.sub("", o)
+            msgs.append(msg)
+        else:
+            msgs.append(o)
+    return msgs
+
+
+class TestVCFIngestionBase(unittest.TestCase):
+    __unittest_skip__ = True
+
+    @classmethod
+    def _setup(cls) -> None:
+        cls.data_uri = S3_BUCKET
+        (
+            cls.namespace,
+            cls.storage_path,
+            cls.acn,
+        ) = tiledb.cloud.groups._default_ns_path_cred()
+        cls.namespace = cls.namespace.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
+        cls.array_name = tiledb.cloud._common.testonly.random_name("vcf-test")
+        cls.dataset_uri = (
+            f"tiledb://{cls.namespace}/{cls.storage_path}/{cls.array_name}"
+        )
+
+    @classmethod
+    def _ingest(cls) -> None:
+        raise NotImplementedError("Implement VCF ingestion")
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls._setup()
+
+        # Capture local and cloud logs during ingestion
+        logger = get_logger(logging.INFO)
+        f = io.StringIO()  # cloud logs are printed
+        with cls.assertLogs(cls, logger=logger) as lg, redirect_stdout(f):
+            cls._ingest()
+        local_logs = list(map(lambda r: r.getMessage(), lg.records))
+        cloud_logs = outputs2msgs(f.getvalue().splitlines())
+        cls.logs = local_logs + cloud_logs
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        if tiledb.object_type(cls.dataset_uri):
+            tiledb.cloud.asset.delete(cls.dataset_uri, recursive=True)
+
+
+class TestVCFIngestionCommon(TestVCFIngestionBase):
+    __unittest_skip__ = True
+
+    def test_dataset_creation(self):
+        self.assertIn(f"Creating dataset: dataset_uri='{self.dataset_uri}'", self.logs)
+
+    def test_dataset_group_and_arrays(self):
+        self.assertEqual(tiledb.object_type(self.dataset_uri), "group")
+        group = tiledb.Group(self.dataset_uri)
+        manifest_uri = group[MANIFEST_ARRAY].uri
+        log_uri = group[LOG_ARRAY].uri
+        self.assertEqual(tiledb.object_type(manifest_uri), "array")
+        self.assertEqual(tiledb.object_type(log_uri), "array")
+
+    def test_filter_uris(self):
+        self.assertIn(
+            "Filtering URIs: len(manifest_uris)=0, len(new_uris)=6", self.logs
+        )
+
+    def test_filter_samples(self):
+        self.assertIn(FILTER_SAMPLES_LOG.format(0, 0, 0, 5, 2, 2), self.logs)
+
+    def test_manifest(self):
+        group = tiledb.Group(self.dataset_uri)
+        manifest_uri = group[MANIFEST_ARRAY].uri
+        with tiledb.open(manifest_uri) as A:
+            manifest_df = A.df[:]
+
+        ok_df = manifest_df[manifest_df["status"] == "ok"]
+        self.assertEqual(len(ok_df), 2)
+        ok_vcfs = ok_df["vcf_uri"].tolist()
+        ok_indexes = ok_df["index_uri"].tolist()
+        self.assertIn(READY_URI, ok_vcfs)
+        self.assertIn(READY_URI + ".tbi", ok_indexes)
+        self.assertIn(MISSING_INDEX_URI, ok_vcfs)
+        self.assertIn("None", ok_indexes)
+
+        # NOTE: This code path is currently unreachable; an error is logged instead
+        self.assertIn(
+            f"Skipping invalid VCF file: vcf_uri='{MISSING_SAMPLE_NAME_URI}'", self.logs
+        )
+
+        multiple_samples_df = manifest_df[manifest_df["status"] == "multiple samples"]
+        self.assertEqual(len(multiple_samples_df), 1)
+
+        duplicate_sample_name_df = manifest_df[
+            manifest_df["status"] == "duplicate sample name"
+        ]
+        self.assertEqual(len(duplicate_sample_name_df), 1)
+
+        bad_index_df = manifest_df[manifest_df["status"] == "bad index"]
+        self.assertEqual(len(bad_index_df), 1)
+
+    def test_dataset(self):
+        import tiledbvcf
+
+        ds = tiledbvcf.Dataset(
+            self.dataset_uri,
+            cfg=tiledbvcf.ReadConfig(tiledb_config=self.config),
+        )
+        samples = ds.samples()
+        self.assertEqual(len(samples), 2)
+        self.assertIn(READY_SAMPLE_NAME, samples)
+        self.assertIn(MISSING_INDEX_SAMPLE_NAME, samples)
+
+
+class TestVCFIngestionSearch(TestVCFIngestionCommon):
+    __unittest_skip__ = True
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionSearch, cls)._setup()
+        cls.search_uri = cls.data_uri + "/"
+        cls.search_pattern = "*.vcf.gz"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            search_uri=cls.search_uri,
+            pattern=cls.search_pattern,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_find_uris_logs(self):
+        msg = (
+            "Searching for VCF URIs: "
+            f"search_uri='{self.search_uri}', "
+            f"include='{self.search_pattern}', "
+            "exclude=None, "
+            "len(vcf_uris)=6"
+        )
+        self.assertIn(msg, self.logs)
+
+
+class TestVCFIngestionSampleList(TestVCFIngestionCommon):
+    __unittest_skip__ = True
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionSampleList, cls)._setup()
+        cls.sample_list_uri = cls.data_uri + "/sample-list.txt"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            sample_list_uri=cls.sample_list_uri,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_read_uris_logs(self):
+        msg = (
+            "Reading VCF URIs from URI: "
+            f"list_uri='{self.sample_list_uri}', len(vcf_uris)=6"
+        )
+        self.assertIn(msg, self.logs)
+
+
+class TestVCFIngestionMetadata(TestVCFIngestionCommon):
+    __unittest_skip__ = True
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionMetadata, cls)._setup()
+        cls.metadata_uri = cls.data_uri + "/metadata-array/"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_read_metadata_logs(self):
+        msg = (
+            "Reading VCF URIs from the metadata array: "
+            f"metadata_uri='{self.metadata_uri}', metadata_attr='uri', len(vcf_uris)=6"
+        )
+        self.assertIn(msg, self.logs)
+
+
+class TestVCFIngestionResume(TestVCFIngestionBase):
+    __unittest_skip__ = True
+
+    @classmethod
+    def _setup(cls):
+        super(TestVCFIngestionResume, cls)._setup()
+        cls.metadata_uri = cls.data_uri + "/metadata-array/"
+
+    @classmethod
+    def _ingest(cls) -> None:
+        # Ingest with "failure"
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config | {"test.vcf.fail_ingest": True},
+            wait=True,
+        )
+        # Re-ingest without resume
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config,
+            wait=True,
+            resume=False,
+        )
+        # Re-ingest with resume
+        tiledb.cloud.vcf.ingest_vcf(
+            dataset_uri=cls.dataset_uri,
+            metadata_uri=cls.metadata_uri,
+            config=cls.config,
+            wait=True,
+        )
+
+    def test_existing_dataset(self):
+        self.assertIn(
+            f"Using existing dataset: dataset_uri='{self.dataset_uri}'",
+            self.logs,
+        )
+
+    def test_failed_ingest(self):
+        self.assertIn(FILTER_SAMPLES_LOG.format(0, 0, 0, 5, 2, 2), self.logs)
+
+    def test_no_resume(self):
+        self.assertIn(FILTER_SAMPLES_LOG.format(2, 0, 2, 5, 2, 0), self.logs)
+
+    def test_resume(self):
+        self.assertIn(FILTER_SAMPLES_LOG.format(2, 0, 2, 5, 2, 2), self.logs)
